@@ -1,0 +1,343 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Transport & Vehicle Management</a></li>
+    <li class="active"><span>Hired Vehicle Details</span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+  <p-accordionTab header="Hired Transporter Details" [selected]="true">
+    <div class="container-fluid">
+      <div [formGroup]="transporterForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Entered By</span>
+              <div>
+                <input matInput type="text" class="form-control" formControlName="EnteredBy">
+                <span *ngIf="transporterForm.controls.EnteredBy.errors?.required && transporterForm.controls.EnteredBy.touched" class="error-span">
+                  Entered By is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Date of Entry</span>
+              <div>
+                <input matInput type="text" class="form-control border-bottom-1" placeholder="Please Select Date Of Entry" #dateOfEntry
+                       [matDatepicker]="dp" formControlName="DateOfEntry">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp>
+                </mat-datepicker>
+                <span *ngIf="transporterForm.controls.DateOfEntry.errors?.required && transporterForm.controls.DateOfEntry.touched" class="error-span">
+                  Date Of Entry is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Transporter Agency Name</span>
+              <div>
+                <input matInput type="text" maxlength="100" *ngIf="!this.isFindOn && !this.isModifyOn && !this.isAddVehicleMode"
+                       class="form-control" formControlName="TransporterAgencyName" placeholder="Please Enter Transporter Agency Name">
+                <mat-select class="form-control" formControlName="TransporterAgencyName" *ngIf="this.isFindOn || this.isModifyOn || this.isAddVehicleMode"
+                            placeholder="Please Select Transporter Agency" (selectionChange)="onTransportAgencyNameBlurred()" #transporterAgencyName>
+                  <mat-option *ngFor="let transporter of this.hiredTransporterDetailsList" [value]="transporter.hiredTransID">{{transporter.transporterName}}</mat-option>
+                </mat-select>
+
+                <span *ngIf="transporterForm.controls.TransporterAgencyName.errors?.required && transporterForm.controls.TransporterAgencyName.touched
+                    && (!this.isFindOn && !this.isModifyOn && !this.isAddVehicleMode)" class="error-span">
+                  Transporter Agency Name is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Management Details</span>
+              <div>
+                <input matInput type="text" formControlName="ManagementDetails" maxlength="100" class="form-control" placeholder="Please Enter Management Details">
+                <span *ngIf="transporterForm.controls.ManagementDetails.errors?.required && transporterForm.controls.ManagementDetails.touched" class="error-span">
+                  Management Details is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Address </span>
+              <div>
+                <textarea matInput type="text" formControlName="Address" maxlength="300" class="form-control" placeholder="Please Enter Address"></textarea>
+                <span *ngIf="transporterForm.controls.Address.errors?.required && transporterForm.controls.Address.touched" class="error-span">
+                  Address is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Contact Number</span>
+              <div>
+                <input matInput type="text" formControlName="ContactNumber" maxlength="11" class="form-control" placeholder="Please Enter Contact Number">
+                <span *ngIf="transporterForm.controls.ContactNumber.errors?.pattern && transporterForm.controls.ContactNumber.touched" class="error-span">
+                  Contact Number can be only in format of 0XXXXXXXXXX.
+                </span>
+                <span *ngIf="transporterForm.controls.ContactNumber.errors?.required && transporterForm.controls.ContactNumber.touched" class="error-span">
+                  Contact Number is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Alternative Contact No.</span>
+              <div>
+                <input matInput type="text" formControlName="AlternateContactNumber" maxlength="11" class="form-control" placeholder="Please Enter Alternate Contact No.">
+                <span *ngIf="transporterForm.controls.AlternateContactNumber.errors?.pattern && transporterForm.controls.AlternateContactNumber.touched" class="error-span">
+                  Alternate Contact Number can be only in format of 0XXXXXXXXXX.
+                </span>
+                <span *ngIf="transporterForm.controls.AlternateContactNumber.errors?.required && transporterForm.controls.AlternateContactNumber.touched" class="error-span">
+                  Alternate Contact Number is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Email ID</span>
+              <div>
+                <input matInput type="text" formControlName="EmailId" maxlength="30" class="form-control" placeholder="Please Enter Email ID">
+                <span *ngIf="transporterForm.controls.EmailId.errors?.pattern && transporterForm.controls.EmailId.touched" class="error-span">
+                  Email Id is not valid.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div [formGroup]="vehicleForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Vehicle Type</span>
+              <div>
+                <mat-select class="form-control" formControlName="VehicleType" placeholder="Please Select Vehicle Type" #vehicleType>
+                  <mat-option value="Commercial">Commercial</mat-option>
+                  <mat-option value="Passenger">Passenger</mat-option>
+                </mat-select>
+                <span *ngIf="vehicleForm.controls.VehicleType.errors?.required && vehicleForm.controls.VehicleType.touched" class="error-span">
+                  Vehicle Type is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Vehicle Make</span>
+              <div>
+                <input matInput type="text" class="form-control" formControlName="VehicleMake" maxlength="30" placeholder="Please Enter Vehicle Make">
+                <span *ngIf="vehicleForm.controls.VehicleMake.errors?.required && vehicleForm.controls.VehicleMake.touched" class="error-span">
+                  Vehicle Make is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Date of Purchase</span>
+              <div>
+                <input matInput type="text" class="form-control border-bottom-1" placeholder="Please Select Date Of Purchase"
+                       [matDatepicker]="dp2" formControlName="VehicleDOP">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp2>
+                </mat-datepicker>
+                <span *ngIf="vehicleForm.controls.VehicleDOP.errors?.required && vehicleForm.controls.VehicleDOP.touched" class="error-span">
+                  Date Of Purchase is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Registration Number</span>
+              <div>
+                <input matInput type="text" maxlength="20" *ngIf="(!this.isFindOn && !this.isModifyOn) || this.isAddVehicleMode"
+                       class="form-control" formControlName="VehicleRegNumber" (blur)="vehicleRegNoBlurred()" placeholder="Please Enter Registration Number">
+                <mat-select class="form-control" formControlName="VehicleRegNumber" *ngIf="(this.isFindOn || this.isModifyOn) && !this.isAddVehicleMode"
+                            placeholder="Please Select Vehicle Registration No" (selectionChange)="onVehicleRegNoChanged()" #vehicleRegNumber>
+                  <mat-option *ngFor="let vehicle of this.hiredVehicleDetailsList" [value]="vehicle.hiredVehicleID">{{vehicle.vehicleRegNumber}}</mat-option>
+                </mat-select>
+                <span *ngIf="vehicleForm.controls.VehicleRegNumber.errors?.required && vehicleForm.controls.VehicleRegNumber.touched && !isVehicleRegNoInvalid" class="error-span">
+                  Vehicle Reg No is required field.
+                </span>
+                <span *ngIf="isVehicleRegNoInvalid" class="error-span">
+                  Vehicle Reg No should be unique.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Chassis Number</span>
+              <div>
+                <input matInput type="text" formControlName="VehicleChassisNo" maxlength="30" class="form-control" placeholder="Please Enter Chassis Number"
+                       (blur)="vehicleChassisNoBlurred()">
+                <span *ngIf="vehicleForm.controls.VehicleChassisNo.errors?.required && vehicleForm.controls.VehicleChassisNo.touched" class="error-span">
+                  Vehicle Chassis Number is required field.
+                </span>
+                <span *ngIf="isChassisNoInvalid" class="error-span">
+                  Vehicle Chassis Number should be unique.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">No. of Tyres</span>
+              <div>
+                <input matInput type="text" formControlName="VehicleNosTyres" maxlength="2" class="form-control" placeholder="Please Enter No. of Tyres">
+                <span *ngIf="vehicleForm.controls.VehicleNosTyres.errors?.required && vehicleForm.controls.VehicleNosTyres.touched" class="error-span">
+                  No. of Tyred is required field.
+                </span>
+                <span *ngIf="vehicleForm.controls.VehicleNosTyres.errors?.pattern && vehicleForm.controls.VehicleNosTyres.touched" class="error-span">
+                  No. of Tyres can be numerics only.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Average Mileage / Ltr.</span>
+              <div>
+                <input matInput type="text" formControlName="VehicleAvgMileage" class="form-control" placeholder="Please Enter Average Mileage / Ltr.">
+                <span *ngIf="vehicleForm.controls.VehicleAvgMileage.errors?.required && vehicleForm.controls.VehicleAvgMileage.touched" class="error-span">
+                  Vehicle Avg Mileage is required field.
+                </span>
+                <span *ngIf="vehicleForm.controls.VehicleAvgMileage.errors?.pattern && vehicleForm.controls.VehicleAvgMileage.touched" class="error-span">
+                  Vehicle Avg Mileage should be in format of 00.00
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Permit Renewal Duration</span>
+              <div>
+                <input matInput type="text" formControlName="VehicleRenewalDuration" maxlength="2" class="form-control" placeholder="Please Enter Permit Renewal Duration">
+                <span *ngIf="vehicleForm.controls.VehicleRenewalDuration.errors?.required && vehicleForm.controls.VehicleRenewalDuration.touched" class="error-span">
+                  Vehicle Renewal Duration is required field.
+                </span>
+                <span *ngIf="vehicleForm.controls.VehicleRenewalDuration.errors?.pattern && vehicleForm.controls.VehicleRenewalDuration.touched" class="error-span">
+                  Vehicle Renewal Duration can be numerics only.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Capacity in Kgs</span>
+              <div>
+                <input matInput type="text" formControlName="VehicleMaxCapacity" maxlength="5" class="form-control" placeholder="Please Enter Capacity in Kgs">
+                <span *ngIf="vehicleForm.controls.VehicleMaxCapacity.errors?.required && vehicleForm.controls.VehicleMaxCapacity.touched" class="error-span">
+                  Vehicle Max Capacity is required field.
+                </span>
+                <span *ngIf="vehicleForm.controls.VehicleMaxCapacity.errors?.pattern && vehicleForm.controls.VehicleMaxCapacity.touched" class="error-span">
+                  Vehicle Max Capacity can be numerics only.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4" [formGroup]="gpsTrackingDeviceForm">
+          <div class="form-group">
+            <span class="label-control">GPS Tracking Device No.</span>
+            <div>
+              <input matInput type="text" formControlName="GpsDeviceNo" maxlength="30" class="form-control" (blur)="gpsTrackingDeviceBlurred()" placeholder="Please Enter GPS Tracking Device No.">
+              <span *ngIf="isGpsDeviceInvalid" class="error-span">
+                Gps Device Tracking No. should be unique.
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" [formGroup]="vehicleDocumentForm">
+          <div class="form-group">
+            <span class="label-control">Document Name</span>
+            <input matInput type="test" formControlName="DocumentName" maxlength="30" class="form-control" #documentName placeholder="Please Enter Document Name">
+          </div>
+        </div>
+        <div class="col-md-4" [formGroup]="vehicleDocumentForm">
+          <div class="form-group">
+            <span class="label-control">Upload</span>
+            <input type="file" class="form-control" formControlName="DocumentDetails" placeholder="Please Upload Document"
+                   accept="application/pdf, image/jpeg, image/png" (change)="onFileChange($event)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+  <p-accordionTab header="Vehicle Documents Details" [selected]="true">
+    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+      <tbody>
+        <tr>
+          <th>Sl.No</th>
+          <th>Document Name</th>
+        </tr>
+        <tr *ngFor="let document of hiredVehicleDocuments; let documentIndex = index">
+          <ng-container>
+            <td class="text-align-center">
+              {{(documentIndex+1)}}
+            </td>
+            <td class="text-align-center">
+              <span>
+                <a class="text-deco-underline"
+                   (click)="downloadFile(document)">{{document.documentName}}</a></span>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </p-accordionTab>
+  <div style="height: 28px;"></div>
+  <div class="mgt-20 pull-right">
+    <div class="col-md-12">
+      <button pButton type="submit" label="New" class="ui-button-rounded" [disabled]="disableButton || !enableNew"
+              (click)="newTransporter()"></button>
+      <button pButton type="submit" label="Save" class="ui-button-rounded"
+              [disabled]="disableButton || !enableSave || !this.vehicleForm.valid ||
+              (!this.transporterForm.valid && !this.transporterForm.disabled) || (!this.vehicleForm.valid && !this.vehicleForm.disabled) ||
+              isGpsDeviceInvalid || isVehicleRegNoInvalid || isChassisNoInvalid || isFileInvalid"
+              #saveButton (click)="saveTransporter()"></button>
+
+      <button pButton type="submit" label="Add Vehicle" class="ui-button-rounded" [disabled]="this.isAddVehicleMode || !enableFind || !enableModify"
+              (click)="addVehicle()"></button>
+
+      <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="disableButton || !enableFind"
+              (click)="findTransporter()"></button>
+      <button pButton type="submit" label="Modify" class="ui-button-rounded" [disabled]="disableButton || !enableModify"
+              #modifyButton (click)="modifyTransporter()"></button>
+      <button pButton type="submit" label="Clear" class="ui-button-rounded" [disabled]="disableButton"
+              (click)="clearFormDetails()"></button>
+    </div>
+  </div>
+  <div style="height: 28px;"></div>
+</p-accordion>

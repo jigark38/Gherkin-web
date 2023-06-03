@@ -1,0 +1,313 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Sales & CRM</a></li>
+        <li class="active"><span>Consignee & Buyers Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+
+    <div [formGroup]="consigneeForm">
+        <p-accordionTab header="Consignee & Buyers Details" [selected]="true">
+            <div id="pnlOrganizationDetails" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Consignee / Buyers</span>
+                            <mat-select class="form-control" #consigneeBuyerSelect formControlName="consigneeBuyer"
+                                placeholder="Please Select User Type" (selectionChange)="userTypeValueChange($event)">
+                                <!-- <mat-option value="">--Select--</mat-option> -->
+                                <mat-option value="1">Consignee</mat-option>
+                                <mat-option value="0">Buyers</mat-option>
+                            </mat-select>
+                            <span
+                                *ngIf="consigneeForm.controls.consigneeBuyer.errors?.required && consigneeForm.controls.consigneeBuyer.touched"
+                                class="error-span">User type is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" *ngIf="!isFindOrModify">
+                            <span class="label-control">Name</span>
+                            <input type="text" formControlName="name" class="form-control" maxlength="50"
+                                placeholder="Please Enter Name">
+                            <span
+                                *ngIf="consigneeForm.controls.name.errors?.required && consigneeForm.controls.name.touched"
+                                class="error-span">Name is required field.</span>
+                        </div>
+                        <!-- <div class="form-group" *ngIf="isFindOrModify"> -->
+                        <div class="form-group" *ngIf="isFindOrModify">
+                            <span class="label-control">Select User*</span>
+                            <input matInput #orgSelect class="form-control" placeholder="Please Select User"
+                                [matAutocomplete]="autoUser" [formControl]="consigneeForm.controls.selectedUser">
+                            <mat-autocomplete autoActiveFirstOption #autoUser="matAutocomplete"
+                                (optionSelected)="userValueChange($event)">
+                                <mat-option *ngFor="let option of userList" [value]="option.cbName">
+                                    {{option.cbName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Address</span>
+                            <input type="text" formControlName="address" class="form-control" maxlength="300"
+                                placeholder="Please Enter Address">
+                            <span
+                                *ngIf="consigneeForm.controls.address.errors?.required && consigneeForm.controls.address.touched"
+                                class="error-span">Address is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country</span>
+                            <app-auto-complete [options]="countryOptionsList" placeholder="Please Select Country"
+                                (selectedValueChangeBlur)="countryValueChange($event)"
+                                [selectedValueFormControl]="consigneeForm.controls.country"
+                                (input)="consigneeForm.patchValue({country: $event.target.value.toUpperCase()})"
+                                (saveitemToList)="savesCountryToList($event)" [maxLength]="30"></app-auto-complete>
+                            <span
+                                *ngIf="consigneeForm.controls.country.errors?.required && consigneeForm.controls.country.touched"
+                                class="error-span">Country is required field.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">State</span>
+                            <app-auto-complete [options]="stateOptionsList" placeholder="Please Select State"
+                                (selectedValueChangeBlur)="stateValueChange($event)"
+                                (input)="consigneeForm.patchValue({state: $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="consigneeForm.controls.state"
+                                (saveitemToList)="saveStateToList($event)" [maxLength]="30"></app-auto-complete>
+                            <span
+                                *ngIf="consigneeForm.controls.state.errors?.required && consigneeForm.controls.state.touched"
+                                class="error-span">State is required field.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Place / City</span>
+                            <app-auto-complete [options]="cityOptionsList" placeholder="Please Select City"
+                                (selectedValueChangeBlur)="cityValueChange($event)"
+                                [selectedValueFormControl]="consigneeForm.controls.city"
+                                (input)="consigneeForm.patchValue({city: $event.target.value.toUpperCase()})"
+                                (saveitemToList)="saveCityToList($event)" [maxLength]="30"></app-auto-complete>
+                            <span
+                                *ngIf="consigneeForm.controls.city.errors?.required && consigneeForm.controls.city.touched"
+                                class="error-span">City is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Pincode</span>
+                            <input type="text" formControlName="pincode" class="form-control" maxlength="10"
+                                placeholder="Please enter pincode"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span
+                                *ngIf="consigneeForm.controls.pincode.errors?.required && consigneeForm.controls.pincode.touched"
+                                class="error-span">Pincode is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.pincode.errors?.maxlength && consigneeForm.controls.pincode.touched"
+                                class="error-span">Lenght not more than 10 characters.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country Area Code</span>
+                            <input type="text" formControlName="countryAreaCode" class="form-control" maxlength="5"
+                                placeholder="Please enter Country Area Code"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span
+                                *ngIf="consigneeForm.controls.countryAreaCode.errors?.required && consigneeForm.controls.countryAreaCode.touched"
+                                class="error-span">Country Area Code is required field.
+                            </span>
+                            <span
+                                *ngIf="consigneeForm.controls.countryAreaCode.errors?.maxlength && consigneeForm.controls.countryAreaCode.touched"
+                                class="error-span">Lenght not more than 5 characters.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Management Details</span>
+                            <input type="text" formControlName="mgmName" class="form-control" maxlength="12"
+                                placeholder="Please enter Management Details">
+                            <span
+                                *ngIf="consigneeForm.controls.mgmName.errors?.required && consigneeForm.controls.mgmName.touched"
+                                class="error-span">Management Details is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.mgmName.errors?.maxlength && consigneeForm.controls.mgmName.touched"
+                                class="error-span">Lenght not more than 12 characters.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Mobile Number</span>
+                            <input type="text" formControlName="mgmMobileNumber" class="form-control"
+                                placeholder="Please enter Mobile Number" maxlength="12"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                            <span
+                                *ngIf="consigneeForm.controls.mgmMobileNumber.errors?.required && consigneeForm.controls.mgmMobileNumber.touched"
+                                class="error-span">Mobile Number is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.mgmMobileNumber.errors?.maxlength && consigneeForm.controls.mgmMobileNumber.touched"
+                                class="error-span">Lenght not more than 12 characters.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Office Number</span>
+                            <input type="text" formControlName="officeNumber" class="form-control" maxlength="12"
+                                placeholder="Please enter Office Number"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span
+                                *ngIf="consigneeForm.controls.officeNumber.errors?.required && consigneeForm.controls.officeNumber.touched"
+                                class="error-span">Office Number is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.officeNumber.errors?.maxlength && consigneeForm.controls.officeNumber.touched"
+                                class="error-span">Lenght not more than 12 characters.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Alternate Number</span>
+                            <input type="text" formControlName="altNumber" class="form-control" maxlength="12"
+                                placeholder="Please enter Alternate Number"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span
+                                *ngIf="consigneeForm.controls.altNumber.errors?.required && consigneeForm.controls.altNumber.touched"
+                                class="error-span">Alternate Number is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.altNumber.errors?.maxlength && consigneeForm.controls.altNumber.touched"
+                                class="error-span">Lenght not more than 12 characters.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Mail id</span>
+                            <input type="text" formControlName="eMailID" class="form-control" maxlength="30"
+                                placeholder="Please enter email">
+                            <span
+                                *ngIf="consigneeForm.controls.eMailID.errors?.required && consigneeForm.controls.eMailID.touched"
+                                class="error-span">Email is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.eMailID.errors?.email && consigneeForm.controls.eMailID.touched"
+                                class="error-span">Please enter valid Mail.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Alternate Mail id</span>
+                            <input type="text" formControlName="altEMailID" class="form-control" maxlength="30"
+                                placeholder="Please enter Alternate Mail">
+                            <span
+                                *ngIf="consigneeForm.controls.altEMailID.errors?.required && consigneeForm.controls.altEMailID.touched"
+                                class="error-span">Alternate Mail is required field.</span>
+                            <span
+                                *ngIf="consigneeForm.controls.altEMailID.errors?.email && consigneeForm.controls.altEMailID.touched"
+                                class="error-span">Please enter valid Mail.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Licence Number</span>
+                            <input type="text" formControlName="licenseNo" class="form-control" maxlength="30"
+                                placeholder="Please enter Licence Number">
+                            <span
+                                *ngIf="consigneeForm.controls.licenseNo.errors?.required && consigneeForm.controls.licenseNo.touched"
+                                class="error-span">Licence Number is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Credit Limit</span>
+                            <input type="text" formControlName="creditLimit" class="form-control" maxlength="20"
+                                placeholder="Please enter Credit Limit"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span
+                                *ngIf="consigneeForm.controls.creditLimit.errors?.required && consigneeForm.controls.creditLimit.touched"
+                                class="error-span">Credit Limit is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Currency</span>
+                            <app-auto-complete [options]="currencyOptionsList" placeholder="Please Select Currency"
+                                (selectedValueChangeBlur)="currencyValueChange($event)"
+                                [selectedValueFormControl]="consigneeForm.controls.currency"
+                                (saveitemToList)="savesCurrencyToList($event)"></app-auto-complete>
+                            <span
+                                *ngIf="consigneeForm.controls.currency.errors?.required && consigneeForm.controls.currency.touched"
+                                class="error-span">Currency is required field.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+        <p-accordionTab header="Documents Details" [selected]="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Name of the Document</span>
+
+                            <input matInput #document type="text" class="form-control" maxlength="100"
+                                formControlName="document" placeholder="Please enter Name of the Document">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Document Upload</span>
+                            <input type="file" class="form-control" formControlName="documentPath"
+                                accept="application/pdf, image/jpeg, image/png" (change)="onFileChange($event)">
+                            <span *ngIf="isFileError" class="error-span">Please upload file type of
+                                jpeg/png/pdf.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group margin-top-30">
+                            <a class="text-deco-underline" *ngIf="consDoc"
+                                (click)="downloadFile(consDoc.documentDetails)">{{consDoc.documentName }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+    </div>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+    <div class="col-md12">
+        <button pButton type="submit" [disabled]="disableNewButton" label="New" (click)="onNew()"
+            class="ui-button-rounded"></button>
+        <!-- <button pButton type="submit" #saveBtn label="Save" (click)="onSaveConsignee()"
+            class="ui-button-rounded"></button> -->
+        <button pButton type="submit" [disabled]="disableSaveButton" #saveBtn label="Save" (click)="onSaveConsignee()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableFindButton" label="Find" (click)="onFindClick()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableModifyButton" label="Modify" (click)="onModifyClick()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableClearButton" label="Clear" (click)="onClearConsignee()"
+            class="ui-button-rounded"></button>
+    </div>
+</div>

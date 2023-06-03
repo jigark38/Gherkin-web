@@ -1,0 +1,241 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>ESIC Rates Details</span></li>
+    </ol>
+</div>
+
+
+
+<p-accordion>
+    <p-accordionTab header="ESIC Rates Details" class="card" [selected]="true">
+        <!-- the farmers report code -->
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv" [formGroup]="ESICRatesDetailsForm">
+            <div class=" col-md-12 cleartop">
+                <div class="row pl-1 pr-1">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Date of Entry</span>
+                            <input matInput class="form-control 
+                                        border-bottom-1" tabindex="1" placeholder="Please Select Date of Entry"
+                                #dateOfEntry autofocus [matDatepicker]="dp" formControlName="DateOfEntry">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp" tabindex="2">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.DateOfEntry.errors?.required && submitted) || (ESICRatesDetailsForm.controls.DateOfEntry.errors?.required && ESICRatesDetailsForm.controls.DateOfEntry.touched) "
+                                class="error-span">Date of entry is required field.</span>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 disableClick">
+                        <div class=" form-group">
+                            <span class="label-control">Login User Name</span>
+                            <input type="text" placeholder="Enter Login User Name" class="form-control"
+                                readonly="readonly" formControlName="LoginUserName">
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.LoginUserName.errors?.required && submitted) || (ESICRatesDetailsForm.controls.LoginUserName.errors?.required && ESICRatesDetailsForm.controls.LoginUserName.touched) "
+                                class="error-span">Login user name is required.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Effective Date</span>
+                            <input matInput class="form-control 
+                                        border-bottom-1" tabindex="3" placeholder="Enter Effective Date"
+                                [matDatepicker]="dp1" formControlName="EffectiveDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1" tabindex="4">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp1>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.EffectiveDate.errors?.required && submitted) || (ESICRatesDetailsForm.controls.EffectiveDate.errors?.required && ESICRatesDetailsForm.controls.EffectiveDate.touched) "
+                                class="error-span">Effective date is required.</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="row pl-1 pr-1 mb-4">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">From Date</span>
+                            <input matInput class="form-control
+                                        border-bottom-1" tabindex="5" placeholder="Enter Effective From Date"
+                                [matDatepicker]="dp2" formControlName="FromDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2" tabindex="6">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp2>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.FromDate.errors?.required && submitted) || (ESICRatesDetailsForm.controls.FromDate.errors?.required && ESICRatesDetailsForm.controls.FromDate.touched) "
+                                class="error-span">From Date is required.</span>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">To Date</span>
+                            <input matInput class="form-control 
+                                        border-bottom-1" tabindex="7" placeholder="Enter Effective To Date"
+                                [matDatepicker]="dp3" formControlName="ToDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp3" tabindex="8">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp3>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.ToDate.errors?.required && submitted) || (ESICRatesDetailsForm.controls.ToDate.errors?.required && ESICRatesDetailsForm.controls.ToDate.touched) "
+                                class="error-span">To Date is required.</span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Maximum Limit</span>
+                            <input type="text" placeholder="Enter Max Limit" tabindex="9" class="form-control"
+                                maxlength="6" formControlName="MaxLimit">
+                        </div>
+                        <span
+                            *ngIf="(ESICRatesDetailsForm.controls.MaxLimit.errors?.required && submitted) || (ESICRatesDetailsForm.controls.MaxLimit.errors?.required && ESICRatesDetailsForm.controls.MaxLimit.touched) "
+                            class="error-span">Max limit is required.</span>
+                        <span
+                            *ngIf="(ESICRatesDetailsForm.controls.MaxLimit.errors?.pattern && ESICRatesDetailsForm.controls.MaxLimit.touched) "
+                            class="error-span">Max limit can be numbers only.</span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="row pl-1 pr-1 mb-4">
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Employer Contribution (%)</span>
+                            <input type="text" placeholder="00.00" class="form-control" (change)="sum()" tabindex="10"
+                                formControlName="EmployerContribution">
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.EmployerContribution.errors?.required && submitted) || (ESICRatesDetailsForm.controls.EmployerContribution.errors?.required && ESICRatesDetailsForm.controls.EmployerContribution.touched) "
+                                class="error-span">Employer contribution is required.</span>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.EmployerContribution.errors?.pattern && ESICRatesDetailsForm.controls.EmployerContribution.touched) "
+                                class="error-span">Employer Contribution should be numerics only in format of
+                                XX.XX.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Employee Contribution (%)</span>
+                            <input type="text" placeholder="00.00" class="form-control" (change)="sum()" tabindex="11"
+                                formControlName="EmployeeContribution">
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.EmployeeContribution.errors?.required && submitted) || (ESICRatesDetailsForm.controls.EmployeeContribution.errors?.required && ESICRatesDetailsForm.controls.EmployeeContribution.touched) "
+                                class="error-span">Employee contribution is required.</span>
+                            <span
+                                *ngIf="(ESICRatesDetailsForm.controls.EmployeeContribution.errors?.pattern && ESICRatesDetailsForm.controls.EmployeeContribution.touched) "
+                                class="error-span">Employee Contribution should be numerics only in format of
+                                XX.XX.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 disableClick">
+                        <div class=" form-group">
+                            <span class="label-control">Total Contribution</span>
+                            <input type="text" placeholder="Total Contribution" class="form-control" readonly="readonly"
+                                formControlName="TotalContribution">
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+
+
+
+<p-accordion>
+    <p-accordionTab header="ESIC Rates" class="card" [selected]="true">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Effective Date</th>
+                            <th>From Date to To Date</th>
+                            <th>Maximum Limit</th>
+                            <th>Employer Contribution (%)</th>
+                            <th>Employee Contribution (%)</th>
+                            <th>Total Contribution</th>
+                        </tr>
+                        <ng-container *ngFor="let item of ESICRateList;let i = index">
+                            <tr *ngIf="min <= i && max > i" (click)="selectedESIC(i)"
+                                [class.active]="item.esiPassingNo === selectedRowId">
+                                <td class="text-align-center">
+                                    <span>{{i+1}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiEffectiveDate | date: 'dd-MMM-yyyy'}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiEffectiveFromDate | date: 'dd-MMM-yyyy'}}
+                                        / {{item.esiEffectiveToDate | date: 'dd-MMM-yyyy'}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiMaxLimit}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiEmployeeCount}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiEmployerCount}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.esiTotalCount}}</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="10" [totalRecords]="ESICRateList.length" (onPageChange)="paginate($event)">
+                </p-paginator>
+            </div>
+
+
+
+        </div>
+
+
+        <!-- the farmers report code -->
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="submit" label="New" class="ui-button-rounded" (click)="addNewESIC()"
+                [disabled]="!enableNew"></button>
+            <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="saveESIC()" #saveBtn
+                tabindex="12" [disabled]="!enableSave || ESICRatesDetailsForm.invalid"></button>
+            <button pButton type="submit" label="Modify" class="ui-button-rounded" (click)="modifyESIC()"
+                [disabled]="!enableModify"></button>
+            <button pButton type="submit" label="Clear" class="ui-button-rounded" (click)="clearFields()" tabindex="13"
+                [disabled]="!enableClear"></button>
+
+        </div>
+    </div>
+</div>

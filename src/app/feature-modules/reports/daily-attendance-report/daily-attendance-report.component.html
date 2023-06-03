@@ -1,0 +1,262 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li>
+            <a href="#">Human Resource Management</a>
+        </li>
+        <li class="active">
+            <span>Reports</span>
+        </li>
+    </ol>
+</div>
+<div class="card">
+    <div class="bg-gray">
+        Daily Attendance Report
+    </div>
+    <div class="card-body">
+        <form [formGroup]="formDialyAttendanceReport">
+            <div class="row  ml-2 mr-2 mt-2 maindiv">
+                <div class="col-md-12 cleartop">
+                    <div class="row pl-1 pr-1 align-items-center">
+
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Unit</span>
+                                <mat-select class="form-control" formControlName="unitName"
+                                    placeholder="Select Unit Name">
+                                    <mat-option *ngFor="let unit of units" [value]="unit.orgOfficeNo">
+                                        {{unit.orgOfficeName}}</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Status</span>
+                                <mat-select class="form-control" formControlName="statusName"
+                                    placeholder="Select Seasons From/To">
+                                    <mat-option value="All">All</mat-option>
+                                    <mat-option value="OnRoll">On Roll</mat-option>
+                                    <mat-option value="OffRoll">Off Roll</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Division</span>
+                                <mat-select class="form-control" formControlName="divisionName"
+                                    placeholder="Select Buyer Name">
+                                    <mat-option value="All">All</mat-option>
+                                    <mat-option value="Staff">Staff</mat-option>
+                                    <mat-option value="Worker">Workers</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Department</span>
+                                <mat-select class="form-control" formControlName="departmentName"
+                                    placeholder="Select Department" (selectionChange)="departmentValueChange()">
+                                    <mat-option value="All">All</mat-option>
+                                    <mat-option *ngFor="let department of departments"
+                                        [value]="department.departmentCode">
+                                        {{department.departMentName}}</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Sub Department</span>
+                                <mat-select class="form-control" formControlName="subDepartmentName"
+                                    placeholder="Select Sub-Department">
+                                    <mat-option value="All">All</mat-option>
+                                    <mat-option *ngFor="let subDepartment of subDepartments"
+                                        [value]="subDepartment.subDepartmentCode">
+                                        {{subDepartment.subDepartmentName}}</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Shift</span>
+                                <mat-select class="form-control" formControlName="shiftName" placeholder="Select Shift">
+                                    <mat-option value="All">All</mat-option>
+                                    <mat-option *ngFor="let shift of shifts" [value]="shift.shiftNo">
+                                        {{shift.shiftName}}</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control"> Date </span>
+                                <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                    [matDatepicker]="eDate1" formControlName="dialydate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate1">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate1>
+                                </mat-datepicker>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Filter</span>
+                                <mat-select class="form-control" formControlName="filter" placeholder="Select Filter">
+                                    <mat-option value="Time">Time</mat-option>
+                                    <mat-option value="Id">Id</mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Punching Category </span>
+                                <mat-select class="form-control" placeholder="Please enter Punching Category"
+                                    formControlName="category">
+                                    <mat-option value="All">
+                                        All
+                                    </mat-option>
+                                    <mat-option value="Attended">
+                                        Attended
+                                    </mat-option>
+                                    <mat-option value="Single Punch">
+                                        Single Punch
+                                    </mat-option>
+                                    <mat-option value="Total Missed">
+                                        Total Missed
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Gender
+                                </span>
+                                <mat-select class="form-control" placeholder="Please Gender" formControlName="gender">
+                                    <mat-option value="All">
+                                        All
+                                    </mat-option>
+                                    <mat-option value="Male">
+                                        Male
+                                    </mat-option>
+                                    <mat-option value="Female">
+                                        Female
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+                            <div class="form-group">
+                                <span class="label-control">Biometric No
+                                </span>
+                                <input type="text" formControlName="biometricId" class="form-control" maxlength="10"
+                                    placeholder="Please enter biometric Id">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="mgt-20 pull-right">
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+            <button pButton type="submit" label="View" (click)="viewData()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Print" (click)="printbtnClick()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Export" (click)="exportPdf()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+        </div>
+    </div>
+</div>
+
+<p-accordion>
+    <p-accordionTab header="Departments Report " class="card" [selected]="true">
+
+        <div class="row" style="margin-left: 33px !important;">
+            <div class="col-mg-2">
+                Total record :
+            </div>
+            <div class="col-mg-2" *ngIf="gridData">
+                {{gridData.length}}
+            </div>
+            <div class="col-mg-2 pad-lf-10">
+                Male Count :
+            </div>
+            <div class="col-mg-2" *ngIf="gridData">
+                {{maleCount}}
+            </div>
+            <div class="col-mg-2 pad-lf-10">
+                Female Count :
+            </div>
+            <div class="col-mg-2" *ngIf="gridData">
+                {{femaleCount}}
+            </div>
+        </div>
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                                  dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>SI. No</th>
+                            <th>IndRegId</th>
+                            <th>Department</th>
+                            <th>EmployeeName</th>
+                            <th>Gender</th>
+                            <th>Designation</th>
+                            <th>InTime</th>
+                            <th>OutTime</th>
+                            <th>Duration</th>
+                            <th>overtime</th>
+                            <th>Att. Td</th>
+                        </tr>
+                        <ng-container *ngFor="let data of gridData; let i = index">
+                            <tr>
+                                <td>{{i+1}}</td>
+                                <td class="text-align-center">
+                                    <span>{{data.indRegId}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.department}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.employeeName}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.gender}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.designation}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.inTime}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.outTime}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.duration}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{data.overtime}}</span>
+                                </td>
+                                <td class="text-align-center">
+
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>

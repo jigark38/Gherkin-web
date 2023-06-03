@@ -1,0 +1,538 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Harvest GRN Receiving & Weighment</span></li>
+    </ol>
+</div>
+<div style="height: 28px;"></div>
+<p-accordion>
+    <p-tabView [activeIndex]="index">
+        <p-tabPanel header="Pending Harvest GRN Details">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Unit Name</span>
+                            <mat-select class="form-control" (selectionChange)="loadGridDetails($event.value)"
+                                #unitNameDDL>
+                                <mat-option [value]="office" *ngFor="let office of OfficeLocations">
+                                    {{office.orgOfficeName}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Crop Name</span>
+                            <input type="text" class="form-control" value="Test1">
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <p-accordionTab header="Inward Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>IGP Date</th>
+                                <th>IGP No</th>
+                                <th>Area / Branch Name</th>
+                                <th>Vehicle No</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr *ngIf="!inwardDetails">
+                                <td colspan="6" style="text-align: center; ">
+                                    No Record Found.
+                                </td>
+                            </tr>
+                            <tr *ngFor="let inwardDetail of inwardDetails; let i=index" style="text-align: center;">
+                                <ng-container>
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        {{inwardDetail.igpDate | date:'mediumDate'}}
+                                    </td>
+                                    <td style="text-align: right; ">
+                                        {{inwardDetail.igpNo}}
+                                    </td>
+                                    <td>
+                                        {{inwardDetail.supplierTransporter}}
+                                    </td>
+                                    <td>
+                                        {{inwardDetail.veichleNo}}
+                                    </td>
+                                    <td>
+                                        <input type="radio" (change)="radioSelected(inwardDetail)" name="optradio">
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Greens Reception Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4" style="overflow-x: auto;">
+                        <tbody>
+                            <tr *ngIf="!receptionDetails">
+                                <th>Sl.No</th>
+                                <th>GRN Date</th>
+                                <th>GRN No</th>
+                                <th>Area / Branch Name</th>
+                                <th>Vehicle No</th>
+                                <th>Crop Name</th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Grade </th>
+                                <th>Total</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr *ngIf="receptionDetails">
+                                <th>Sl.No</th>
+                                <th>GRN Date</th>
+                                <th>GRN No</th>
+                                <th>Area / Branch Name</th>
+                                <th>Vehicle No</th>
+                                <th>Crop Name</th>
+                                <th *ngFor="let grade of receptionDetails[0].grades;">
+                                    {{grade.cropGradeHeader}}
+                                </th>
+                                <th>Total</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr *ngIf="!receptionDetails" style="text-align: center;">
+                                <td colspan="15">
+                                    No Record Found.
+                                </td>
+                            </tr>
+                            <tr *ngFor="let reception of receptionDetails; let i=index">
+                                <ng-container>
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        {{reception.harvestGRNDate | date:'mediumDate'}}
+                                    </td>
+                                    <td>
+                                        {{reception.harvestGRNNo?reception.harvestGRNNo:reception.greenProcurementNo}}
+                                    </td>
+                                    <td>
+                                        {{reception.areaName}}
+                                    </td>
+                                    <td>
+                                        {{reception.veichleNo}}
+                                    </td>
+                                    <td>
+                                        {{reception.cropName}}
+                                    </td>
+                                    <td *ngFor="let grade of reception.grades;">
+                                        {{grade.cropGradeValue}}
+                                    </td>
+                                    <td style="text-align: right; ">
+                                        {{reception.harvestGRNTotalQuantity}}
+                                    </td>
+                                    <td>
+                                        <input type="radio" (change)="onChecked(reception)" name="optradio2">
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+
+            <div style="height: 28px;"></div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Harvest GRN & Weighment Details">
+            <p-accordionTab header="Harvest GRN & Weighment Details" [selected]="true">
+                <form [formGroup]="harvestWeighmentForm">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Receiving UNIT </span>
+                                    <input type="text" formControlName="receivingUnit" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.receivingUnit.invalid && harvestWeighmentForm.controls.receivingUnit.touched"
+                                        class="error-span">
+                                        Receiving field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Area</span>
+                                    <input type="text" formControlName="area" class="form-control" value="Test">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.area.invalid && harvestWeighmentForm.controls.area.touched"
+                                        class="error-span">
+                                        Area field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Supervisor</span>
+                                    <mat-select class="form-control" formControlName="supervisor">
+                                        <mat-option [value]="employee.employeeId"
+                                            *ngFor="let employee of employeeDetails">
+                                            {{employee.employeeName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.supervisor.invalid && harvestWeighmentForm.controls.supervisor.touched"
+                                        class="error-span">
+                                        Supervisor field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Harvest GRN Date</span>
+                                    <input matInput formControlName="receivharvestGrnDate"
+                                        class="form-control border-bottom-1"
+                                        placeholder="Please Select Harvest GRN Date" [matDatepicker]="hgd">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="hgd">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #hgd>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.receivharvestGrnDate.invalid && harvestWeighmentForm.controls.receivharvestGrnDate.touched"
+                                        class="error-span">
+                                        Harvest GRN Date field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Harvest GRN No</span>
+                                    <input type="text" formControlName="harvestGrnNo" class="form-control" value="Test">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.harvestGrnNo.invalid && harvestWeighmentForm.controls.harvestGrnNo.touched"
+                                        class="error-span">
+                                        Harvest GRN No field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Vehicle No</span>
+                                    <input type="text" formControlName="vehicleNo" class="form-control" value="Test">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.vehicleNo.invalid && harvestWeighmentForm.controls.vehicleNo.touched"
+                                        class="error-span">
+                                        Vehicle No field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Starting KM Reading</span>
+                                    <input type="text" formControlName="startingKmReading" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.startingKmReading.invalid && harvestWeighmentForm.controls.startingKmReading.touched"
+                                        class="error-span">
+                                        Starting KM Reading field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Time of Dispatch</span>
+                                    <!-- <input type="datetime-local" formControlName="timeOfDispatch" class="form-control"> -->
+                                    <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                                        [timeOnly]="true" formControlName="timeOfDispatch" class="timer">
+
+                                    </p-calendar>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.timeOfDispatch.invalid && harvestWeighmentForm.controls.timeOfDispatch.touched"
+                                        class="error-span">
+                                        Time of Dispatch field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">No. of Crates (Desp.)</span>
+                                    <input type="text" formControlName="noOfCratesDispatch" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.noOfCratesDispatch.invalid && harvestWeighmentForm.controls.noOfCratesDispatch.touched"
+                                        class="error-span">
+                                        No. of Crates (Desp.) field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Total Quantity (Desp.) KGS</span>
+                                    <input type="text" formControlName="totalQuantity" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.totalQuantity.invalid && harvestWeighmentForm.controls.totalQuantity.touched"
+                                        class="error-span">
+                                        Total Quantity (Desp.) KGS field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Receiving Date</span>
+                                    <input matInput formControlName="receivingDate" class="form-control border-bottom-1"
+                                        placeholder="Please Select Receiving Date" [matDatepicker]="rd">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="rd">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #rd>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.receivingDate.invalid && harvestWeighmentForm.controls.receivingDate.touched"
+                                        class="error-span">
+                                        Receiving Date field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Ending KM</span>
+                                    <input type="text" formControlName="endingKm" (focusout)="calculateKm()"
+                                        class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.endingKm.invalid && harvestWeighmentForm.controls.endingKm.touched"
+                                        class="error-span">
+                                        Ending KM field
+                                        is required field.</span>
+                                    <span *ngIf="harvestWeighmentForm.controls.endingKm.errors?.pattern &&
+                                        harvestWeighmentForm.controls.endingKm.touched" class="error-span">
+                                        Only 6 digit numbers are allowed.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Factory Recv. Time</span><br>
+                                    <!-- <input type="datetime-local" formControlName="factoryReceiveTime"
+                                        (focusout)="calculateTime()" class="form-control"> -->
+                                    <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                                        formControlName="factoryReceiveTime" [timeOnly]="true"
+                                        (focusout)="calculateTime()" hideOnDateTimeSelect="true" #recTime class="timer">
+                                    </p-calendar>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.factoryReceiveTime.invalid && harvestWeighmentForm.controls.factoryReceiveTime.touched"
+                                        class="error-span">
+                                        Factory Recv. Time field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">No. of KMS</span>
+                                    <input type="text" formControlName="noOfKms" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.noOfKms.invalid && harvestWeighmentForm.controls.noOfKms.touched"
+                                        class="error-span">
+                                        No. of KMS field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Duration</span>
+                                    <input type="text" formControlName="duration" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.duration.invalid && harvestWeighmentForm.controls.duration.touched"
+                                        class="error-span">
+                                        Duration field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">No. of Crates (Recd.)</span>
+                                    <input type="text" formControlName="noOfCratesReceived" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.noOfCratesReceived.invalid && harvestWeighmentForm.controls.noOfCratesReceived.touched"
+                                        class="error-span">
+                                        No of Crates (Recd.) field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Total Quantity (Recd.) KGS</span>
+                                    <input type="text" formControlName="totalQtyReceived" class="form-control">
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.totalQtyReceived.invalid && harvestWeighmentForm.controls.totalQtyReceived.touched"
+                                        class="error-span">
+                                        Total Qty field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Weightment Mode</span>
+                                    <mat-select formControlName="weighmentMode"
+                                        (selectionChange)="changeWeighmentMode($event.value)" class="form-control">
+                                        <mat-option value="Direct">Direct</mat-option>
+                                        <mat-option value="Manual Weighment">Manual Weighment</mat-option>
+                                        <mat-option value="Automation Weighment">Automation Weighment</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="harvestWeighmentForm.controls.weighmentMode.invalid && harvestWeighmentForm.controls.weighmentMode.touched"
+                                        class="error-span">
+                                        Weighment Mode field
+                                        is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </p-accordionTab>
+            <p-accordionTab header="Summary Receiving Details " [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                    <tbody>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>Grades</th>
+                            <th>Desp. Crates</th>
+                            <th>Desp. KGS</th>
+                            <th>Recd. Crates</th>
+                            <th>Recd. KGS</th>
+                            <th>Diff. Crates</th>
+                            <th>Diff KGS</th>
+                            <th *ngIf="showGrid">Select</th>
+                        </tr>
+                        <tr *ngFor="let summaryDetail of summaryReceivingDetails; let i = index">
+                            <ng-container>
+                                <td>{{i+1}}</td>
+                                <td style="text-align: right; ">{{summaryDetail.grade}}</td>
+                                <td style="text-align: right; ">{{summaryDetail.despCrates}}</td>
+                                <td style="text-align: right; ">
+                                    {{summaryDetail.despKgs}}
+                                </td>
+                                <td #summaryCrates>
+                                    <input type="text" class="form-control right-aligned-input"
+                                        [(ngModel)]="summaryDetail.recdCrates"
+                                        (keyup)="calcCratesDiff($event, summaryDetail)" name="recdCrates"
+                                        (keydown)="OnlyNumber($event)"
+                                        [disabled]="!(!showGrid && !(summaryDetail.despKgs === null && summaryDetail.despCrates === null))">
+                                </td>
+                                <td #summaryKgs>
+                                    <input type="text" class="form-control right-aligned-input"
+                                        [(ngModel)]="summaryDetail.recdKgs" (keyup)="calcKgsDiff($event, summaryDetail)"
+                                        name="recdKgs" (keydown)="ThreeDigitDecimalNumber($event)"
+                                        [disabled]="!(!showGrid && !(summaryDetail.despKgs === null && summaryDetail.despCrates === null))">
+                                </td>
+                                <td style="text-align: right; ">
+                                    {{summaryDetail.diffCrates}}
+                                </td>
+                                <td style="text-align: right; ">
+                                    {{summaryDetail.diffKgs}}
+                                </td>
+                                <td *ngIf="showGrid">
+                                    <input type="radio"
+                                        [disabled]="summaryDetail.despKgs === null && summaryDetail.despCrates === null"
+                                        (change)="onSummarySelected(summaryDetail,index)" name="optradio3">
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-accordionTab>
+            <p-accordionTab *ngIf="showGrid" header="Summary Weighment Details " [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                    <tbody>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>Wt. No.</th>
+                            <th>Grade </th>
+                            <th>No of Crates</th>
+                            <th>Crates Tare Wt.</th>
+                            <th>Gross Wt.</th>
+                            <th>Tare Wt.</th>
+                            <th>Net Wt.</th>
+                        </tr>
+                        <tr *ngFor="let summaryWeighment of summaryWeighmentDetail; let i = index">
+                            <ng-container>
+                                <td>{{i+1}}</td>
+                                <td #wtNo style="text-align: right; ">
+                                    {{summaryWeighment.weightNo}}
+                                </td>
+                                <td style="text-align: right; ">
+                                    {{summaryWeighment.grade}}
+                                </td>
+                                <td>
+                                    <input #noOfCrates type="text" class="form-control right-aligned-input"
+                                        (keydown)="OnlyNumber($event)" [(ngModel)]="summaryWeighment.noOfCrates"
+                                        name="noOfCrates" (change)="noofCratesChange(i)">
+                                </td>
+                                <td>
+                                    <input #crateTareWt type="text" class="form-control right-aligned-input"
+                                        (keydown)="ThreeDigitDecimalNumber($event)"
+                                        [(ngModel)]="summaryWeighment.crateTareWt" name="crateTareWt"
+                                        (change)="crateTarWtChange(i)">
+                                </td>
+                                <td>
+                                    <input #grossWt type="text" class="form-control right-aligned-input"
+                                        [(ngModel)]="summaryWeighment.grossWt" name="grossWt"
+                                        (keydown)="ThreeDigitDecimalNumber($event)" (change)="tareWtChange(i)">
+                                </td>
+                                <td>
+                                    <input #tareWt type="text" class="form-control right-aligned-input"
+                                        [(ngModel)]="summaryWeighment.tareWt" name="tareWt"
+                                        (keyup)="calcNetWt($event, summaryWeighment)" (focusout)="showPopUp()"
+                                        (keydown)="ThreeDigitDecimalNumber($event)">
+                                </td>
+                                <td #netWt style="text-align: right; ">
+                                    {{summaryWeighment.netWt}}
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-accordionTab>
+
+
+
+            <div style="height: 28px;"></div>
+        </p-tabPanel>
+        <div class="mgt-20 pull-right">
+            <div class="col-md-12">
+                <button pButton type="submit" label="Harvest GRN" (click)="harvestGRN()"
+                    class="ui-button-rounded"></button>
+                <button pButton type="submit" [disabled]="!showNext" (click)="openNext()" label="Next"
+                    class="ui-button-rounded"></button>
+                <button pButton type="submit" #saveBtn [disabled]="!showSave || !harvestWeighmentForm.valid"
+                    label="Save" class="ui-button-rounded" (click)="saveDetails()"></button>
+                <button pButton type="submit" label="Modify" [disabled]="!showModify"
+                    class="ui-button-rounded"></button>
+                <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+                <button pButton type="submit" [disabled]="!showBack" (click)="goBack()" label="Back"
+                    class="ui-button-rounded"></button>
+            </div>
+        </div>
+    </p-tabView>
+</p-accordion>
+<jw-modal id="save-weighment-Modal">
+    <h6>Do you want to continue?</h6>
+    <div class="row pull-right bottom-right">
+        <input type="button" class="btn btn-info" (click)="sameGrade()" value="Same Grade" />
+        <input type="button" class="btn btn-info" (click)="changeGrade()" value="Change Grade" />
+        <input type="button" class="btn btn-info" (click)="complete()" value="Complete" />
+    </div>
+</jw-modal>

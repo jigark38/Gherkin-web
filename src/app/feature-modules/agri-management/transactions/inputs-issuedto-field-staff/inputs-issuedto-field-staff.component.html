@@ -1,0 +1,340 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Field Staff & Material Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+
+<p-accordion>
+    <p-accordionTab header="Field Staff & Material Details" [selected]="true">
+        <form [formGroup]="fieldStaffForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Issue</span>
+
+                            <p-calendar id="areaBMRD" [formControlName]="'Date_of_Issue'" class="form-control"
+                                readonlyInput="true" tabindex="0" dateFormat="dd-M-yy" [showTime]="false"
+                                [showIcon]="true" icon="pi pi-calendar" placeholder="Select Date of Issue">
+                            </p-calendar>
+                            <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Date_of_Issue').valid) && (fieldStaffForm.get('Date_of_Issue').touched) 
+                                    && fieldStaffForm.get('Date_of_Issue').errors?.required">Date of Issue is
+                                required!</small>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Issued from </span>
+                            <mat-select #matOptGrp class="form-control" placeholder="Select Issued from"
+                                formControlName="Issued_from" [hidden]="labelSelect">
+
+                                <mat-optgroup *ngFor="let ld of locationDetails">
+                                    <span (click)="selectedGroup(ld)">{{ld.OrgOfficeName | uppercase}}</span>
+                                    <hr />
+                                    <mat-option *ngFor="let a of areaDetails" [value]="a"
+                                        (click)="getEmpDetailsByIssueFronDDL(a)">
+                                        {{a.areaName}}
+                                    </mat-option>
+                                </mat-optgroup>
+
+                                <!-- <mat-option *ngFor="let ld of locationDetails" [value]="ld">
+                                    {{ld.OrgOfficeName | uppercase}}
+                                </mat-option> -->
+
+                            </mat-select>
+
+                            <input [hidden]="!labelSelect" type="text" readonly="true" class="form-control"
+                                formControlName="Issued_from" id="input">
+                            <button (click)="openOptGrp()" [hidden]="!labelSelect" id="input_ic">
+                                <i class="fa fa-caret-down fa-lg" aria-hidden='true'></i>
+                            </button>
+
+
+                            <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Issued_from').valid) && (fieldStaffForm.get('Issued_from').touched) 
+                                && fieldStaffForm.get('Issued_from').errors?.required">Issued from is
+                                required!</small>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Branch Area</span>
+                                <mat-select class="form-control" formControlName="Branch_Area"
+                                    [placeholder]="branchAreaPlace" (ngModelChange)="getEmpDetailsByAreaId($event)">
+                                    <mat-option *ngFor="let a of areaDetails" [value]="a">
+                                        {{a.areaName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Branch_Area').valid) && (fieldStaffForm.get('Branch_Area').touched) 
+                                && fieldStaffForm.get('Branch_Area').errors?.required">Branch Area is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Name of Field Staff</span>
+                                <mat-select class="form-control" formControlName="Name_of_Field_Staff"
+                                    placeholder="Select Name of Field Staff"
+                                    (ngModelChange)="getCropGroupDetailsByAreaId($event)">
+                                    <mat-option *ngFor="let e of empDetails" [value]="e">
+                                        {{e.employeeName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Name_of_Field_Staff').valid) && 
+                                (fieldStaffForm.get('Name_of_Field_Staff').touched) 
+                                && fieldStaffForm.get('Name_of_Field_Staff').errors?.required">Name of Field Staff is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Group</span>
+                                <mat-select class="form-control" formControlName="Crop_Group"
+                                    placeholder="Select Crop Group" (ngModelChange)="getCropNameByGroupCode($event)">
+                                    <mat-option *ngFor="let c of cropGroupDetails" [value]="c">
+                                        {{c.cropGroupName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Crop_Group').valid) && 
+                                (fieldStaffForm.get('Crop_Group').touched) 
+                                && fieldStaffForm.get('Crop_Group').errors?.required">Crop Group is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Name</span>
+                                <mat-select class="form-control" formControlName="Crop_Name"
+                                    placeholder="Select Crop Name"
+                                    (ngModelChange)="getSchDetailsByCropNameCode($event)">
+                                    <mat-option *ngFor="let cd of cropDetails" [value]="cd">
+                                        {{cd.cropName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Crop_Name').valid) && 
+                                (fieldStaffForm.get('Crop_Name').touched) 
+                                && fieldStaffForm.get('Crop_Name').errors?.required">Crop Name is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Season From / To</span>
+                                <mat-select class="form-control" formControlName="Season_From_To"
+                                    placeholder="Season From / To"
+                                    (ngModelChange)="getHbomDetailsByCropNameCodeAndPsNum($event)">
+                                    <mat-option *ngFor="let p of plantationSchdls" [value]="p">
+                                        {{p.seasonFromToDate}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Season_From_To').valid) && 
+                                (fieldStaffForm.get('Season_From_To').touched) 
+                                && fieldStaffForm.get('Season_From_To').errors?.required">Season From / To is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Issued By</span>
+                                <input type="text" class="form-control" formControlName="Issued_By"
+                                    placeholder="Issued By">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Outward Gate Pass No</span>
+                                <input type="text" class="form-control" formControlName="Outward_Gate_Pass_No"
+                                    placeholder="Outward Gate Pass No">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Outward Gate Pass Date</span>
+
+                                <p-calendar id="areaBMRD" [formControlName]="'Outward_Gate_Pass_Date'"
+                                    class="form-control" readonlyInput="true" tabindex="0" dateFormat="dd-M-yy"
+                                    [showTime]="false" [showIcon]="true" icon="pi pi-calendar"
+                                    placeholder="Select Outward Gate Pass Date">
+                                </p-calendar>
+                                <small Class="form-text text-danger" *ngIf="!(fieldStaffForm.get('Outward_Gate_Pass_Date').valid) && (fieldStaffForm.get('Outward_Gate_Pass_Date').touched) 
+                                && fieldStaffForm.get('Outward_Gate_Pass_Date').errors?.required">Outward Gate Pass
+                                    Date is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="card">
+            <div class="card-header bg-blue">
+                Material Stocks
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row m-b-25">
+                        <div class="col-md-12">
+                            <div>
+                                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    cellpadding="4">
+                                    <tbody>
+                                        <tr>
+                                            <th>POP Division</th>
+                                            <th>Material Group</th>
+                                            <th>Material Name</th>
+                                            <th>Total Issued Qty</th>
+                                            <th>Amount</th>
+                                        </tr>
+
+                                        <tr *ngFor="let mt of materialStocksGrid1; let i = index"
+                                            (click)="rowSelected(mt)" [ngClass]="{'active' : mt.id === selectedRowId}">
+                                            <td class="text-left">
+                                                {{mt.hbomDivisionFor}}
+                                            </td>
+                                            <td class="text-left">
+                                                {{mt.rawMaterialGroup}}
+                                            </td>
+                                            <td class="text-left text-danger">
+                                                {{mt.rawMaterialDetailsName}}
+                                            </td>
+                                            <td class="text-right">
+                                                {{mt.totalIssuedQty}}
+                                            </td>
+                                            <td class="text-right">
+                                                {{mt.totalAmountSum}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <span class="text-center" *ngIf="noDataFoundG1"> No Data Available</span> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 28px;"></div>
+
+
+<p-accordion>
+    <p-accordionTab header="Material Stocks" [selected]="true">
+        <div class="container-fluid">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <div>
+                        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                            cellpadding="4">
+                            <tbody>
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Check Box</th>
+                                    <th>Batch Date / Batch No</th>
+                                    <th>Available Stock Qty</th>
+                                    <th>Issue Qty</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+
+                                <tr *ngFor="let mg2 of materialStocksGrid2; let i = index">
+                                    <td class="text-center">
+                                        {{i+1}}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input #checkboxes class="form-check-input" type="checkbox" value=""
+                                                [disabled]="mg2.disabledGrid" id="defaultCheck1"
+                                                (change)="onCheckboxChange(i)">
+                                        </div>
+                                    </td>
+
+                                    <td class="text-left" *ngIf="mg2.rmBatchNo_B!==0; else showFromG1A">
+                                        {{ mg2.rmGRNDate_B | date:'dd-MM-yyyy'}} / {{mg2.rmBatchNo_B}}</td>
+                                    <ng-template #showFromG1A>
+                                        <td>{{mg2.rmStockLOTGRNDate | date:'dd-MM-yyyy'}} / {{mg2.rmmStockLOTGRNNo}}
+                                        </td>
+                                    </ng-template>
+
+                                    <td class="text-right" *ngIf="mg2.rmBatchNo_B!==0; else showFromG1B">
+                                        <!-- {{mg2.rmGRNReceivedQty_B - mg2.sumRmMaterialTransferQty_B}} -->
+                                        {{mg2.sumBatchNoFSMatIssueQty | number : '1.0-2'}}
+                                    </td>
+                                    <ng-template #showFromG1B>
+                                        <td class="text-right">
+                                            <!-- {{mg2.rmStockLotGrnQty - mg2.sumRmMaterialTransferQty}} -->
+                                            {{mg2.sumStockNoFSMatIssueQty | number : '1.0-2'}}
+                                        </td>
+                                    </ng-template>
+
+                                    <td>
+                                        <input [readOnly]="i!==editable" (focusout)='disable()' class="form-control"
+                                            type="number" style="text-align: right"
+                                            (change)="addQty(mg2,$event.target.value)">
+                                    </td>
+
+                                    <td class="text-right" *ngIf="mg2.rmBatchNo_B!==0; else showFromG1C">
+                                        {{mg2.rmGRNMaterialwiseTotalRate_B}} </td>
+                                    <ng-template #showFromG1C>
+                                        <td class="text-right">{{mg2.rmStockLotGrnRate}}</td>
+                                    </ng-template>
+
+                                    <td class="text-right">
+                                        {{mg2.enteredAmount | number : '1.2-2'}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- <span class="text-center" *ngIf="noDataFoundG2"> No Data Available</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="button" label="Issues to Field Staff" class="ui-button-rounded" (click)="addIssues()"
+            [disabled]="!addIssueEnabled"></button>
+        <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="save()" #saveFocus
+            [disabled]="!saveEnabled"></button>
+        <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="!findEnabled"></button>
+        <button pButton type="button" label="Modify" class="ui-button-rounded" [disabled]="!modifyEnabled"></button>
+        <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="resetForm()"></button>
+    </div>
+</div>
+<jw-modal id="AddMoreQty">
+    <h6>Do you want to Issue more Quantity?</h6>
+    <div class="row pull-right bottom-right">
+        <input type="button" class="btn btn-info" #YesBtn (click)="openNewPop();" value="Yes" />
+        <input type="button" class="btn btn-info" (click)="onNoClick();" value="No" />
+    </div>
+</jw-modal>

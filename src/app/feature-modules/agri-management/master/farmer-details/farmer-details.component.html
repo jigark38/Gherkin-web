@@ -1,0 +1,618 @@
+<div class="row pull-right" id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+            <li><a href="#">Agri Management </a></li>
+            <li class="active"><span>Field Staff</span></li>
+        </ol>
+ </div>
+      
+ <div class="breadcrumb-height-max"></div>
+
+<p-tabView>
+        <p-tabPanel header="Farmer Details">
+                <form [formGroup]="farmerForm">
+                        <!-- <div class="row pull-right " id="bread">
+                <ol class="breadcrumb breadcrumb-arrow">
+                        <li><a href="#">Organisation Management</a></li>
+                        <li class="active"><span>Farmer Details</span></li>
+                </ol>
+        </div> -->
+                        <div class="card">
+                                <!-- <div class="card-header card-header-text" data-background-color="rose">
+                        <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Farmer Details</h4>
+                </div> -->
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Date of Entry</span>
+                                                                <input [matDatepicker]="ejd" #dateOfEntry
+                                                                        class="form-control"
+                                                                        formControlName="dateOfEntry" #PsDate>
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="ejd">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #ejd>
+                                                                </mat-datepicker>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Login User Name</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="userName">
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="!showFarmerTxt">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Farmer Name</span>
+                                                                <input #FarmerNameTxt type="text" Class="form-control"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()"
+                                                                        formControlName="farmerName">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('farmerName').valid) && (isAddFarmerClicked || isSubbmitted)">Farmer
+                                                                        Name required</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="showFarmerTxt">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Farmer Name</span>
+                                                                <input type="text" #FarmerNameDDL matInput
+                                                                        class="form-control" [formControl]="myControl"
+                                                                        [value]="(showFarmerTxt?myControl.value:'') | uppercase"
+                                                                        [matAutocomplete]="auto">
+                                                                <mat-autocomplete #auto="matAutocomplete"
+                                                                        [displayWith]="displayFn.bind(this)"
+                                                                        (optionSelected)="getfarmerById($event.option.value)">
+                                                                        <mat-option
+                                                                                *ngFor="let farmer of filteredOptions  | async"
+                                                                                [value]="farmer.farmerCode ">
+                                                                                {{farmer.farmerName | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-autocomplete>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(myControl.valid) && (isFindBtnClicked || isModifyBtnClicked || isSubbmitted)">Farmer
+                                                                        Name required</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Father name</span>
+                                                                <input class="form-control"
+                                                                        formControlName="farmerAddress"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('farmerAddress').valid) && (isAddFarmerClicked || isSubbmitted)">Fathers
+                                                                        name required</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Country</span>
+                                                                <mat-select #CountryNameDDL
+                                                                        formControlName="countryCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getState($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let country of countryList"
+                                                                                [value]="country.countryCode">
+                                                                                {{country.countryName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('countryCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        select a country</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>State</span>
+                                                                <mat-select #StateDDL formControlName="stateCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getDisrtict($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let state of stateList"
+                                                                                [value]="state.stateCode">
+                                                                                {{state.stateName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('stateCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        select a state</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>District</span>
+                                                                <mat-select formControlName="districtCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getMandal($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option
+                                                                                *ngFor="let district of districtList"
+                                                                                [value]="district.districtCode">
+                                                                                {{district.districtName | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-select>
+
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('districtCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        select a district</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Mandal</span>
+                                                                <mat-select formControlName="mandalCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getVillage($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let mandal of mandalList"
+                                                                                [value]="mandal.mandalCode">
+                                                                                {{mandal.mandalName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('mandalCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        select a mandal</small>
+
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Village</span>
+                                                                <mat-select formControlName="villageCode"
+                                                                        class="form-control" (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let village of villageList"
+                                                                                [value]="village.villageCode">
+                                                                                {{village.villageName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('villageCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        select a village</small>
+
+                                                        </div>
+                                                </div>
+
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">No. of Crops Till
+                                                                        Date</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="pinCode"
+                                                                        (blur)="onBlurMethod()">
+                                                                <!-- <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('pinCode').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter valid pincode</small> -->
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="!showFarmerTxt">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Farmer A/C No.</span>
+                                                                <input type="text" Class="form-control"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()"
+                                                                        formControlName="alternativeContactPerson">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('alternativeContactPerson').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter farmer A/C no</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="showFarmerTxt">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Farmer A/C No.</span>
+                                                                <input type="text" matInput class="form-control"
+                                                                        [formControl]="myAccountControl"
+                                                                        [value]="(showFarmerTxt?myAccountControl.value:'') | uppercase"
+                                                                        [matAutocomplete]="auto1">
+                                                                <mat-autocomplete #auto1="matAutocomplete"
+                                                                        [displayWith]="displayAccountFn.bind(this)"
+                                                                        (optionSelected)="getfarmerById($event.option.value)">
+                                                                        <mat-option
+                                                                                *ngFor="let farmer of filteredOptionsAccount  | async"
+                                                                                [value]="farmer.farmerCode ">
+                                                                                {{farmer.alternativeContactPerson | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-autocomplete>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(myControl.valid) && (isFindBtnClicked || isModifyBtnClicked || isSubbmitted)">Farmer
+                                                                        Name required</small>
+                                                        </div>
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Contact Number</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="contactNumber"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('contactNumber').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter contact number</small>
+
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Aadhar Card No.</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="aadharCardNo"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('aadharCardNo').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter valid aadhar card no.</small>
+
+                                                        </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">No. of Acers</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="noOfAcres"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('noOfAcres').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter no of acres</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Approved By</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="approvedBy"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <!-- <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerForm.get('approvedBy').valid) && (isAddFarmerClicked || isSubbmitted)">Please
+                                                                        enter valid IFSC code</small> -->
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card" [formGroup]="farmerBankDetails">
+                                <!-- <div class="card-header card-header-text" data-background-color="rose">
+                        <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Acount Details</h4>
+                </div> -->
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Account Holder Name</span>
+                                                                <input type="text" class="form-control" #BankName
+                                                                        formControlName="farmerAccountHolderName"
+                                                                        (keyup)="onbankDetailChange(1)"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('farmerAccountHolderName').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">Please
+                                                                        enter account holder name</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Name of the bank</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="farmerBankName"
+                                                                        (keyup)="onbankDetailChange(2)"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('farmerBankName').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">Please
+                                                                        enter bank name</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Branch name</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="farmerBankBranch"
+                                                                        (keyup)="onbankDetailChange(3)"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('farmerBankBranch').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">
+                                                                        <span
+                                                                                *ngIf="farmerBankDetails.get('farmerBankBranch').errors">
+                                                                                Please enter valid branch name
+                                                                        </span></small>
+                                                        </div>
+                                                </div>
+
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Account Number</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="farmerBankAccountNo"
+                                                                        (keyup)="onbankDetailChange(4)"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('farmerBankAccountNo').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">Please
+                                                                        enter valid account Number</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">IFSC Code</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="farmerBankIFSC"
+                                                                        (keyup)="onbankDetailChange(5)"
+                                                                        oninput="this.value = this.value.toUpperCase()"
+                                                                        (blur)="onBlurMethod()">
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('farmerBankIFSC').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">Please
+                                                                        enter valid IFSC code</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Preffered</span>
+                                                                <mat-select formControlName="preferredBank"
+                                                                        class="form-control" (blur)="onPrefferedBlur()"
+                                                                        (ngModelChange)="onbankDetailChange(6)">
+                                                                        <mat-option value="YES">YES</mat-option>
+                                                                        <mat-option value="NO">NO</mat-option>
+                                                                </mat-select>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerBankDetails.get('preferredBank').valid) && (isAddBankBtnClicked || isAddFarmerClicked || isSubbmitted) && !(isNoBankClicked)">Please
+                                                                        select preffered status code</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+
+
+                                </div>
+                        </div>
+                        <div class="card" [formGroup]="farmerDocuments">
+                                <!-- <div class="card-header card-header-text" data-background-color="rose">
+                        <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Farmer Document</h4>
+                </div> -->
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Name of the Document</span>
+                                                                <input type="text" #documentName class="form-control"
+                                                                        placeholder="Please Enter Name of the Document"
+                                                                        formControlName="documentName">
+                                                                <span *ngIf="farmerDocuments.controls.documentName.errors?.required
+                                                                            &&
+                                                                            farmerDocuments.controls.documentName.touched"
+                                                                        class="error-span">Name of the
+                                                                        Document is
+                                                                        required
+                                                                        field.</span>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Document Upload</span>
+                                                                <input type="file" class="form-control"
+                                                                        accept="application/pdf, image/jpeg, image/png"
+                                                                        (change)="onFileChange($event)">
+                                                                <span *ngIf="isFileError" class="error-span">Please
+                                                                        upload file type of jpeg/png/pdf.</span>
+                                                        </div>
+                                                </div>
+                                                <!-- <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Name of the Document</span>                                                                
+                                                                <div style="display: -webkit-box;">
+                                                                        <input matInput class="form-control" type="text"
+                                                                                formControlName="documentName"
+                                                                                placeholder="Select document"
+                                                                                tabindex="-1">
+                                                                               
+                                                                        <button #UploadDocBtn mat-button matSuffix
+                                                                                mat-icon-button aria-label="Upload"
+                                                                                (click)="onFileAddClick()">
+                                                                                <mat-icon><span class="material-icons">
+                                                                                                cloud_upload
+                                                                                        </span></mat-icon>
+
+                                                                        </button>
+                                                                </div>
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(farmerDocuments.get('documentName').valid) && (isAddFarmerClicked || isSubbmitted) && isModifyBtnClicked">Select
+                                                                        a document</small>
+
+                                                        </div>
+                                                </div> -->
+                                        </div>
+                                </div>
+                        </div>
+                        <input type="file" #fileUpload class="form-control" id="fileUpload" name="fileUpload"
+                                multiple="multiple" style="visibility:hidden;">
+
+                        <div class="card">
+                                <div class="card-body" style="overflow-y:auto">
+                                        <div class="row m-b-25">
+                                                <div class="col-md-12">
+                                                        <div>
+                                                                <table class="table table-striped table-bordered dt-responsive nowrap"
+                                                                        cellspacing="0" cellpadding="4"
+                                                                        id="grdOrganizations">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>S.No</th>
+                                                                                        <th>Account Holder Name</th>
+                                                                                        <th>Bank Name</th>
+                                                                                        <th>Account Number</th>
+                                                                                        <th>IFSC Code</th>
+                                                                                        <th>Preferred</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody
+                                                                                *ngIf="farmerBankDetailsList?.length > 0">
+                                                                                <tr *ngFor="let bank of farmerBankDetailsList; let i = index"
+                                                                                        (click)="populateBank(bank)">
+                                                                                        <td>{{i+1}}</td>
+                                                                                        <td>{{bank.farmerAccountHolderName}}
+                                                                                        </td>
+                                                                                        <td>{{bank.farmerBankName}}</td>
+                                                                                        <td>{{bank.farmerBankAccountNo}}
+                                                                                        </td>
+                                                                                        <td>{{bank.farmerBankIFSC}}</td>
+                                                                                        <td>{{bank.preferredBank}}</td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card">
+                                <!-- <div class="card-header card-header-text" data-background-color="rose">
+                                        <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Farmer Details</h4>
+                                </div> -->
+                                <div class="card-body" style="overflow-y:auto">
+                                        <div class="row m-b-25">
+                                                <div class="col-md-12">
+                                                        <div>
+                                                                <table class="table table-striped table-bordered dt-responsive nowrap"
+                                                                        cellspacing="0" cellpadding="4"
+                                                                        id="grdOrganizations">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>S.No</th>
+                                                                                        <th>Name of the Document</th>
+                                                                                        <th
+                                                                                                *ngIf="isModifyBtnClicked == true">
+                                                                                                Action</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <tr *ngFor="let document of documentList;let
+                                        i=
+                                        index">
+                                                                                        <td class="text-align-center">
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td class="text-align-center">
+                                                                                                <span>
+                                                                                                        {{document.documentName}}</span>
+                                                                                        </td>
+                                                                                        <td
+                                                                                                *ngIf="isModifyBtnClicked == true">
+                                                                                                <a (click)="onDownloadClick(document)"
+                                                                                                        class="text-primary">
+                                                                                                        Download </a>
+                                                                                                <a (click)="deleteDocument(document.id, document.farmerCode)"
+                                                                                                        [hidden]="!isModifyBtnClicked"
+                                                                                                        class="text-danger">
+                                                                                                        Delete </a>
+                                                                                        </td>
+
+                                                                                </tr>
+                                                                        </tbody>
+                                                                        <!-- <tbody *ngIf="files?.length > 0">
+                                                                                <tr
+                                                                                        *ngFor="let file of files; let i = index">
+                                                                                        <td>
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{file.data.name}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <li>
+                                                                                                        <mat-progress-bar
+                                                                                                                [value]="file.progress">
+                                                                                                        </mat-progress-bar>
+                                                                                                        <span
+                                                                                                                id="file-label">
+
+                                                                                                        </span>
+                                                                                                </li>
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                        <tbody *ngIf="respFile?.length > 0">
+                                                                                <tr
+                                                                                        *ngFor="let file of respFile; let i = index">
+                                                                                        <td>
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{file.documentName}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <a (click)="onDownloadClick(file)"
+                                                                                                        class="text-primary">
+                                                                                                        Download </a>
+                                                                                                <a (click)="deleteDocument(file.id, file.farmerCode)"
+                                                                                                        [hidden]="!isModifyBtnClicked"
+                                                                                                        class="text-danger">
+                                                                                                        Delete </a>
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </tbody> -->
+
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card">
+                                <div class="row pull-right btSection">
+                                        <div class="col-md12">
+                                                <button pButton type="button" class="ui-button-rounded"
+                                                        label="Add Farmer" (click)="onAddfarmerClick()" tabindex="-1"
+                                                        [disabled]="disblAddFarmerBtn"></button>
+                                                <button pButton type="button" class="ui-button-rounded"
+                                                        label="Add Bank Account" (click)="onAddBankAccountClick()"
+                                                        tabindex="-1" [disabled]="disblAddBankBtn"></button>
+                                                <button pButton type="button" class="ui-button-rounded" label="Save"
+                                                        #saveCommand (click)="onSubmit()"
+                                                        [disabled]="disableSave()"></button>
+                                                <button pButton type="button" class="ui-button-rounded" label="Find"
+                                                        (click)="onFindBtnClick()" [disabled]="disblFindBtn"></button>
+                                                <button pButton type="button" class="ui-button-rounded" label="Modify"
+                                                        (click)="onModifyBtnClick()"
+                                                        [disabled]="disblModifyBtn"></button>
+                                                <button pButton type="button" class="ui-button-rounded" label="Clear"
+                                                        (click)="resetForm()"></button>
+                                        </div>
+                                </div>
+                        </div>
+                </form>
+        </p-tabPanel>
+</p-tabView>
+<jw-modal id="AddMoreDoc">
+        <h6>Do you want to add more Documents?</h6>
+        <!-- <p>Home page text: <input type="text" [(ngModel)]="bodyText" /></p> -->
+        <div class="row pull-right bottom-right">
+                <input type="button" class="btn btn-info" #YesBtn (click)="addNewDoc();" value="yes" />
+                <input type="button" class="btn btn-info" (click)="onNoClick();" value="No" />
+        </div>
+
+</jw-modal>
+<jw-modal id="AddMoreBank">
+        <h6>Do you want to add more Bank Account Details?</h6>
+        <!-- <p>Home page text: <input type="text" [(ngModel)]="bodyText" /></p> -->
+        <div class="row pull-right bottom-right">
+                <input type="button" class="btn btn-info" #YesBankBtn (click)="addNewBank();" value="yes" />
+                <input type="button" class="btn btn-info" (click)="onNoBankClick();" value="No" />
+        </div>
+
+</jw-modal>

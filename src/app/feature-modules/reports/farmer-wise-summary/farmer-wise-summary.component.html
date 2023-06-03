@@ -1,0 +1,167 @@
+
+
+<p-accordion>
+  <p-accordionTab header="Farmers Report" class="card" [selected]="true">
+      <!-- the farmers report code -->
+      <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+          <div class=" col-md-12 cleartop">
+              <div class="row pl-1 pr-1">
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div [formGroup]="cropGroupForm" class="form-group">
+                      <span class="label-control">Crop Group</span>
+                      <mat-select class="form-control" formControlName="cropGroupName" placeholder="Please Select" (selectionChange)="getCropNameOnGroupCodeChange($event.value)">
+                        <mat-option *ngFor="let cropGroup of cropGroupsData" [value]="cropGroup.CropGroupCode">
+                          {{cropGroup.Name}}
+                      </mat-option>
+                      </mat-select>
+                  </div>
+                  </div>
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div [formGroup]="cropNameForm" class=" form-group">
+                      <span class="label-control">Crop Name</span>
+                      <mat-select class="form-control" formControlName="cropNameControl" placeholder="Please Select" (selectionChange)="getSchemeDetailsOnCropNameChange($event.value)">
+                        <mat-option *ngFor="let cropName of cropNames" [value]="cropName.cropNameCode">
+                          {{cropName.name}}
+                      </mat-option>
+                      </mat-select>
+                  </div>
+                  </div>
+                  <div class="col-xs-4 col-sm-4 col-md-4" >
+                    <span class="label-control">Year</span>
+                    <div [formGroup]="datePickerForm" class="form-group">
+                      <mat-form-field  style="margin-top: 5px; width: 100%;">
+                        <input [disabled]="!cropFromToDetails" matInput
+                              [satDatepicker]="picker"
+                              formControlName="date"
+                                (dateChange)="onDateChange($event)">
+                        <sat-datepicker #picker [rangeMode]="true">
+                        </sat-datepicker>
+                        <sat-datepicker-toggle matSuffix [for]="picker" style="width: 10px;"></sat-datepicker-toggle>
+                        <mat-error>
+                          Invalid financial year range selected
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="row pl-1 pr-1 mb-4">
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div [formGroup]="schemeDetailsForm" class=" form-group">
+                      <span class="label-control">Season</span>
+                      <mat-select [disabled]="isDateInvalid" class="form-control" formControlName="fromToDate" placeholder="Please Select" (selectionChange)="getSelectedSeason($event.value)" >
+                        <mat-option *ngFor="let scheme of plantationSchemeDetails" [value]="scheme.psNumber">
+                          {{scheme.seasonFromTo}}
+                        </mat-option>
+                      </mat-select>
+                  </div>
+                  </div>
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                      <div class="form-group radiobtnend">
+                          <mat-radio-group aria-label="Select an option">
+                              <mat-radio-button value="1">Option 1</mat-radio-button>
+                          </mat-radio-group>
+                      </div>
+                  </div>
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                      <div [formGroup]="branchDetailsForm"  class="form-group">
+                          <span class="label-control">Branch wise </span>
+                          <mat-select class="form-control" [disabled]="!selectedPsNumber" formControlName="branchName" placeholder="Please Select" (selectionChange)="getSelectedArea($event.value)">
+                            <mat-option *ngFor="let area of areas" [value]="area.areaId">
+                              {{area.areaName}}
+                            </mat-option>
+                          </mat-select>
+                      </div>
+                  </div>
+
+              </div>
+
+
+
+          </div>
+      </div>
+
+  </p-accordionTab>
+</p-accordion>
+
+<div class=" pull-right">
+  <div class="row pull-right btSection">
+      <div class="col-md12">
+          <button pButton type="submit" label="View" (click)="viewData()"  class="ui-button-rounded"></button>
+          <button pButton type="submit" label="Print" (click)="printClick()"  class="ui-button-rounded"></button>
+          <button pButton type="submit" label="Export" (click)="downloadClick()"  class="ui-button-rounded"></button>
+          <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+      </div>
+  </div>
+</div>
+
+
+
+
+<p-accordion>
+  <p-accordionTab  header="Report Details" class="card" [selected]="true">
+      <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+          <div class=" col-md-12 cleartop">
+              <table  class="table table-striped table-bordered
+                              dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                  <tbody>
+                      <tr>
+                          <th>Account No</th>
+                          <th>Farmer Name</th>
+                          <th>Father Name</th>
+                          <th>State</th>
+                          <th>District</th>
+                          <th>Mandal / TaluK</th>
+                          <th>Village</th>
+                      </tr>
+                        <tr *ngFor="let farmer of farmerDetails">
+                          <td class="text-align-left">
+                            <span>{{farmer.alternativeContactPerson}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.farmerName}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.farmerAddress}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.stateName}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.districtName}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.mandalName}}</span>
+                          </td>
+                          <td class="text-align-left">
+                            <span>{{farmer.villageName}}</span>
+                          </td>
+                        </tr>
+
+                           <!-- <td class="text-align-center">
+                              <span> <a class="text-deco-underline"></a></span>
+                          </td>  -->
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      <!-- the farmers report code -->
+  </p-accordionTab>
+</p-accordion>
+
+
+<p-dialog header="Action" [(visible)]="displayPopup" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <p>In which format you need pdf?</p>
+  <p-footer>
+      <button type="button" pButton (click)="createPotraitPdf()" label="Potrait"></button>
+      <button type="button" pButton (click)="createLandScapePdf()" label="LandScape" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="Action" [(visible)]="displayPopupForDownload" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <p>In which format you need pdf?</p>
+  <p-footer>
+      <button type="button" pButton (click)="createPotraitPdfDownload()" label="Potrait"></button>
+      <button type="button" pButton (click)="createLandScapePdfDownload()" label="LandScape" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

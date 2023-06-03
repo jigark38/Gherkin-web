@@ -1,0 +1,401 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Agri Management</a></li>
+    <li class="active"><span>Package of Practice</span></li>
+  </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+  <p-accordionTab header="Package of Practice" [selected]="true">
+    <form [formGroup]="popForm">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Date of Entry</span>
+                <input matInput class="form-control
+                                    border-bottom-1" #entryDateInput formControlName="entryDate"
+                       placeholder="Please Select Date Of Entry" [matDatepicker]="dp">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp>
+                </mat-datepicker>
+                <span *ngIf="popForm.controls.entryDate.errors?.required
+                                    && popForm.controls.entryDate.touched" class="error-span">Date of Entry is required
+                  field.
+                </span>
+              </div>
+
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <div class="form-group">
+                  <span class="label-control">Entered By</span>
+                  <input type="text" class="form-control" list="enterdBy" formControlName="enteredBy"
+                         maxlength="10">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" [style.color]="!isNewPOP ? 'blue' : 'black'">
+                <span class="label-control">Crop Group Name</span>
+                <mat-select formControlName="cropGroupCode" #cropGroupMatSelect class="form-control"
+                            placeholder="Please Select Crop Group Name"
+                            (selectionChange)="cropGroupValueChange($event)">
+                  <mat-option *ngFor="let cropGroup of
+                                        cropGroupList" [value]="cropGroup.CropGroupCode">{{cropGroup.Name}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.cropGroupCode.invalid
+                                    && popForm.controls.cropGroupCode.touched" class="error-span">Crop Group is
+                  required
+                  field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group" [style.color]="!isNewPOP ? 'blue' : 'black'">
+                <span class="label-control">Crop Name</span>
+                <mat-select formControlName="cropNameCode" class="form-control" #cropNameMatSelect
+                            (selectionChange)="cropNameValueChange($event)"
+                            placeholder="Please Select Crop Name">
+                  <mat-option *ngFor="let crop of
+                                        cropNameList" [value]="crop.cropnameCode">
+                    {{crop.cropName}}</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.cropNameCode.invalid
+                                    && popForm.controls.cropNameCode.touched" class="error-span">Crop Name is required
+                  field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" [style.color]="!isNewPOP ? 'blue' : 'black'">
+                <span class="label-control">Package of Practice for</span>
+
+                <mat-select class="form-control" formControlName="popFor" #packageofPracticeFor
+                            placeholder="Please Select Package of Practice for" (selectionChange)="packageOfPracticeValueChanged($event)">
+                  <mat-option value="FERTILISER">FERTILISER</mat-option>
+                  <mat-option value="PESTICIDE">PESTICIDE</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.popFor.errors?.required
+                                    && popForm.controls.popFor.touched" class="error-span">Package Type is required
+                  field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Practice/Acrege</span>
+                <mat-select class="form-control" formControlName="pPerAcrege" #practiceAcreage
+                            placeholder="Please Select Practice Area">
+                  <mat-option value="HALF ACRE">Half Acre</mat-option>
+                  <mat-option value="ONE ACRE">One Acre</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.pPerAcrege.errors?.required
+                                    && popForm.controls.pPerAcrege.touched" class="error-span">Area is required
+                  field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group" [style.color]="!isNewPOP ? 'blue' : 'black'">
+                <span class="label-control">Season From/To</span>
+                <mat-select [class.error-crops]="popForm.controls.cropGroupCode.invalid
+                                    && popForm.controls.cropGroupCode.touched" formControlName="sessionFromTo"
+                            class="form-control" #sessionFromToMatSelect
+                            placeholder="Please Select Season From/To"
+                            (selectionChange)="fromToDateChange($event)">
+                  <mat-option *ngFor="let season of
+                                        allSeasonFromTo" [value]="season.psNo">
+                    {{season.date}}</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.sessionFromTo.invalid
+                                    && popForm.controls.sessionFromTo.touched" class="error-span">Season From/To is
+                  required field.</span>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <!-- [style.color]="!isNewPOP ? 'blue' : 'black'" -->
+              <div class="form-group" [style.color]="!isNewPOP ? 'blue' : 'black'">
+                <span class="label-control">Phase Effective Date</span>
+                <!-- (selectionChange)="phaseEffectDateChange($event)" -->
+                <mat-select [class.error-crops]="popForm.controls.cropGroupCode.invalid
+                                    && popForm.controls.cropGroupCode.touched" formControlName="phaseEffectiveDate" class="form-control"
+                            placeholder="Please Select Phase Effective Date" #phaseEffDateMatSelect (selectionChange)="phaseEffectDateChange($event)">
+                  <mat-option *ngFor="let phase of
+                                        allPhaseEffectiveDate" [value]="phase.transCode">
+                    {{phase.practiceEffectiveDateString}}</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.phaseEffectiveDate.invalid
+                                    &&
+                                    popForm.controls.phaseEffectiveDate.touched" class="error-span">Phase Effective
+                  Date is
+                  required field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Crop Phase Name</span>
+                <mat-select #cropPhaseMatSelect [class.error-crops]="popForm.controls.cropGroupCode.invalid
+                                    && popForm.controls.cropGroupCode.touched" formControlName="cropPhaseName"
+                            class="form-control" placeholder="Please Select Crop Phase Name"
+                            #cropPhaseNameMatSelect (selectionChange)="cropPhaseNameChange($event)">
+                  <mat-option *ngFor="let phase of
+                                        allCropPhaseName" [value]="phase.cropphaseCode">
+                    {{phase.cropphaseName}}</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.cropPhaseName.invalid
+                                    && popForm.controls.cropPhaseName.touched" class="error-span">Crop Phase Name is
+                  required field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Phase Days/ Sowing
+                  Day</span>
+                <input type="text" class="form-control" list="pdSd" placeholder="Phase Days/ Sowing"
+                       formControlName="phaseSowingDay">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Harvest Details</span>
+                <input type="text" placeholder="Harvest Details" class="form-control" list="pdSd"
+                       formControlName="harvestDetails">
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Practices Effective
+                  Date</span>
+
+                <input matInput class="form-control
+                                    border-bottom-1" formControlName="practiceEffectiveDate"
+                       placeholder="Please Select Practices Effective Date" #dateOfCreation
+                       [matDatepicker]="pDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="pDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #pDate>
+                </mat-datepicker>
+                <span *ngIf="popForm.controls.practiceEffectiveDate.invalid
+                                    &&
+                                    popForm.controls.practiceEffectiveDate.touched" class="error-span">Practices
+                  Effective Date is required field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Days after Sowing</span>
+                <input type="text" placeholder="Please Enter Days After Sowing" #daysAfterSowingInput
+                       class="form-control" formControlName="daysApplicable" maxlength="3"
+                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" />
+                <span *ngIf="popForm.errors?.invalid" class="error-span">
+                  Value must be between Sowing day and Phase Days</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Material Group</span>
+                <mat-select formControlName="materialGroupCode" class="form-control"
+                            #materialGroupMatSelect (selectionChange)="materialGroupValueChange($event)"
+                            placeholder="Please Select Crop Group
+                                        Name">
+                  <mat-option *ngFor="let matGroup of
+                                            materialGroupList" [value]="matGroup.Raw_Material_Group_Code">
+                    {{matGroup.Raw_Material_Group}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.materialGroupCode.invalid
+                                        &&
+                                        popForm.controls.materialGroupCode.touched" class="error-span">Material Group
+                  is
+                  required field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Chemical /
+                  Material Name</span>
+                <mat-select formControlName="materialNameCode"
+                            (selectionChange)="materialNameValueChange($event)" class="form-control"
+                            placeholder="Please Select Material" #materialNameMatSelect>
+                  <mat-option *ngFor="let material of
+                                            materialNameList" [value]="material.Raw_Material_Details_Code">
+                    {{material.Raw_Material_Details_Name}}</mat-option>
+                </mat-select>
+                <span *ngIf="popForm.controls.materialNameCode.invalid
+                                        &&
+                                        popForm.controls.materialNameCode.touched" class="error-span">Material Name is
+                  required field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Trade Name</span>
+                <input type="text" placeholder="Please Enter Trade Name" #tNameInput
+                       class="form-control" formControlName="tradeName" maxlength="50" />
+                <span *ngIf="popForm.controls.tradeName.errors?.required
+                                &&
+                                popForm.controls.tradeName.touched" class="error-span">Trade Name is
+                  required field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Chemical
+                  Volume/Lt</span>
+                <input type="text" placeholder="Please Enter Chemical Volume/Lt" class="form-control"
+                       formControlName="chemicalVolPLt" maxlength="7"
+                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) " />
+                <span
+                      *ngIf="popForm.controls.chemicalVolPLt.errors?.required && popForm.controls.chemicalVolPLt.touched"
+                      class="error-span">Quantity is invalid.</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">UOM</span>
+
+                <input matInput #biometric class="form-control" maxlength="10"
+                       placeholder="Please Select Rate / UOM" [formControl]="popForm.controls.UOM"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of UOMList" [value]="option.chemicalUom">
+                    {{option.chemicalUom}}
+                  </mat-option>
+                </mat-autocomplete>
+                <span *ngIf="popForm.controls.UOM.errors?.required
+                                &&
+                                popForm.controls.UOM.touched" class="error-span">UOM is
+                  required field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Spray Volume / UOM Acre</span>
+                <input type="text" class="form-control" formControlName="sprayVolumePerUOM"
+                       placeholder="Please Enter Spray Volume / UOM Acre" maxlength="3"
+                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57 ) " />
+                <span
+                      *ngIf="popForm.controls.sprayVolumePerUOM.errors?.required && popForm.controls.sprayVolumePerUOM.touched"
+                      class="error-span">Quantity is invalid.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Qty of Chemical/UOM Acre in ML/Gm</span>
+                <input type="number" class="form-control" formControlName="quantity" value=""
+                       placeholder="Please Enter Qty of Chemical/UOM Acre in ML/Gm"
+                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) " />
+                <span
+                      *ngIf="popForm.controls.quantity.errors?.required && popForm.controls.quantity.touched"
+                      class="error-span">Quantity is invalid.</span>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Target Pest/s</span>
+                <input type="text" class="form-control" formControlName="targetPets"
+                       placeholder="Please Enter Target Pest/s Name" (blur)="onBlur()" maxlength="75" />
+                <span
+                      *ngIf="popForm.controls.targetPets.errors?.required && popForm.controls.quantity.touched"
+                      class="error-span">Target Pests is required field.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+
+      </div>
+    </form>
+  </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+  <p-accordionTab header="Crop Stage Details" [selected]="true">
+    <div class="container-fluid">
+      <table class="table table-striped
+                    table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4" id="grdOrganizations">
+        <tbody>
+          <tr>
+            <th>S.No</th>
+            <th>Crop Phase Name</th>
+            <th>Days after Sowing</th>
+            <th>Trade Name</th>
+            <th>Chemical Name</th>
+            <th>Chemical Value/Lt</th>
+            <th>Spray Volume / UOM Acre</th>
+            <th>Qty of Chemical</th>
+            <th>Target Pest</th>
+
+
+          </tr>
+          <ng-container *ngFor="let pMaterial of
+                    pMaterialList; let i= index">
+            <tr *ngIf="min <= i && max > i">
+              <td>
+                {{i+1}}
+              </td>
+              <td>
+                {{pMaterial.cropPhaseName}}
+              </td>
+              <td>
+                {{pMaterial.daysApplicable}}
+              </td>
+              <td>
+                {{pMaterial.tradeName}}
+              </td>
+              <td>
+                {{pMaterial.chemicalName}}
+              </td>
+              <td>
+                {{pMaterial.chemicalVolume}} - {{pMaterial.chemicalUom}}
+              </td>
+              <td>
+                {{pMaterial.sprayVolume}}
+              </td>
+              <td>
+                {{pMaterial.chemicalQty}}
+              </td>
+              <td>
+                {{pMaterial.targetPest}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <p-paginator [rows]="10" [totalRecords]="pMaterialList.length" (onPageChange)="paginate($event)">
+      </p-paginator>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+  <button pButton type="submit" [disabled]="disableNewButton" #newBtn label="New POP" (click)="newPOP()"
+          class="ui-button-rounded"></button>
+
+  <button pButton type="submit" label="Save" [disabled]="disableSaveButton" #saveBtn (click)="onSavePOP()"
+          class="ui-button-rounded"></button>
+  <button pButton type="submit" [disabled]="disableFindButton" (click)="findPOP()" label="Find"
+          class="ui-button-rounded"></button>
+  <button pButton type="button"  label="Clear" (click)="onClearClick()"
+          class="ui-button-rounded"></button>
+</div>

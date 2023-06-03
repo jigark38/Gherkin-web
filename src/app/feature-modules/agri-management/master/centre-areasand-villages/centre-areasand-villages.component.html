@@ -1,0 +1,290 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+      <li><a href="#">Agri Management </a></li>
+      <li class="active"><span>Area & Villages</span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+  <p-accordionTab header="Area Details" [selected]="true">
+    <form [formGroup]="areaDetailsForm" class="form-horizontal;padding-top:10px;">
+      <div class="card">
+        <!-- <div class="card-header card-header-text" data-background-color="rose">
+          <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Centre Areas</h4>
+        </div> -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Date of Entry</span>
+                <input matInput #dateOfEntryEl class="form-control
+                border-bottom-1" placeholder="Please Select Date of Entry" #dateOfCreation [matDatepicker]="dp"
+                  formControlName="dateOfEntry">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp>
+                </mat-datepicker>
+                <span *ngIf="areaDetailsForm.controls.dateOfEntry.errors?.required
+                &&
+                areaDetailsForm.controls.dateOfEntry.touched" class="error-span">Date of Entry is
+                  required
+                  field.</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Login User Name</span>
+                <input type="text" class="form-control" formControlName="userName"
+                  placeholder="Please enter Login user name" />
+                <span *ngIf="areaDetailsForm.controls.userName.errors?.required
+                  &&
+                  areaDetailsForm.controls.userName.touched" class="error-span">User Name is required</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Area Name</span>
+                <input type="text" class="form-control" formControlName="areaName" (blur)="areaNameBlur()"
+                  placeholder="Please enter area name">
+                <span *ngIf="areaDetailsForm.controls.areaName.errors?.required
+                  &&
+                  areaDetailsForm.controls.areaName.touched" class="error-span">Area Name is required</span>
+                <span *ngIf="isAreaNameError" class="error-span">This Area Name already exist.</span>
+              </div>
+
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Area Code</span>
+                <input type="text" class="form-control" (blur)="areaCodeBlur()" formControlName="areaCode" maxlength="2"
+                  placeholder="Please enter area code">
+                <span *ngIf="areaDetailsForm.controls.areaCode.errors?.required
+                  &&
+                  areaDetailsForm.controls.areaCode.touched" class="error-span">Area Code is required</span>
+                <span *ngIf="areaDetailsForm.get('areaCode').errors?.pattern  &&
+                areaDetailsForm.controls.areaCode.touched" class="error-span">Area Code should be
+                  two numberic digits.</span>
+                <span *ngIf="isAreaCodeError" class="error-span">This Area Code already exist.</span>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row mgt-10">
+      <div class="col-md-12">
+        <button pButton type="button" label="Clear" (click)="clearArea()" class="ui-button-rounded pull-right"></button>
+        <button pButton type="button" label="Save"
+          [disabled]="!areaDetailsForm.valid || isAreaNameError || isAreaCodeError" class="pull-right ui-button-rounded"
+          #saveAreaFocus (click)="submitArea()"></button>
+        <button pButton type="button" label="Add Area" [disabled]="!enableNewArea" class="pull-right ui-button-rounded"
+          (click)="newArea()"></button>
+
+      </div>
+    </div>
+  </p-accordionTab>
+  <p-accordion>
+
+    <p-accordion>
+      <p-accordionTab header="Village List" [selected]="true">
+        <form [formGroup]="villageDetailsForm" class="form-horizontal;padding-top:10px;">
+          <div class="card">
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span class="label-control">Area Name</span>
+                    <mat-select class="form-control" placeholder="Please selecte area name" formControlName="areaName"
+                      #areaVillageName>
+
+                      <mat-option *ngFor="let item of getAllArea" [value]="item.areaName">
+                        {{item.areaName}}
+                      </mat-option>
+                    </mat-select>
+                    <span *ngIf="villageDetailsForm.controls.areaName.errors?.required
+                    &&
+                    villageDetailsForm.controls.areaName.touched" class="error-span">Area Name is required</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span class="label-control">Area Code</span>
+                    <input disabled type="text" class="form-control" placeholder="Please selecte area code"
+                      formControlName="areaCode">
+                    <span *ngIf="villageDetailsForm.controls.areaCode.errors?.required
+                    &&
+                    villageDetailsForm.controls.areaCode.touched" class="error-span">Area Code is required</span>
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span>Country</span>
+                    <app-auto-complete [options]="countryOptionsList" placeholder="Please Select Country"
+                      (selectedValueChangeBlur)="changeCountryValue($event)" (input)="villageDetailsForm.patchValue({country:
+                        $event.target.value.toUpperCase()})"
+                      [selectedValueFormControl]="villageDetailsForm.controls.country"
+                      (saveitemToList)="saveCountry($event)" [maxLength]="20"></app-auto-complete>
+                    <span *ngIf="villageDetailsForm.controls.country.errors?.required
+                      &&
+                      villageDetailsForm.controls.country.touched" class="error-span">Country is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span>State</span>
+                    <app-auto-complete [options]="stateOptionsList" placeholder="Please Select State"
+                      (selectedValueChangeBlur)="changeStateValue($event)" (input)="villageDetailsForm.patchValue({state:
+                        $event.target.value.toUpperCase()})"
+                      [selectedValueFormControl]="villageDetailsForm.controls.state"
+                      (saveitemToList)="saveState($event)" [maxLength]="20"></app-auto-complete>
+                    <span *ngIf="villageDetailsForm.controls.state.errors?.required
+                    &&
+                    villageDetailsForm.controls.state.touched" class="error-span">State is required</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span>District</span>
+                    <app-auto-complete [options]="districtOptionsList" placeholder="Please Select District"
+                      (selectedValueChangeBlur)="changeDistrictValue($event)" (input)="villageDetailsForm.patchValue({district:
+                        $event.target.value.toUpperCase()})"
+                      [selectedValueFormControl]="villageDetailsForm.controls.district"
+                      (saveitemToList)="saveDistrict($event)" [maxLength]="20"></app-auto-complete>
+                    <span *ngIf="villageDetailsForm.controls.district.errors?.required
+                  &&
+                  villageDetailsForm.controls.district.touched" class="error-span">District is required</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span>Mandal</span>
+                    <app-auto-complete [options]="mandalOptionsList" placeholder="Please Select Mandal"
+                      (selectedValueChangeBlur)="changeMandalValue($event)" (input)="villageDetailsForm.patchValue({mandal:
+                        $event.target.value.toUpperCase()})"
+                      [selectedValueFormControl]="villageDetailsForm.controls.mandal"
+                      (saveitemToList)="saveMandal($event)" [maxLength]="20"></app-auto-complete>
+                    <span *ngIf="villageDetailsForm.controls.mandal.errors?.required
+                    &&
+                    villageDetailsForm.controls.mandal.touched" class="error-span">Mandal is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group" #villageDiv>
+                    <span>Village</span>
+                    <input type="text" formControlName="village" #villageField (blur)="blurVillageValue()"
+                      class="form-control" placeholder="Please enter village" (input)="villageDetailsForm.patchValue({village:
+                        $event.target.value.toUpperCase()})" />
+                    <!-- <app-auto-complete [options]="villageOptionsList" placeholder="Please Select Village"
+                      (selectedValueChangeBlur)="changeVillageValue($event)"
+                      [selectedValueFormControl]="villageDetailsForm.controls.village"
+                      (saveitemToList)="saveVillage($event)" [maxLength]="20"></app-auto-complete> -->
+                    <span *ngIf="villageDetailsForm.controls.village.errors?.required
+                  &&
+                  villageDetailsForm.controls.village.touched" class="error-span">Village is required</span>
+                    <span *ngIf="isVillageCodeError" class="error-span">Duplicate village can not be saved.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-accordionTab>
+      <p-accordion>
+
+
+        <div class="card">
+          <!-- <div class="card-header card-header-text" data-background-color="rose">
+            <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Supplier Document List</h4>
+          </div> -->
+          <div class="card-body" style="overflow-y:auto">
+            <div class="row m-b-25">
+              <div class="col-md-12">
+                <div>
+                  <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+                    id="grdOrganizations">
+                    <tbody>
+                      <tr>
+                        <th style="background-color: #007ad9!important">S.No</th>
+                        <th style="background-color: #007ad9!important">Area Name</th>
+                        <th style="background-color: #007ad9!important">State Name</th>
+                        <th style="background-color: #007ad9!important">District Name</th>
+                        <th style="background-color: #007ad9!important">Mandal Name</th>
+                        <th style="background-color: #007ad9!important">Village Name</th>
+                        <th *ngIf="isVillagesFound" style="background-color: #007ad9!important">
+                          <mat-checkbox (change)="changeParentCheckBox($event)"></mat-checkbox>
+                        </th>
+                      </tr>
+                      <ng-container *ngFor="let item of villageGridsObject;let i = index">
+                        <tr *ngIf="min <= i && max > i" (click)="rowSelected(item)"
+                          [class.active]="item.id === selectedRowId">
+                          <td>
+                            <span>{{i+1}}</span>
+                          </td>
+                          <td>
+                            {{item.areaName}}
+                          </td>
+                          <td>
+                            {{item.stateName}}
+                          </td>
+                          <td>
+                            {{item.districtName}}
+                          </td>
+                          <td>
+                            {{item.mandalName}}
+                          </td>
+                          <td>
+                            {{item.villageName}}
+                          </td>
+                          <td *ngIf="isVillagesFound" style="text-align: center;">
+                            <mat-checkbox [(ngModel)]="item.isSelected"></mat-checkbox>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <p-paginator [rows]="10" [totalRecords]="villageGridsObject.length" (onPageChange)="paginate($event)">
+                  </p-paginator>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p-accordion>
+          <div class="card">
+            <div class="card-body" style="overflow-y:auto">
+              <div class="row mgt-10">
+                <div class="col-md-12">
+                  <button pButton type="button" label="Clear" class="pull-right ui-button-rounded"
+                    (click)="clearVillage()"></button>
+                  <!-- <button pButton type="button" [disabled]="!isRowSelected" label="Modify"
+                    class="pull-right ui-button-rounded" (click)="UpdateVillageData()"></button> -->
+                  <button pButton type="button" [disabled]="!enableModify" label="Modify"
+                    class="pull-right ui-button-rounded" (click)="modify()"></button>
+                  <button pButton type="button" label="Find" [disabled]="!enableFind"
+                    class="pull-right ui-button-rounded" (click)="find()"></button>
+                  <button pButton type="button" [disabled]="!enableSave || isVillageCodeError" #saveFocus label="Save"
+                    class="pull-right ui-button-rounded" (click)="submitVillage()"></button>
+                  <button pButton type="button" [disabled]="!enableNewVillage" label="Add Village"
+                    class="pull-right ui-button-rounded" (click)="addVillage()"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-accordion>

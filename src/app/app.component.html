@@ -1,0 +1,25 @@
+<div class="mainDiv">
+    <div class="container-fluid" *ngIf="this.authService.userLoggedin" style="margin-bottom: 50px;">
+        <app-header> </app-header>
+    </div>
+    <div class="container-fluid">
+        <div class="p-grid">
+
+            <div class="p-col-fixed side-bar" id="sidebar" *ngIf="this.authService.userLoggedin">
+                <app-primeng-sidenavbar></app-primeng-sidenavbar>
+                <!-- LCras gravida, diam non adipiscing cursus, sapien urna adipiscing enim, at faucibus nunc felis at turpis. Aliquam erat volutpat. Nulla facilisi. Aenean nec nisi gravida ante convallis euismod sed quis odio. Sed nulla est, fringilla vel rhoncus vel, fermentum
+                et turpis. Curabitur eu posuere tortor. Integer sit amet nisl elit, gravida rutrum ipsum. Cras nisl est, sodales quis faucibus nec, tempus vel libero. Aliquam lobortis gravida erat, in placerat libero ultricies in. Curabitur volutpat lorem
+                ut ligula aliquet a fermentum augue porttitor. Vestibulum varius, purus id sollicitudin tincidunt, velit felis tincidunt erat, ut feugiat augue diam commodo lorem. Donec in augue non est tincidunt consequat. Mauris nec justo eget augue
+                varius pulvinar id ut risus. Donec fringilla, enim vitae tincidunt accumsan, urna elit laoreet tellus, ac gravida dolor dolor ac quam. Vestibulum dignissim felis quis tortor sollicitudin ut placerat mi adipiscing. -->
+
+            </div>
+            <div [ngClass]="(this.authService.userLoggedin)?'p-col-9 child-content':'p-col-12'">
+                <app-ng-alert></app-ng-alert>
+                <div>
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast [style]="{marginTop: '20px'}"></p-toast>

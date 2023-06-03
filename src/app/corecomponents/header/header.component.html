@@ -1,0 +1,38 @@
+<header class="header">
+    <div class="navigation-trigger hidden-xl-up" data-sa-action="aside-open" data-sa-target=".sidebar">
+        <i class="zmdi zmdi-menu"></i>
+    </div>
+
+    <div class="search">
+        <div class="search__inner">
+            <a [routerLink]="['/home']" routerLinkActive="router-link-active">
+                <h1 class="JmeFont">{{ LogoHeader }}</h1>
+            </a>
+        </div>
+    </div>
+    <div class="ft-16">
+        {{UserName | titlecase }}
+    </div>
+    <div class="clock hidden-md-down">
+        <div class="time">
+            <span class="time__hours">16</span>
+            <span class="time__min">51</span>
+            <span class="time__sec">23</span>
+        </div>
+    </div>
+    <div *ngIf="this.authService.userLoggedin" class="ft-16">
+        <i class="fa fa-power-off mr-1" aria-hidden="true"></i>
+        <a (click)="logOut()" label="Logout" class="text-white mr-3"> Logout </a>
+    </div>
+
+
+    <!-- <a href="#" data-toggle="dropdown" style="border:0px" aria-expanded="false"><span
+                    id="lbluserlogin">Logout</span></a> -->
+    <!-- <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-80px, 27px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <a id="lnklogout" class="dropdown-item" href=" ">LogOut</a>                   
+            </div> -->
+
+    <div style="width:100%;position: fixed;margin-top:45px" *ngIf="true ||this.authService.userLoggedin">
+        <ngx-loading-bar [includeSpinner]="false" [height]="'5px'" [fixed]="false"></ngx-loading-bar>
+    </div>
+</header>

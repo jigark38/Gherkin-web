@@ -1,0 +1,218 @@
+<form [formGroup]="PlantationSchdlForm" (ngSubmit)="OnSubmit()">
+        <div class="row pull-right" id="bread">
+                <ol class="breadcrumb breadcrumb-arrow">
+                    <li><a href="#">Agri Management </a></li>
+                    <li class="active"><span>Plantation Scheduling</span></li>
+                </ol>
+         </div>
+              
+         <div class="breadcrumb-height"></div>
+        <p-tabView>
+                <p-tabPanel header="Plantation Scheduling">
+                        <div class="card">
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Plantation Scheduling</span>
+                                                                <input [matDatepicker]="ejd" class="form-control"
+                                                                        formControlName="PsDate" #PsDate
+                                                                        placeholder="DD-MM-YYYY">
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="ejd">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #ejd>
+                                                                </mat-datepicker>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('PsDate').valid) && (isNewSchedule || isSubmitted)">Plantation
+                                                                        Schedule date required!</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Schedule No</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="PsNumber">
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Group</span>
+                                                                <mat-select #CropGroupDDL
+                                                                        formControlName="CropGroupCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getCropName($event)">
+                                                                        <mat-option
+                                                                                *ngFor="let crpGrp of croupGroupList"
+                                                                                [value]="crpGrp.CropGroupCode">
+                                                                                {{crpGrp.Name | uppercase}}</mat-option>
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('CropGroupCode').valid) && (isNewSchedule || isSubmitted || isSearchClicked)">Please
+                                                                        select crop group!</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Name</span>
+                                                                <mat-select formControlName="CropNameCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getSchedulePlantations()">
+                                                                        <mat-option *ngFor="let crop of cropsList"
+                                                                                [value]="crop.CropCode">
+                                                                                {{crop.Name | uppercase}}</mat-option>
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('CropNameCode').valid) && (isNewSchedule || isSubmitted || isSearchClicked)">Please
+                                                                        select crop name!</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Season From</span>
+                                                                <input #fromDate [matDatepicker]="frmDate"
+                                                                        class="form-control" formControlName="FromDate"
+                                                                        placeholder="DD-MM-YYYY">
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="frmDate">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #frmDate>
+                                                                </mat-datepicker>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('FromDate').valid) && (isNewSchedule || isSubmitted)">Please
+                                                                        seasion start date required!</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Season To</span>
+                                                                <input [matDatepicker]="toDate" class="form-control"
+                                                                        formControlName="ToDate"
+                                                                        placeholder="DD-MM-YYYY">
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="toDate">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #toDate>
+                                                                </mat-datepicker>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('ToDate').valid) && (isNewSchedule || isSubmitted)">Please
+                                                                        Seasion end date required!</small>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(dateValid) && (PlantationSchdlForm.get('ToDate').touched || isSubmitted)">!To
+                                                                        date should be greater than from date</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Prepared by</span>
+                                                                <mat-select formControlName="PreparedBy"
+                                                                        class="form-control">
+                                                                        <mat-option
+                                                                                *ngFor="let loginEmpDetail of loginEmpDetails"
+                                                                                [value]="loginEmpDetail.employeeId">
+                                                                                {{loginEmpDetail.userName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('PreparedBy').valid) && (isNewSchedule || isSubmitted)">
+                                                                        Prepared by Required</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Approved by</span>
+                                                                <mat-select formControlName="ApprovedBy"
+                                                                        class="form-control">
+                                                                        <mat-option
+                                                                                *ngFor="let loginEmpDetail of loginEmpDetails"
+                                                                                [value]="loginEmpDetail.employeeId">
+                                                                                {{loginEmpDetail.userName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(PlantationSchdlForm.get('ApprovedBy').valid) && (isNewSchedule || isSubmitted)">
+                                                                        Approved by required</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        <div class="card">
+
+                                <div class="card-body" style="overflow-y:auto">
+                                        <div class="row m-b-25">
+                                                <div class="col-md-12">
+                                                        <div>
+                                                                <table class="table table-striped table-bordered dt-responsive nowrap"
+                                                                        cellspacing="0" cellpadding="4"
+                                                                        id="grdOrganizations">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>S.No</th>
+                                                                                        <th>Crop Group</th>
+                                                                                        <th>Crop Name</th>
+                                                                                        <th>Season From / Season To</th>
+                                                                                        <th>Prepared By</th>
+                                                                                        <th>Approved By</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <tr *ngFor="let plantationSchedule of plantationScheduleList; let i = index"
+                                                                                        (click)="populate(plantationSchedule)">
+                                                                                        <td>
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{changeGrpCodeToName(plantationSchedule.CropGroupCode) | uppercase}}
+                                                                                                <!-- {{plantationSchedule.CropGroupCode}} -->
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{changeCrpCodeToName(plantationSchedule.CropNameCode) | uppercase}}
+                                                                                                <!-- {{plantationSchedule.CropNameCode}} -->
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{plantationSchedule.FromDate | date: 'dd-MM-yyyy'}}
+                                                                                                /
+                                                                                                {{plantationSchedule.ToDate | date: 'dd-MM-yyyy'}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{plantationSchedule.PreparedBy | uppercase}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{plantationSchedule.ApprovedBy | uppercase}}
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card">
+                                <div class="row pull-right btSection">
+                                        <div class="col-md12">
+                                                <button pButton type="button" label="Plantation New Sch."
+                                                        class="ui-button-rounded" (click)=NewPlantationClicked()
+                                                        [disabled]="disblNewPlantaBtn"></button>
+                                                <button pButton type="submit" label="Save" class="ui-button-rounded"
+                                                        #saveCommand [disabled]="!(PlantationSchdlForm.valid)"></button>
+                                                <button pButton type="button" label="Find" class="ui-button-rounded"
+                                                        (click)="FindBtnClick()" [disabled]="disblFindBtn"></button>
+                                                <button pButton type="button" label="Modify" class="ui-button-rounded"
+                                                        (click)="ModifyBtnClick()" [disabled]="disblModifyBtn"></button>
+                                                <button pButton type="button" label="Clear" class="ui-button-rounded"
+                                                        (click)="ClearBtnClick()"></button>
+                                        </div>
+                                </div>
+                        </div>
+                </p-tabPanel>
+        </p-tabView>
+</form>

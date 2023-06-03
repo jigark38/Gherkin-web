@@ -1,0 +1,813 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Daily Greens Receiving Details </span></li>
+    </ol>
+</div>
+
+
+<div class="breadcrumb-height"></div>
+
+<p-accordion>
+    <p-tabView (onChange)="onTabChange($event.index)">
+        <p-tabPanel header="Need To be discuss" [selected]="selectedTab === 'discuss'">
+            <button pButton type="button" (click)="Find();" label="Find" class="ui-button-rounded"
+                [disabled]="formStatus.IsFind===false"></button>
+            <button pButton type="button" (click)="Modify();" label="Modify" class="ui-button-rounded"
+                [disabled]="formStatus.IsModify===false"></button>
+            <button pButton type="button" (click)="Clear();" label="Clear" class="ui-button-rounded"></button>
+            <p-accordion>
+                <p-accordionTab header="Buyer Schedules" [selected]="true">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <table class="table table-striped table-bordered
+                                    dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4">
+                                        <tbody>
+                                            <tr>
+                                                <th>Sl.No</th>
+                                                <th>Buyer Name</th>
+                                                <th>Area / Branch Location</th>
+                                                <th>Desp Date</th>
+                                                <th>Desp No</th>
+                                                <th>Select </th>
+                                            </tr>
+                                            <tr>
+                                            <tr *ngFor="let item of buyerScheduleDetail; let i = index">
+                                                <td class="text-center">
+                                                    {{item.slNo}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.buyerName}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.area}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.despDate |
+                                                        date:'dd-MMM-yyyy'}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.despNo}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-check m-0  text-center">
+                                                        <input #selectedBuyerElem
+                                                            class="form-check-input position-static" type="radio"
+                                                            name="blankRadio" [value]="item.despNo" aria-label="..."
+                                                            (change)="slectedItem($event)">
+                                                        <span *ngIf="item.greensProcurementNo && formStatus.IsNew">On
+                                                            Going</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <form [formGroup]="dailyGreensReceivingDetailsForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Harvest Date</span>
+                                        <input matInput class="form-control border-bottom-1 mb-1"
+                                            (ngModelChange)="GetCompletedDailyGreensRecieving()"
+                                            placeholder="Please Select Harvest Date" [matDatepicker]="eDate"
+                                            formControlName="harvestDate" #dateofEntry>
+                                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                            [for]="eDate">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #eDate>
+                                        </mat-datepicker>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.harvestDate.errors?.required
+                                        &&
+                                        dailyGreensReceivingDetailsForm.controls.harvestDate.touched"
+                                            class="error-span">Harvest Date is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Area</span>
+                                        <input type="text" class="form-control" placeholder="Enter Area Name"
+                                            formControlName="area" maxlength="10">
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.area.errors?.required
+                                &&
+                                dailyGreensReceivingDetailsForm.controls.area.touched" class="error-span">Area is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Crop Group</span>
+                                        <mat-select class="form-control" formControlName="cropGroup"
+                                            (ngModelChange)="getCropNameCodeList($event)"
+                                            placeholder="Please select Crop Group">
+                                            <mat-option [value]="cg.CropGroupCode" *ngFor="let
+                                                                        cg
+                                                                        of
+                                                                        cropGroupList">{{cg.Name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.cropGroup.errors?.required
+                                        &&
+                                        dailyGreensReceivingDetailsForm.controls.cropGroup.touched"
+                                            class="error-span">Crop Group is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Crop Name</span>
+                                        <mat-select class="form-control" formControlName="cropName"
+                                            (ngModelChange)="getSeasonFromTo($event)"
+                                            placeholder="Please enter Crop Name">
+                                            <mat-option [value]="cropName.cropNameCode" *ngFor="let
+                                            cropName
+                                            of
+                                            cropNameList">
+                                                {{cropName.name}}</mat-option>
+                                        </mat-select>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.cropName.errors?.required
+                                        &&
+                                        dailyGreensReceivingDetailsForm.controls.cropName.touched"
+                                            class="error-span">Crop Name is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Season From / To</span>
+                                        <mat-select class="form-control" formControlName="seasonFrom"
+                                            placeholder="Please select Season From / To"
+                                            (ngModelChange)="changeSeasonFromTo($event)">
+                                            <mat-option [value]="season.psNumber" *ngFor="let
+                                            season
+                                            of
+                                            seasonList">
+                                                {{season.seasonFrom
+                                                    |
+                                                    date:'dd-MMM-yyyy'}}
+                                                /
+                                                {{season.seasonTo
+                                                    |
+                                                    date:'dd-MMM-yyyy'}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.seasonFrom.errors?.required
+                                        &&
+                                        dailyGreensReceivingDetailsForm.controls.seasonFrom.touched"
+                                            class="error-span">Season From / To is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Buying Assistant 1</span>
+                                        <mat-select class="form-control" formControlName="buyingAssistant"
+                                            placeholder="Please select Buying Assistant 1">
+                                            <mat-option *ngFor="let employee of employeeList"
+                                                [value]="employee.employeeId">
+                                                {{employee.employeeName}}</mat-option>
+                                        </mat-select>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Buying Assistant 2</span>
+                                        <mat-select class="form-control" formControlName="buyingAssistant2"
+                                            placeholder="Please select Buying Assistant 2">
+                                            <mat-option *ngFor="let employee of employeeList"
+                                                [value]="employee.employeeId">
+                                                {{employee.employeeName}}</mat-option>
+                                        </mat-select>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Weighment Mode</span>
+                                        <mat-select class="form-control" formControlName="weighmentMode"
+                                            placeholder="Please select Weighment Mode">
+                                            <mat-option value="Manual">Manual</mat-option>
+                                            <mat-option value="Automation">Automation</mat-option>
+                                        </mat-select>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.weighmentMode.errors?.required
+                                        &&
+                                        dailyGreensReceivingDetailsForm.controls.weighmentMode.touched"
+                                            class="error-span">Weighment Mode is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Village</span>
+                                        <!-- <input type="text" class="form-control" formControlName="village"> -->
+                                        <div class="ng-autocomplete">
+                                            <ng-autocomplete [data]="villageList" [searchKeyword]="keyword" #villageData
+                                                (inputCleared)="clearCascade('vllageList')" formControlName="driverName"
+                                                formControlName="village"
+                                                (selectedValueChangeBlur)="villageChange($event)"
+                                                (selected)='selectVillageEvent($event)'
+                                                placeholder="Please enter Village" [itemTemplate]="itemTemplate"
+                                                maxlength="30">
+                                            </ng-autocomplete>
+                                            <ng-template #itemTemplate let-item>
+                                                <a [innerHTML]="item.name"></a>
+                                            </ng-template>
+                                        </div>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.village.errors?.required
+                                &&
+                                dailyGreensReceivingDetailsForm.controls.village.touched" class="error-span">Village is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Farmer A/c No</span>
+                                        <input type="text" class="form-control" formControlName="farmerNameAcNo"
+                                            (blur)="getFarmerAcNo($event, dailyGreensReceivingDetailsForm.value)"
+                                            placeholder="Please enter Farmer A/c No">
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.farmerNameAcNo.errors?.required
+                                &&
+                                dailyGreensReceivingDetailsForm.controls.farmerNameAcNo.touched"
+                                            class="error-span">Farmer A/c No is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Farmer Name</span>
+                                        <!-- <input type="text" class="form-control" formControlName="farmerName"> -->
+                                        <div class="ng-autocomplete">
+                                            <ng-autocomplete [data]="farmerNameList" [searchKeyword]="farmerKeyword"
+                                                formControlName="farmerName"
+                                                (selectedValueChangeBlur)="farmerNameChange($event)"
+                                                (selected)='selectFarmerEvent($event)'
+                                                placeholder="Please enter Farmer Name" [itemTemplate]="farmerTemplate"
+                                                maxlength="30">
+                                            </ng-autocomplete>
+                                            <ng-template #farmerTemplate let-item>
+                                                <a [innerHTML]="item.farmerName"></a>
+                                            </ng-template>
+                                        </div>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.farmerName.errors?.required
+                                &&
+                                dailyGreensReceivingDetailsForm.controls.farmerName.touched" class="error-span">Farmer
+                                            Name is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <span class="label-control">Last Harvest </span>
+                                        <mat-select class="form-control" formControlName="lastHarvest">
+                                            <mat-option value="Yes">Yes</mat-option>
+                                            <mat-option value="No"> No</mat-option>
+                                        </mat-select>
+                                        <span *ngIf="dailyGreensReceivingDetailsForm.controls.lastHarvest.errors?.required
+                                &&
+                                dailyGreensReceivingDetailsForm.controls.lastHarvest.touched" class="error-span">Last
+                                            Harvest is
+                                            required field.
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <button pButton type="button" [disabled]="!dailyGreensReceivingDetailsForm.valid"
+                                (click)="saveGreenProcurementDetail(dailyGreensReceivingDetailsForm.value)" label="Next"
+                                class="ui-button-rounded"></button>
+                        </form>
+
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+            <p-accordion>
+                <p-accordionTab header="Farmers Details" [selected]="true">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <table class="table table-striped table-bordered dt-responsive nowrap"
+                                        cellspacing="0" cellpadding="4">
+                                        <tbody>
+                                            <tr>
+                                                <th>Sl.No</th>
+                                                <th>Farmer Name / AC No</th>
+                                                <th>Crop Count</th>
+                                                <th>Total Crates</th>
+                                                <th>Total Quantity</th>
+                                                <th *ngIf="this.formStatus.IsFind || this.formStatus.IsModify">
+                                                    Select
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                            <tr
+                                                *ngFor="let item of farmerDetailsList | matchesFarmer:farmerAcNo:dailyGreensReceivingDetailsForm.controls.cropName.value;let j = index">
+                                                <td class="text-center">
+                                                    {{j+1}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.farmerName}} / {{item.farmerAcNo}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.cropCountInfo}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.totalCrate}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.totalQuantity}}
+                                                </td>
+                                                <td *ngIf="this.formStatus.IsFind || this.formStatus.IsModify">
+                                                    <input type="radio" [(ngModel)]="famerCropSchemeRadio"
+                                                        name="famerCropSchemeRadio"
+                                                        [value]="item.farmerCode+'|'+item.cropCount"
+                                                        (change)="selectedFarmerCropSchemeCode($event)">
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </p-accordionTab>
+            </p-accordion>
+
+            <p-accordion>
+                <p-accordionTab header="Greens Count & Weight Details" [selected]="true">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <table class="table table-striped table-bordered dt-responsive nowrap"
+                                        cellspacing="0" cellpadding="4">
+                                        <tbody>
+                                            <tr>
+                                                <th>Sl.No</th>
+                                                <th>Crop Count</th>
+                                                <th>No. of Crates</th>
+                                                <th>Each Crate Tare Wt.</th>
+                                                <th>Crate No From </th>
+                                                <th>Crate No To</th>
+                                                <th>Gross Wt.</th>
+                                                <th>Tare Wt.</th>
+                                                <th>Net Wt.</th>
+                                            </tr>
+                                            <tr *ngFor="let item of weightDetailsList; let i = index">
+                                                <td class="text-center">
+                                                    {{i+1}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <mat-select class="form-control" #autoHighlight
+                                                            (ngModelChange)="selectedcropScheme($event, item)"
+                                                            [(ngModel)]="item.cropCount" name="cropCount"
+                                                            [disabled]="item.isDisabled || item.cropSchemeDisabled">
+                                                            <mat-option [value]="crop.Code"
+                                                                *ngFor="let crop of cropSchemeList">
+                                                                {{crop.From}}
+                                                                {{' '}}
+                                                                {{crop.Sign}}
+                                                                {{' / '}}
+                                                                {{crop.Count}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                                                    && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                                                        required!</small> -->
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="item.noOfCrate"
+                                                            (keyup)="getNoOfCrate($event, item)" name="noOfCrate"
+                                                            (keydown)="OnlyNumber($event)" [disabled]="item.isDisabled">
+
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="item.eachTare"
+                                                            (keyup)="geteachTrae($event, item)" name="eachTare"
+                                                            (keydown)="ThreeDigitDecimalNumber($event)"
+                                                            [disabled]="item.isDisabled">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            (keyup)="getcreatFromNo($event, item)"
+                                                            [(ngModel)]="item.creatFromNo" name="creatFromNo"
+                                                            [disabled]="item.isDisabled">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            (keyup)="getcreatToNo($event, item)"
+                                                            [(ngModel)]="item.creatToNo" name="creatToNo"
+                                                            [disabled]="item.isDisabled">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="item.grossWt" (keyup)="calcNetWt($event, item)"
+                                                            (blur)="showPopup($event, item)" name="grossWt"
+                                                            (keydown)="ThreeDigitDecimalNumber($event)"
+                                                            [disabled]="item.isDisabled">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="item.tareWt" name="tareWt" [disabled]="true">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="item.netWt" name="netWt" [disabled]="true">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="bg-skyblue">
+                                                <td class="text-center">
+
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="font-weight-bold">Total</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="font-weight-bold"> {{getCrateTotal(true,"")}} </span>
+                                                </td>
+                                                <td class="text-center">
+
+                                                </td>
+                                                <td class="text-center">
+
+                                                </td>
+                                                <td class="text-center">
+
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="font-weight-bold"> {{getGrossWtTotal(true,"")}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="font-weight-bold"> {{getTareWtTotal(true,"")}} </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="font-weight-bold"> {{getNetWtTotal(true,"")}} </span>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+        </p-tabPanel>
+
+        <p-tabPanel header="Summary" [selected]="selectedTab === 'Summary'">
+            <form [formGroup]="dailyGreensReceivingSummaryForm">
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Area</span>
+                                <input type="text" class="form-control" formControlName="areainfo"
+                                    placeholder="Please enter Area">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.areainfo.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.areainfo.touched" class="error-span">Area is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Buying Supervisor</span>
+                                <input type="text" class="form-control" formControlName="buyingSupervisor"
+                                    placeholder="Please enter Buying Supervisor">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.buyingSupervisor.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.buyingSupervisor.touched"
+                                    class="error-span">Buying Supervisor is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">End Time & Date</span>
+                                <input matInput class="form-control border-bottom-1 mb-1"
+                                    placeholder="Please enter End Time & Date" [matDatepicker]="eDate1"
+                                    formControlName="endDateTime">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate1">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate1>
+                                </mat-datepicker>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.endDateTime.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.endDateTime.touched" class="error-span">End
+                                    Time & Date is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Ending Reading</span>
+                                <input type="text" class="form-control" formControlName="endingReading"
+                                    placeholder="Please enter Ending Reading" maxlength="7">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.endingReading.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.endingReading.touched"
+                                    class="error-span">Ending Reading is
+                                    required field.
+                                </span>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.endingReading.errors?.pattern
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.endingReading.touched"
+                                    class="error-span">Ending Reading can be of maximum 7 digits
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Time Duration</span>
+                                <input type="text" class="form-control" formControlName="timeDuration"
+                                    (focusout)="TimeOfDespatchChange()" placeholder="Please enter Time Duration">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.timeDuration.errors?.required
+                                    &&
+                                    dailyGreensReceivingSummaryForm.controls.timeDuration.touched"
+                                    class="error-span">Time Duration is
+                                    required field.
+                                </span>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.timeDuration.errors?.pattern
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.timeDuration.touched"
+                                    class="error-span">Please enter duration in HH:MM format</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">No. of KMS</span>
+                                <input type="text" class="form-control" formControlName="noOfKms"
+                                    placeholder="Please enter No. of KMS" maxlength="5">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.noOfKms.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.noOfKms.touched" class="error-span">No. of KMS
+                                    is
+                                    required field.
+                                </span>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.noOfKms.errors?.pattern
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.noOfKms.touched" class="error-span">No. of KMS
+                                    can be of maximum 5 digits
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Other Charges</span>
+                                <input type="text" class="form-control" formControlName="otherCharges"
+                                    placeholder="Please enter Other Charges" maxlength="6">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.otherCharges.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.otherCharges.touched" class="error-span">Other
+                                    Charges is
+                                    required field.
+                                </span>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.otherCharges.errors?.pattern
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.otherCharges.touched" class="error-span">Other
+                                    Charges can be of maximum 6 digits
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Total Quantity (KGS)</span>
+                                <input type="text" class="form-control" formControlName="totalQuantity"
+                                    placeholder="Please enter Total Quantity">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.totalQuantity.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.totalQuantity.touched"
+                                    class="error-span">Total Quantity (KGS) is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Total Crates (Nos)</span>
+                                <input type="text" class="form-control" formControlName="totalCrates"
+                                    placeholder="Please enter Total Crates">
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.totalCrates.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.totalCrates.touched" class="error-span">Total
+                                    Crates (Nos) is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Vehicle End Point</span>
+                                <mat-select class="form-control" formControlName="vehicleEndPoint"
+                                    placeholder="Please enter  Vehicle End Point"
+                                    (ngModelChange)="getLocationData($event,dailyGreensReceivingSummaryForm.value)">
+                                    <mat-option value="UNIT">UNIT</mat-option>
+                                    <mat-option value="Area Branch">Area Branch</mat-option>
+                                    <mat-option value="Tr. to Pooled Truck">Tr. to Pooled Truck</mat-option>
+                                </mat-select>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.vehicleEndPoint.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.vehicleEndPoint.touched"
+                                    class="error-span">Vehicle End Point is
+                                    required field.
+                                </span>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                    && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                        required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Location</span>
+                                <mat-select class="form-control" formControlName="location"
+                                    placeholder="Please enter Location"
+                                    (ngModelChange)="saveCompleteTrip($event, dailyGreensReceivingSummaryForm.value)">
+                                    <mat-option [value]="item.locationcode" *ngFor="let item of locationList">
+                                        {{item.locationName}}</mat-option>
+                                </mat-select>
+                                <span *ngIf="dailyGreensReceivingSummaryForm.controls.location.errors?.required
+                                &&
+                                dailyGreensReceivingSummaryForm.controls.location.touched" class="error-span">Location
+                                    is
+                                    required field.
+                                </span>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                    && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                        required!</small> -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <p-accordionTab header="Summary Greens Received Details" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    cellpadding="4">
+                                    <tbody>
+                                        <tr>
+                                            <th>Sl.No</th>
+                                            <th>Farmer Name / AC No</th>
+                                            <th>Nos.</th>
+                                            <th *ngFor="let crop of cropSchemeListFromFarmerList">
+                                                {{crop.CropSchemeInfo}}
+                                            </th>
+                                            <th *ngIf="this.formStatus.IsFind || this.formStatus.IsModify">
+                                                Select
+                                            </th>
+                                        </tr>
+                                        <tr *ngFor="let item of farmerWiseSummary; let i = index">
+                                            <td class="text-center">
+                                                {{i + 1}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.farmerName}} / {{item.farmerAcNo}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.farmerWiseCrateTotal}}
+                                            </td>
+                                            <td class="text-center" *ngFor="let crop of cropSchemeListFromFarmerList">
+                                                {{getNetWtFarmerCropWiseTotal(item.farmerCode,crop.CropSchemeCode)}}
+                                            </td>
+                                            <td *ngIf="this.formStatus.IsFind || this.formStatus.IsModify">
+                                                <input type="radio" name="famerRadio" [value]="item.farmerCode"
+                                                    (change)="selectedFarmer($event)">
+                                            </td>
+                                        </tr>
+
+                                        <tr class="bg-skyblue">
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td colspan="2" class="text-center">
+                                                <span class="font-weight-bold">Total</span>
+                                            </td>
+                                            <td class="text-center" *ngFor="let crop of cropSchemeListFromFarmerList">
+                                                <span class="font-weight-bold">
+                                                    {{getNetWtCropWiseTotal(crop.CropSchemeCode)}}</span>
+                                            </td>
+                                            <td *ngIf="this.formStatus.IsFind || this.formStatus.IsModify"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+
+        </p-tabPanel>
+    </p-tabView>
+</p-accordion>
+
+<!-- 
+<jw-modal id="AddMoreData">
+    <h6>Do you want to continue?</h6>
+    <div class="row pull-right bottom-right">
+        <input type="button" class="btn btn-info button-display" #YesBtn
+            (click)="continueToAddCount(dailyGreensReceivingDetailsForm.value);" value="continue count" />
+        <input type="button" class="btn btn-info button-display" #YesBtn
+            (click)="changeCountdata(dailyGreensReceivingDetailsForm.value);" value="change count" />
+        <input type="button" class="btn btn-info button-display" #YesBtn
+            (click)="changeFarmerData(dailyGreensReceivingDetailsForm.value);" value="change farmer" />
+        <input type="button" class="btn btn-info button-display" #YesBtn
+            (click)="goToSummary(dailyGreensReceivingDetailsForm.value);" value="goto summary" />
+    </div>
+
+</jw-modal> -->
+
+<div class="modal fade" id="AddMoreData" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="addMoreDataModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMoreDataModalCenterTitle">Continue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-dismiss="modal"
+                    (click)="closePopup()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you want to continue?
+            </div>
+            <div class="modal-footer">
+                <button pButton type="button" (click)="continueToAddCount(dailyGreensReceivingDetailsForm.value,false);"
+                    label="Continue Count" class="ui-button-rounded" data-dismiss="modal" #continueBtn></button>
+                <button *ngIf="this.weightDetails && this.weightDetails.Id !== undefined && this.weightDetails.Id>0"
+                    pButton type="button" (click)="continueToAddCount(dailyGreensReceivingDetailsForm.value,true);"
+                    label="Update" class="ui-button-rounded" data-dismiss="modal" #continueModifyBtn></button>
+                <button pButton type="submit" (click)="changeCountdata(dailyGreensReceivingDetailsForm.value);"
+                    label="Change Count" class="ui-button-rounded" data-dismiss="modal"></button>
+                <button pButton type="submit" (click)="changeFarmerData(dailyGreensReceivingDetailsForm.value);"
+                    label="Change Farmer" class="ui-button-rounded" data-dismiss="modal"></button>
+                <button pButton type="button" (click)="goToSummary(dailyGreensReceivingDetailsForm.value);"
+                    label="Go to Summary" class="ui-button-rounded" data-dismiss="modal"></button>
+            </div>
+        </div>
+    </div>
+</div>

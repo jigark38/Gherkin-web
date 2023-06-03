@@ -1,0 +1,378 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Agri Management</a></li>
+    <li class="active"><span>Inputs Returns from Farmers</span></li>
+  </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+  <p-accordionTab header="Farmers Details" [selected]="true">
+    <form [formGroup]="farmersInputsMaterialMasterForm">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Date of Return</span>
+                <div>
+                  <input matInput type="text" class="form-control border-bottom-1"
+                    placeholder="Please Select Date Of Return" #dateOfReturn [matDatepicker]="dp"
+                    formControlName="DateOfReturn">
+                  <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #dp>
+                  </mat-datepicker>
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.DateOfReturn.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.DateOfReturn.touched" class="error-span">
+                    Date of Return is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Field Staff Area / Branch </span>
+                <div>
+                  <mat-select class="form-control" formControlName="FieldStaffArea"
+                    (selectionChange)="onFieldStaffAreaSelectionChanged()" placeholder="Please Select Field Staff Area"
+                    #fieldStaffArea>
+                    <mat-option *ngFor="let area of this.harvestAreaList" [value]="area.areaId">{{area.areaName}}
+                    </mat-option>
+                  </mat-select>
+
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.FieldStaffArea.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.FieldStaffArea.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Field Staff Area is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Field Staff Name</span>
+                <div>
+                  <!-- Uncomment this code to autofill the logged in employee details -->
+                  <!-- <input matInput type="text" maxlength="100" *ngIf="!this.isFindOn && !this.isModifyOn"
+                         class="form-control" formControlName="FieldStaffEmployee" placeholder="Please Enter Field Staff Name"> -->
+
+                  <!-- Comment this section to autofill the logged in employee details-->
+                  <mat-select class="form-control" formControlName="FieldStaffEmployee" #fieldStaffName
+                    placeholder="Please Select Field Staff Name"
+                    (selectionChange)="onFieldStaffEmployeeSelectionChanged()">
+                    <mat-option *ngFor="let fieldStaff of this.fieldStaffCropGroupSeason.fieldStaffList"
+                      [value]="fieldStaff.employeeId">{{fieldStaff.employeeName}}</mat-option>
+                  </mat-select>
+
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.FieldStaffEmployee.errors?.required &&
+                                farmersInputsMaterialMasterForm.controls.FieldStaffEmployee.touched &&
+                                (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Field Staff Name is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Crop Group</span>
+                <div>
+                  <mat-select class="form-control" formControlName="CropGroup"
+                    (selectionChange)="onCropGroupSelectionChanged()" placeholder="Please Select Crop Group" #cropgroup>
+                    <mat-option *ngFor="let cropGroup of this.fieldStaffCropGroupSeason.cropGroupList"
+                      [value]="cropGroup.CropGroupCode">{{cropGroup.Name}}</mat-option>
+                  </mat-select>
+
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.CropGroup.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.CropGroup.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Crop Group is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Crop Name</span>
+                <div>
+                  <mat-select class="form-control" formControlName="CropName"
+                    (selectionChange)="onCropSelectinChanged()" placeholder="Please Select Crop Name" #cropName>
+                    <mat-option *ngFor="let crop of this.cropList" [value]="crop.CropCode">{{crop.Name}}</mat-option>
+                  </mat-select>
+
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.CropName.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.CropName.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Crop Name is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Season From / To</span>
+                <div>
+                  <mat-select class="form-control" formControlName="SeasonFromTo"
+                    (selectionChange)="onSeasonFromToSelectionChanged()" placeholder="Please Select Season From / To"
+                    #seasonFromTo>
+                    <mat-option [value]="seasonFromTo.PsNumber" *ngFor="let seasonFromTo of areaWiseSeasonToFromList">
+                      {{seasonFromTo.FromDate |date:'dd-MMM-yyyy'}} /
+                      {{seasonFromTo.ToDate | date:'dd-MMM-yyyy'}}</mat-option>
+                  </mat-select>
+
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.SeasonFromTo.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.SeasonFromTo.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Season From / To is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Village</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100" placeholder="Please Enter Village Name"
+                    [formControl]="farmersInputsMaterialMasterForm.controls.Village"
+                    [matAutocomplete]="autoCompleteVillage">
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteVillage="matAutocomplete"
+                    (optionSelected)="optionSelectedVillage($event)">
+                    <mat-option *ngFor="let village of this.villageList" [value]="village.villageCode">
+                      {{village.villageName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.Village.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.Village.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Village is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Farmer Name</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100" placeholder="Please Enter Farmer Name"
+                    [formControl]="farmersInputsMaterialMasterForm.controls.FarmerName"
+                    [matAutocomplete]="autoCompleteFarmerName">
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteFarmerName="matAutocomplete"
+                    (optionSelected)="optionSelectedFarmer($event)">
+                    <mat-option *ngFor="let farmer of this.farmerList" [value]="farmer.farmerCode">
+                      {{farmer.farmerName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.FarmerName.errors?.required &&
+                                                            farmersInputsMaterialMasterForm.controls.FarmerName.touched &&
+                                                            (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Farmer Name is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Farmer Alt Contact Person</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100"
+                    placeholder="Please Enter Farmer Alt Contact Person"
+                    [formControl]="farmersInputsMaterialMasterForm.controls.FarmerAltContactPerson"
+                    [matAutocomplete]="autoCompleteFarmerAltContactPerson">
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteFarmerAltContactPerson="matAutocomplete"
+                    (optionSelected)="optionSelectedFarmer($event)">
+                    <mat-option *ngFor="let farmer of this.farmerList" [value]="farmer.farmerCode">
+                      {{farmer.farmerAltContactPerson}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.FarmerAltContactPerson.errors?.required &&
+                                  farmersInputsMaterialMasterForm.controls.FarmerAltContactPerson.touched &&
+                                  (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Farmer Alt Contact Person is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Stock Returned To</span>
+                <div>
+                  <mat-select class="form-control" formControlName="StockReturnedTo"
+                    (selectionChange)="onStockReturnedToSelectionChanged()"
+                    placeholder="Please Select Stock Returned To" #stockReturnedTo>
+                    <mat-option value="Area Branch">Area Branch</mat-option>
+                    <mat-option *ngFor="let office of this.officeLocationList" [value]="office.orgOfficeNo">
+                      {{office.orgOfficeName}}</mat-option>
+                    <mat-option value="With Field Staff">With Field Staff</mat-option>
+                  </mat-select>
+                  <span *ngIf="farmersInputsMaterialMasterForm.controls.StockReturnedTo.errors?.required &&
+                                farmersInputsMaterialMasterForm.controls.StockReturnedTo.touched &&
+                                (!this.isFindOn && !this.isModifyOn)" class="error-span">
+                    Stock Returned To is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="this.isFindOn || this.isModifyOn">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Return Voucher No</span>
+                <div>
+                  <input matInput type="text" formControlName="ReturnVoucherNo" maxlength="100" class="form-control"
+                    placeholder="Please Enter Return Voucher No">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <span class="error-span" style="float: left;" *ngIf="isMasterRecordAlreadyExist">
+          The farmer has already returned some items. Try modifying them.
+        </span>
+      </div>
+    </form>
+  </p-accordionTab>
+</p-accordion>
+
+<div style="height: 28px;"></div>
+
+<p-accordion>
+  <p-accordionTab header="Material Details Note" [selected]="true">
+    <div class="container-fluid">
+      <div class="row m-b-25">
+        <div class="col-md-12">
+          <div>
+            <table class="table table-striped table-bordered dt-responsive nowrap"
+              *ngIf="!this.isFindOn && !this.isModifyOn" cellspacing="0" cellpadding="4">
+              <tbody>
+                <tr>
+                  <th>Sl.No</th>
+                  <th>Issue No</th>
+                  <th>Material Group</th>
+                  <th>Material Name</th>
+                  <th>UOM</th>
+                  <th>Issued Quantity</th>
+                  <th>Returned Quantity</th>
+                </tr>
+                <tr *ngFor="let detail of this.farmersInputsMaterialDetail; let index = index;">
+                  <td class="text-center">
+                    {{(index + 1)}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.mifConsumptionVoucherNo}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.rawMaterialGroup}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.rawMaterialDetailsName}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.rawMaterialDetailsUOM}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.farmersMaterialIssuedQty}}
+                  </td>
+                  <td class="text-center">
+                    <input matInput type="text" [(ngModel)]="detail.farmersMaterialReturnQty"
+                      [max]="detail.farmersMaterialIssuedQty" maxlength="10" class="form-control"
+                      placeholder="Please Enter Return Qty" style="text-align: right;"
+                      [disabled]="detail.farmersMaterialIssuedQty===0.0">
+                    <span class="error-span" style="float: left;"
+                      *ngIf="detail.farmersMaterialReturnQty > detail.farmersMaterialIssuedQty">Return Qty can not be
+                      more than issued qty.</span>
+                    <span class="error-span" style="float: left;"
+                      *ngIf="detail.farmersMaterialReturnQty<1 || detail.farmersMaterialIssuedQty!=0">
+                      Return Qty should be minimum 1.</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table table-striped table-bordered dt-responsive nowrap"
+              *ngIf="this.isFindOn || this.isModifyOn" cellspacing="0" cellpadding="4">
+              <tbody>
+                <tr>
+                  <th>Sl.No</th>
+                  <th>Return Date</th>
+                  <th>Material Group</th>
+                  <th>Material Name</th>
+                  <th>Returned Quantity</th>
+                </tr>
+                <tr *ngFor="let detail of this.farmersInputsMaterialDetail; let index = index;">
+                  <td class="text-center">
+                    {{(index + 1)}}
+                  </td>
+                  <td class="text-center">
+                    {{farmersInputsMaterialMaster.fMIRDate | date: 'dd-MMM-yyyy'}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.rawMaterialGroup}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.rawMaterialDetailsName}}
+                  </td>
+                  <td class="text-center">
+                    <input matInput type="text" [(ngModel)]="detail.farmersMaterialReturnQty"
+                      [max]="detail.farmersMaterialIssuedQty" [disabled]="this.isFindOn && !this.isModifyOn"
+                      maxlength="10" class="form-control" placeholder="Please Enter Return Qty"
+                      style="text-align: right;">
+                    <span class="error-span" style="float: left;"
+                      *ngIf="detail.farmersMaterialReturnQty > detail.farmersMaterialIssuedQty && this.isModifyOn && !this.isFindOn">
+                      Return Qty can not be more than issued qty.</span>
+                    <span class="error-span" style="float: left;"
+                      *ngIf="detail.farmersMaterialReturnQty < 1 && this.isModifyOn && !this.isFindOn">
+                      Return Qty should be minimum 1.</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+<div class="mgt-20 pull-right">
+  <div class="col-md-12">
+    <button pButton type="button" label="Input Returns" class="ui-button-rounded"
+      [disabled]="disableButton || !enableNew" (click)="inputReturns()"></button>
+    <button pButton type="submit" label="Save" class="ui-button-rounded"
+      [disabled]="disableButton || !enableSave || (!this.farmersInputsMaterialMasterForm.valid && !this.isModifyOn)"
+      (click)="saveFarmersInputReturns()"></button>
+    <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="disableButton || !enableFind"
+      (click)="findReturns()"></button>
+    <button pButton type="button" label="Modify" class="ui-button-rounded" [disabled]="disableButton || !enableModify"
+      (click)="modifyReturns()"></button>
+    <button pButton type="button" label="Clear" class="ui-button-rounded" [disabled]="disableButton"
+      (click)="clearFormDetails()"></button>
+  </div>
+</div>

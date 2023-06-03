@@ -1,0 +1,370 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Grading & Weighment Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-tabView (onChange)="onTabChange($event)">
+        <p-tabPanel header="Green Reception Details" [selected]="selectedTab === 'ReceptionDetails'">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Unit Name</span>
+                            <mat-select class="form-control" placeholder="--Select Unit Name--" name="unitName"
+                                [(ngModel)]="unitNameLocation" (selectionChange)="unitNameChange($event)">
+                                <mat-option *ngFor="let unitNameLocation of unitNameLocations"
+                                    [value]="unitNameLocation">
+                                    {{unitNameLocation.OrgOfficeName}}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Green Reception Details" [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+                    id="grdPurchaseMaterial">
+                    <tbody>
+                        <tr>
+                            <!-- <th style="background-color: #007ad9!important">Select</th> -->
+                            <th style="background-color: #007ad9!important">GRN Date</th>
+                            <th style="background-color: #007ad9!important">GRN No</th>
+                            <th style="background-color: #007ad9!important">Green Procurement No</th>
+                            <th style="background-color: #007ad9!important">Area Name</th>
+                            <th style="background-color: #007ad9!important">Crop Name</th>
+                            <th style="background-color: #007ad9!important">Quantity</th>
+                            <th style="background-color: #007ad9!important">Is OnGoing</th>
+
+                        </tr>
+                        <ng-container *ngFor="let item of greenReceptionGridDatas ;let i = index">
+                            <tr *ngIf="min <= i && max > i" [class.active]="item.isSelected">
+                                <!-- <td>
+                                    <span>
+                                        <mat-checkbox [(ngModel)]="item.isSelected"
+                                            (change)="onCheckboxChange($event, item)"></mat-checkbox>
+                                    </span>
+                                </td> -->
+                                <td>
+                                    {{item.harvestGRNDate | date:'dd-MMM-yyyy'}}
+                                </td>
+                                <td class="right-aligned-input">
+                                    {{item.harvestGRNNo}}
+                                </td>
+                                <td class="right-aligned-input">
+                                    {{item.greensProcurementNo}}
+                                </td>
+                                <td>
+                                    {{item.areaName}}
+                                </td>
+                                <td>
+                                    {{item.cropName}}
+                                </td>
+                                <td class="right-aligned-input">
+                                    {{item.totalReceivedQty}}
+                                </td>
+                                <td>
+                                    <div class="form-check m-0  text-center">
+                                        <mat-checkbox #checkboxes [(ngModel)]="item.isSelected"
+                                            (change)="onCheckboxChange($event, item)"></mat-checkbox>
+                                        <span *ngIf="item.isOnGoing== true"> On
+                                            Going</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="10" [totalRecords]="greenReceptionGridDatas.length"
+                    (onPageChange)="paginate($event)">
+                </p-paginator>
+                <!-- <app-ng-grid [actions]="greenReceptionDetailsgridActionParams" [cols]="greenReceptionDetailsCols"
+                    [data]="greenReceptionGridDatas" [autoIndexingEnabled]="true"
+                    (selectedRowHandler)="greenReceptionGridRadioClick($event)"
+                    (unSelectedRowHandler)="removeUnselectedGRNNumber($event)" actionsColName="Select">
+                </app-ng-grid> -->
+            </p-accordionTab>
+
+
+            <div style="height: 28px;"></div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Grading Material Details" [selected]="selectedTab === 'MaterialDetails'">
+            <p-accordionTab header="Grading Material Details" [selected]="true">
+                <form [formGroup]="gradingMaterialDetailsForm">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Receiving UNIT </span>
+                                    <input type="text" class="form-control" formControlName="receivingUnitF"
+                                        [(ngModel)]="greensGradingInwardDetails.orgOfficeName">
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.receivingUnitF.errors?.required && gradingMaterialDetailsForm.controls.receivingUnitF.touched"
+                                        class="error-span">Receiving UNIT is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">GRN No (s)</span>
+                                    <input type="text" class="form-control" formControlName="grnNumberF"
+                                        [(ngModel)]="selectedGRNNumbers">
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.grnNumberF.errors?.required && gradingMaterialDetailsForm.controls.grnNumberF.touched"
+                                        class="error-span">GRN No is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Group Name</span>
+                                    <mat-select formControlName="cropGroupNameF" class="form-control"
+                                        placeholder="--Select Crop Group--"
+                                        [(ngModel)]="greensGradingInwardDetails.cropGroupCode"
+                                        (selectionChange)="cropGroupNameChange($event.value)" #cropNameDDL>
+                                        <mat-option [value]="cg.CropGroupCode" *ngFor="let
+                                                                                        cg
+                                                                                        of
+                                                                                        cropGroupList">{{cg.Name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.cropGroupNameF.errors?.required && gradingMaterialDetailsForm.controls.cropGroupNameF.touched"
+                                        class="error-span">Crop Group Name is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Name</span>
+                                    <mat-select class="form-control" formControlName="cropNameF"
+                                        [(ngModel)]="greensGradingInwardDetails.cropNameCode"
+                                        (selectionChange)="cropNameChange($event.value)"
+                                        placeholder="--Select Crop Name--">
+                                        <mat-option [value]="crop.CropCode" *ngFor="let
+                                                                                    crop
+                                                                                    of
+                                                                                    crops">{{crop.Name}}
+                                        </mat-option>
+
+                                    </mat-select>
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.cropNameF.errors?.required && gradingMaterialDetailsForm.controls.cropNameF.touched"
+                                        class="error-span">Crop Name is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Total No. of Crates</span>
+                                    <input type="number" disabled="true" class="form-control right-aligned-input"
+                                        formControlName="noOfCratesF"
+                                        [(ngModel)]="greensGradingInwardDetails.gradedTotalCrates">
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.noOfCratesF.errors?.required && gradingMaterialDetailsForm.controls.noOfCratesF.touched"
+                                        class="error-span">No. of Crates (Recd) is required field.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Total Quantity (KGS)</span>
+                                    <input type="number" disabled="true" class="form-control right-aligned-input"
+                                        formControlName="totalQuantityF"
+                                        [(ngModel)]="greensGradingInwardDetails.gradedTotalQuantity">
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.totalQuantityF.errors?.required && gradingMaterialDetailsForm.controls.totalQuantityF.touched"
+                                        class="error-span">Total Quantity (KGS) is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Weightment Mode</span>
+                                    <mat-select #weightmentModeFocus formControlName="WeightModeF" class="form-control"
+                                        placeholder="--Select Weightment Mode--"
+                                        (selectionChange)="WeightedModeChange()"
+                                        [(ngModel)]="greensGradingInwardDetails.weighmentMode">
+                                        <mat-option value="Direct">Direct</mat-option>
+                                        <mat-option value="Manual Weighment">Manual Weighment</mat-option>
+                                        <mat-option value="Automation Weighment">Automation Weighment</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="gradingMaterialDetailsForm.controls.WeightModeF.errors?.required && gradingMaterialDetailsForm.controls.WeightModeF.touched"
+                                        class="error-span">Weightment Mode is required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </p-accordionTab>
+
+
+            <p-accordionTab header="Grade Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Grades</th>
+                                <th>No. ofCrates </th>
+                                <th>Actual Quantity (Kgs)</th>
+                            </tr>
+                            <ng-container
+                                *ngFor="let data of greensGradingQuantityDetailsList;  index as i;let j=index">
+
+                                <tr [ngClass]="{'clsforselectedtr': data.showBgColor}">
+                                    <td>
+                                        <span>{{j+1}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{data.from}}{{' '}}{{data.sign}}{{' / '}}{{data.count}}</span>
+                                    </td>
+                                    <td class="right-aligned-input">
+                                        <span>
+                                            <!-- <input class="form-control border-bottom-1" [value]="data.gradingNoofCrates"
+                                                [(ngModel)]="data.gradingNoofCrates" (keydown)="OnlyNumber($event)"> -->
+                                            {{data.gradingNoofCrates}}
+                                        </span>
+                                    </td>
+                                    <td class="right-aligned-input">
+                                        <span>
+                                            <!-- <input class="form-control border-bottom-1"
+                                                [value]="data.quantityAfterGradingTotal"
+                                                [(ngModel)]="data.quantityAfterGradingTotal"
+                                                (keydown)="ThreeDigitDecimalNumber($event)"> -->
+                                            {{data.quantityAfterGradingTotal}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <!-- <tr>
+                                <th>Total</th>
+                                <td></td>
+                                <td>{{greensGradingInwardDetails.gradedTotalCrates}}</td>
+                                <td>{{greensGradingInwardDetails.gradedTotalQuantity}}</td>
+                            </tr> -->
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Summary Weighment Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th class="text-dropdown">Grade </th>
+                                <th>No of Crates</th>
+                                <th>Crates Tare Wt.</th>
+                                <th>Gross Wt.</th>
+                                <th>Tare Wt.</th>
+                                <th>Net Wt.</th>
+                            </tr>
+                            <tr *ngFor="let data of grid3data;  index as i;let j=index">
+                                <ng-container>
+                                    <td>
+                                        <span>{{j+ 1}}</span>
+                                    </td>
+                                    <td class="text-dropdown">
+                                        <!-- <mat-select [(ngModel)]="data.cropSchemeCode" class="form-control"
+                                            (ngModelChange)="onGridDrpDownChange(data.cropSchemeCode)"
+                                            placeholder="--Select Grade--" [disabled]="data.Disabled">
+                                            <mat-option [value]="crop.Code" *ngFor="let crop of grades">
+                                                {{crop.From}} {{' '}} {{crop.Sign}}{{' / '}}{{crop.Count}}
+                                            </mat-option>
+                                        </mat-select> -->
+                                        <div class="form-group mb-0">
+                                            <mat-select #cropSchemeCodeFocus [(ngModel)]="data.cropSchemeCode"
+                                                class="form-control"
+                                                (ngModelChange)="onGridDrpDownChange(data.cropSchemeCode)"
+                                                [disabled]="data.isDisabled || disablecropSchemeCode"
+                                                placeholder="--Select Grade--" name="cropSchemeCode">
+                                                <mat-option [value]="crop.Code" *ngFor="let crop of grades">
+                                                    {{crop.From}} {{' '}} {{crop.Sign}}{{' / '}}{{crop.Count}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-group mb-0">
+                                            <input type="text" class="form-control right-aligned-input"
+                                                (blur)="calculateTareWt(data)" [(ngModel)]="data.gmWeightNoofCrates"
+                                                [disabled]="data.isDisabled" (keydown)="OnlyNumber($event)" #noOfCrates>
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="form-group mb-0">
+                                            <input type="text" class="form-control right-aligned-input"
+                                                (blur)="calculateTareWt(data)" [(ngModel)]="data.gmCratesTareWeight"
+                                                [disabled]="data.isDisabled"
+                                                (keydown)="ThreeDigitDecimalNumber($event)">
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="form-group mb-0">
+                                            <input type="text" class="form-control right-aligned-input"
+                                                (blur)="calculateNetWT(data)" (focusout)="grosWetFocusOut(data)"
+                                                [(ngModel)]="data.gmWeightGrossWeight" [disabled]="data.isDisabled"
+                                                (keydown)="ThreeDigitDecimalNumber($event)">
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-group mb-0">
+                                            <input type="text" class="form-control right-aligned-input"
+                                                [(ngModel)]="data.gmWeightTareWeight" [disabled]="true">
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-group mb-0">
+                                            <input type="text" class="form-control right-aligned-input"
+                                                [(ngModel)]="data.hmWeightNetWeight" [disabled]="true">
+                                        </div>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th class="text-dropdown">Total</th>
+                                <td>{{gridCatesTotal}}</td>
+                                <td>{{gridCratesTareWt}}</td>
+                                <td></td>
+                                <td>{{gridTareWt}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+    </p-tabView>
+    <div class="mgt-20 pull-right">
+        <div class="col-md-12">
+            <button pButton type="submit" label="Grading Weighment" class="ui-button-rounded" (click)="GradBtnClick()"
+                [disabled]="GradBtnDisable"></button>
+            <button pButton type="submit" label="Next" (click)="next()" class="ui-button-rounded"
+                [disabled]="!(selectedHarvestGrnDetails.length>0) || isNextClicked"></button>
+            <button pButton type="submit" label="Save" (click)="changeStatus()" class="ui-button-rounded" #saveBtn
+                [disabled]="!this.gradingMaterialDetailsForm.valid"></button>
+            <button pButton type="submit" label="Modify" class="ui-button-rounded" disabled="true"></button>
+            <button pButton type="submit" label="Clear" (click)="Reset()" class="ui-button-rounded"></button>
+        </div>
+    </div>
+    <div style="height: 28px;"></div>
+</p-accordion>
+<p-dialog header="Action" [(visible)]="displayDialog" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <p>Do you want to add more data for this Grade ?</p>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="pushRow()" label="Continue Grade"></button>
+        <button type="button" pButton icon="pi pi-check" (click)="changeGradeCall()" label="Change Grade"></button>
+        <button type="button" pButton icon="pi pi-times" (click)="setFocusOnSaveButton()"
+            label="Complete Grading Process" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>

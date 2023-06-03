@@ -1,0 +1,17 @@
+
+
+.table tr.active td {
+    background-color: #007ad9 !important;
+    color: white;
+  }
+  .bg-blue{
+    background-color: #007ad9;
+    border: 1px solid#007ad9;
+    color: #ffffff;
+  }
+  .card .card-header {
+    padding: 9px 14px 9px !important;
+    z-index: 3;
+    font-weight: bold !important;
+  }
+  

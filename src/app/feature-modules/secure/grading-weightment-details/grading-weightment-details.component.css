@@ -1,0 +1,22 @@
+th {
+  background-color: #007ad9 !important;
+  color: white !important;
+}
+
+.img-block {
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+}
+
+.clsforselectedtr{
+  background-color: #007ad9 !important;
+  color: white !important;
+}
+.text-dropdown {
+  width: 100px;
+}
+.right-aligned-input
+{
+text-align:right;
+}

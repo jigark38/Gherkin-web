@@ -1,0 +1,211 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Purchase Management</a></li>
+    <li class="active"><span>Raw Material Branch Stocks</span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+  <p-accordionTab header="Raw Material Branch Stock" [selected]="true">
+
+    <form [formGroup]="rmBranchStockForm" class="form-horizontal;padding-top:10px;">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Stock Date</span>
+
+                <input matInput class="form-control border-bottom-1" #dateOfStock formControlName="stockDate"
+                  placeholder="Please Select Stock Date" [matDatepicker]="stockDateField">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="stockDateField">
+                </mat-datepicker-toggle>
+                <mat-datepicker #stockDateField>
+                </mat-datepicker>
+                <span
+                  *ngIf="rmBranchStockForm.controls.stockDate.errors?.required && rmBranchStockForm.controls.stockDate.touched"
+                  class="error-span">Stock Date is required.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Stock No</span>
+                <input disabled type="text" placeholder="Stock No Auto Generated" class="form-control"
+                  formControlName="stockNo">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <label class="label-control">Area Name</label>
+                <mat-select class="form-control" formControlName="areaName" #areaNameField
+                  placeholder="Please Select Area Name">
+                  <mat-option *ngFor="let item of getRMBranchStocksData?.Area" [value]="item.areaName">
+                    {{item.areaName}}
+                  </mat-option>
+                </mat-select>
+                <span
+                  *ngIf="rmBranchStockForm.controls.areaName.errors?.required && rmBranchStockForm.controls.areaName.touched"
+                  class="error-span">Area Name is required</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Area Code</span>
+                <input disabled type="text" placeholder="Area Code Auto selected" class="form-control"
+                  formControlName="areaCode">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <label class="label-control">Material Group</label>
+                <mat-select class="form-control" #materialGroup formControlName="materialGroup"
+                  placeholder="Please Select Material Group">
+                  <ng-container>
+                    <mat-option *ngFor="let item of getRMBranchStocksData?.RawMaterialMasters"
+                      [value]="item.Raw_Material_Group">
+                      {{item.Raw_Material_Group}}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+                <span
+                  *ngIf="rmBranchStockForm.controls.materialGroup.errors?.required && rmBranchStockForm.controls.materialGroup.touched"
+                  class="error-span">Material Group is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <label class="label-control">Material Name</label>
+                <mat-select class="form-control" formControlName="materialName"
+                  placeholder="Please Select Material Name">
+                  <ng-container>
+                    <mat-option *ngFor="let item of materialNameList" [value]="item.Raw_Material_Details_Name">
+                      {{item.Raw_Material_Details_Name}}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+                <span
+                  *ngIf="rmBranchStockForm.controls.materialName.errors?.required && rmBranchStockForm.controls.materialName.touched"
+                  class="error-span">Material Name is required</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">UOM</span>
+                <input disabled type="text" placeholder="UOM Auto selected" class="form-control" formControlName="uom">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class="form-group">
+                <span class="label-control">Total Quantity</span>
+                <input type="text" class="form-control" #totalQuantityField placeholder="Please Enter Total Quantity"
+                  formControlName="totalQuantity" (blur)="pushBranchStock()">
+                <span
+                  *ngIf="rmBranchStockForm.controls.totalQuantity.errors?.required && rmBranchStockForm.controls.totalQuantity.touched"
+                  class="error-span">Total Quantity is required</span>
+                <span
+                  *ngIf="rmBranchStockForm.get('totalQuantity').errors?.pattern && rmBranchStockForm.controls.totalQuantity.touched"
+                  class="error-span">Total Quantity
+                  can be numberics only. i.e. XXXXXXXXXX.XXX</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+  <p-accordionTab header="Stock Details" [selected]="true">
+
+    <div class="container-fluid">
+      <div class="row m-b-25">
+        <div class="col-md-12">
+          <!-- <app-ng-grid [cols]="orgCols"></app-ng-grid> -->
+
+          <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+            id="grdOrganizations">
+            <tbody>
+              <tr>
+                <th style="background-color: #007ad9!important">S.No</th>
+                <th style="background-color: #007ad9!important">Stock Date</th>
+                <th style="background-color: #007ad9!important">Material Group</th>
+                <th style="background-color: #007ad9!important">Material Name</th>
+                <th style="background-color: #007ad9!important">UOM</th>
+                <th style="background-color: #007ad9!important">Qty</th>
+              </tr>
+              <tr *ngFor="let item of rmBranchStockGrid;let i = index" (click)="RowSelected(item)"
+                [class.active]="item.id === selectedRowId">
+                <td>
+                  <span>{{i+1}}</span>
+                </td>
+                <td>
+                  {{item.stockDate  | date : 'dd-MMM-yyyy'}}
+                </td>
+                <td>
+                  {{item.rawMaterialGroupCodeName}}
+                </td>
+                <td>
+                  {{item.rawMaterialDetailsCodeName}}
+                </td>
+                <td>
+                  {{item.rawMaterialUom}}
+                </td>
+                <td>
+                  {{item.rmStockQuantity}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20">
+  <div class="col-md-12">
+    <button pButton type="submit" label="Clear" class="pull-right ui-button-rounded" (click)="clear()"></button>
+
+    <button [disabled]="!enableModify" pButton type="submit" label="Modify" (click)="modify()"
+      class="pull-right ui-button-rounded"></button>
+
+    <button pButton type="submit" [disabled]="!enableFind" label="Find" class="pull-right ui-button-rounded"
+      (click)="find()"></button>
+
+    <!-- <button pButton type="submit" [disabled]="!hasFindDataUpdated" label="Update Stocks"
+      class="pull-right ui-button-rounded" (click)="submitUpdatedStocks()"></button> -->
+
+    <button pButton [disabled]="!enableSave || !rmBranchStockForm.valid" #saveFocus label="Save"
+      class="pull-right ui-button-rounded" (click)="submitBranchStocks()"></button>
+
+
+    <button pButton type="submit" [disabled]="!enableNewBranchStock" label="Area Stock Update"
+      class="pull-right ui-button-rounded" (click)="addBranchStock()"></button>
+
+  </div>
+</div>

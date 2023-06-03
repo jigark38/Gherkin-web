@@ -1,0 +1,55 @@
+/* Guru css  */
+
+.titlep {
+    color: #ffffff;
+    font-size: 1.5em;
+    font-weight: 600;
+    /* border:2px solid red; */
+    padding-right: 6px;
+    /* padding-left: 6px; */
+    padding-bottom: 4px;
+    padding-top: 10px;
+}
+
+.cleartop {
+    margin-top: -5px;
+}
+
+.pright {
+    float: right;
+}
+
+.btnstyle {
+    border: 3px solid #ffffff;
+    background: #789cff;
+    margin-left: 3px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.btnflex {
+    font-size: 1em;
+    background: #789cff;
+    height: 45px;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radiobtnend {
+    /* border:3px solid red; */
+    margin-top: 30px;
+}
+
+.nowrap th {
+    color: #ffffff;
+}
+
+th {
+    background-color: #007ad9 !important;
+    color: white !important;
+}
+
+
+/* Guru css ends here  */

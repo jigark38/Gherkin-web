@@ -1,0 +1,273 @@
+<div>
+    <div class="row pull-right " id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+            <li><a href="#">Accounts & Finance Management</a></li>
+            <li class="active"><span>Bank Account Details</span></li>
+        </ol>
+    </div>
+    <div class="breadcrumb-height-max"></div>
+    <p-tabView>
+        <p-tabPanel header="Bank Account Detail">
+            <div class="card" [formGroup]="bankAccountDetailsForm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Organisation Name</span>
+                                <mat-select placeholder="Please select Organisation Name"
+                                    class="form-control border-bottom-1" formControlName="organisationCode">
+                                    <mat-option *ngFor="let org of organizationlist" [value]="org.orgCode">
+                                        {{org.organisationName}}
+                                    </mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.organisationCode.errors?.required && submitted) || bankAccountDetailsForm.controls.organisationCode.errors?.required && bankAccountDetailsForm.controls.organisationCode.touched"
+                                    class="error-span float-left">Organisation Name is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Date of Entry</span>
+                                <input matInput class="form-control border-bottom-1"
+                                    placeholder="Please Select Date Of Entry" #dateOfEntry [matDatepicker]="dp"
+                                    formControlName="dateOfEntry">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.dateOfEntry.errors?.required && submitted) || bankAccountDetailsForm.controls.dateOfEntry.errors?.required && bankAccountDetailsForm.controls.dateOfEntry.touched"
+                                    class="error-span">Date of Entry is required field.</span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Account Number</span>
+                                <input matInput formControlName="bankAccountNumber"
+                                    placeholder="Please enter Account Number" class="form-control" value="0"
+                                    type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankAccountNumber.errors?.required && submitted) || bankAccountDetailsForm.controls.bankAccountNumber.errors?.required && bankAccountDetailsForm.controls.bankAccountNumber.touched"
+                                    class="error-span">Account Number is required field.</span>
+                                <span
+                                    *ngIf="bankAccountDetailsForm.get('bankAccountNumber').errors?.pattern && bankAccountDetailsForm.controls.bankAccountNumber.touched"
+                                    class="error-span">Account Number is invalid.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Name of the Bank</span>
+                                <input matInput
+                                    (input)="bankAccountDetailsForm.patchValue({bankName: $event.target.value.toUpperCase()})"
+                                    formControlName="bankName" placeholder="Please enter Name of the Bank"
+                                    class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankName.errors?.required && submitted) || bankAccountDetailsForm.controls.bankName.errors?.required && bankAccountDetailsForm.controls.bankName.touched"
+                                    class="error-span">Name of the Bank is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Branch Name</span>
+                                <input matInput
+                                    (input)="bankAccountDetailsForm.patchValue({bankBranch: $event.target.value.toUpperCase()})"
+                                    formControlName="bankBranch" placeholder="Please enter Branch Name"
+                                    class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankBranch.errors?.required && submitted) || bankAccountDetailsForm.controls.bankBranch.errors?.required && bankAccountDetailsForm.controls.bankBranch.touched"
+                                    class="error-span">Branch Name is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Branch Address</span>
+                                <input matInput formControlName="bankAddress" placeholder="Please enter Branch Address"
+                                    class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankAddress.errors?.required && submitted) || (bankAccountDetailsForm.controls.bankAddress.errors?.required && bankAccountDetailsForm.controls.bankAddress.touched)"
+                                    class="error-span">Branch Address is required field.</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Branch IFSC</span>
+                                <input matInput formControlName="bankIFSC" maxlength="11"
+                                    placeholder="Please enter Branch IFSC" class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankIFSC.errors?.required && submitted) || (bankAccountDetailsForm.controls.bankIFSC.errors?.required && bankAccountDetailsForm.controls.bankIFSC.touched)"
+                                    class="error-span">Branch IFSC is required field.</span>
+                                <span
+                                    *ngIf="bankAccountDetailsForm.get('bankIFSC').errors?.pattern && bankAccountDetailsForm.controls.bankIFSC.touched"
+                                    class="error-span">Branch IFSC is invalid.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Branch SWIFT Code</span>
+                                <input matInput formControlName="bankSwiftCode"
+                                    placeholder="Please enter Branch SWIFT Code" class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.bankSwiftCode.errors?.required && submitted) || (bankAccountDetailsForm.controls.bankSwiftCode.errors?.required && bankAccountDetailsForm.controls.bankSwiftCode.touched)"
+                                    class="error-span">Branch SWIFT Code is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Other Details</span>
+                                <input matInput formControlName="bankOtherDetails"
+                                    placeholder="Please enter Other Details" class="form-control" type="text">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Authorisation</span>
+                                <input matInput formControlName="authorisationEmployee"
+                                    placeholder="Please enter Authorisation" class="form-control" type="text">
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.authorisationEmployee.errors?.required && submitted) || (bankAccountDetailsForm.controls.authorisationEmployee.errors?.required && bankAccountDetailsForm.controls.authorisationEmployee.touched)"
+                                    class="error-span">Authorisation is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control">Operation from Date</span>
+                                <input matInput class="form-control border-bottom-1"
+                                    placeholder="Please Select Operation from Date" #dateOfOperation
+                                    [matDatepicker]="dp1" formControlName="operationDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp1>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.operationDate.errors?.required && submitted) || (bankAccountDetailsForm.controls.operationDate.errors?.required && bankAccountDetailsForm.controls.operationDate.touched) "
+                                    class="error-span">Operation from Date is required field.</span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <label class="label-control">Salary Link Account</label>
+                                <mat-select class="form-control" formControlName="salaryLinkedAccount"
+                                    placeholder="Please Select Salary Link Account">
+
+                                    <mat-option value="Yes">Yes</mat-option>
+                                    <mat-option value="No">No</mat-option>
+
+
+                                </mat-select>
+                                <span
+                                    *ngIf="(bankAccountDetailsForm.controls.salaryLinkedAccount.errors?.required && submitted) || (bankAccountDetailsForm.controls.salaryLinkedAccount.errors?.required && bankAccountDetailsForm.controls.salaryLinkedAccount.touched)"
+                                    class="error-span">Salary Link Account is required field.</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div *ngIf="mode === 'Add' || mode === 'Update'" class="row pull-right m-b-30 m-r-10">
+                        <div class="col-md-12">
+                            <button pButton type="submit" #saveButton label="Save" class="ui-button-rounded"
+                                (click)="onSubmit()"></button>
+                            <button pButton type="submit" label="Clear" (click)="clearForm()"
+                                class="ui-button-rounded"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="mode === 'Close'" class="card" [formGroup]="bankAccountClosureForm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label-control">Bank Account Close</label>
+                                <mat-select class="form-control" formControlName="accountCloseStatus"
+                                    placeholder="Please Select Bank Account Close">
+
+                                    <mat-option value="In Active">Yes</mat-option>
+                                    <mat-option value="Active">No</mat-option>
+
+                                </mat-select>
+                                <span
+                                    *ngIf="(bankAccountClosureForm.controls.accountCloseStatus.errors?.required && submittedClosure)|| (bankAccountClosureForm.controls.accountCloseStatus.errors?.required && bankAccountClosureForm.controls.accountCloseStatus.touched)"
+                                    class="error-span">Bank Account Close is required field.</span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label-control">Closing Date</label>
+                                <input matInput class="form-control border-bottom-1"
+                                    placeholder="Please Select Closing Date" #closingDate [matDatepicker]="dp2"
+                                    formControlName="accountClosingDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp2>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="(bankAccountClosureForm.controls.accountClosingDate.errors?.required && bankAccountClosureForm.controls.accountClosingDate.touched) || (bankAccountClosureForm.controls.accountClosingDate.errors?.required && submittedClosure)"
+                                    class="error-span">Closing Date is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label-control">Reasons</label>
+                                <input matInput formControlName="accountCloseReason" placeholder="Please enter Reasons"
+                                    class="form-control" type="text">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="mode === 'Close'" class="row pull-right m-b-30 m-r-10">
+                        <div class="col-md-12">
+                            <button pButton type="submit" #saveButton label="{{mode}} Bank Account"
+                                class="ui-button-rounded" (click)="bankAccountCloseSubmit()"></button>
+                            <!-- <button pButton type="submit" label="Cancel" (click)="bankAccountCloseClearForm()"
+                                class="ui-button-rounded"></button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+
+<p-tabView>
+    <p-tabPanel header="Bank Account Details">
+        <div class="card-body" style="overflow-y:auto">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <app-ng-grid [cols]="bankAccountCols" [data]="bankAccountDetails" [actions]="actionParams"
+                        (selectedRowHandler)="bankAccountSelectedRowEvent($event)" [caption]="'Bank Account List'">
+                    </app-ng-grid>
+                </div>
+            </div>
+            <div class="row pull-right m-b-30 m-r-10">
+                <div class="col-md-12">
+                    <button pButton type="submit" label="New Bank Account" (click)="addNewBankAccountDetails()"
+                        class="ui-button-rounded"></button>
+                    <button [disabled]="selectedRow ? false : true " pButton type="submit"
+                        label="Bank Account Suspension" (click)="bankAccountSuspension()"
+                        class="ui-button-rounded"></button>
+                    <button [disabled]="selectedRow && activeRecord ? false : true " pButton type="submit"
+                        label="Update Bank Account" (click)="modifyBankAccountDetails()"
+                        class="ui-button-rounded"></button>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+<p-toast [style]="{marginTop: '20px'}"></p-toast>

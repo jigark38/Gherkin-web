@@ -1,0 +1,42 @@
+{
+    "materailDetails": [
+        {
+            "divisionPOP": "1234",
+            "materialGroup": "Group1",
+            "materialName": "Test1",
+            "transferredTillDate": "100",
+            "popStdperUOM": "56",
+            "tobeIssueQty": "230",
+            "transferQty": "87",
+            "transferAmount": "12345",
+            "qtyRequired": "432"
+        },
+        {
+            "divisionPOP": "4678",
+            "materialGroup": "Group2",
+            "materialName": "Test2",
+            "transferredTillDate": "200",
+            "popStdperUOM": "87",
+            "tobeIssueQty": "430",
+            "transferQty": "123",
+            "transferAmount": "34567",
+            "qtyRequired": "567"
+        }
+    ],
+    "stockDetails": [
+        {
+            "batchNoAndDate": "123/12-04-2020",
+            "avaialableStockQty": "345",
+            "issueQty": "",
+            "rate": "120",
+            "amount": "13478"
+        },
+        {
+            "batchNoAndDate": "456/18-04-2020",
+            "avaialableStockQty": "413",
+            "issueQty": "",
+            "rate": "200",
+            "amount": "23456"
+        }
+    ]
+}

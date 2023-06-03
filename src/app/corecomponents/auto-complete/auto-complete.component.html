@@ -1,0 +1,15 @@
+<input type="text" [maxlength]="maxLength" class="form-control" placeholder="{{placeholder}}" aria-label="Number"
+    [(ngModel)]="selectedValue" [formControl]="selectedValueFormControl" [matAutocomplete]="auto"
+    (blur)="blurTextbox($event)">
+<mat-autocomplete autoActiveFirstOption="true" (optionSelected)="optionSelected($event)" #auto="matAutocomplete">
+    <mat-option *ngFor="let option of matchedOptions" [value]="option">
+        <span style="float: left;">{{option}}</span>
+        <mat-icon *ngIf="isEditAllow" class="edit-icon" (click)="editItem(option);$event.stopPropagation()">edit</mat-icon>
+    </mat-option>
+    <mat-option *ngIf="notMatched" [value]="selectedValue">
+        <!-- <span class="font-8">No match found. Do you want to save this field?</span>
+        <br> -->
+        <button class="btn btn-info" (click)="addField()">Add new</button>
+    </mat-option>
+
+</mat-autocomplete>

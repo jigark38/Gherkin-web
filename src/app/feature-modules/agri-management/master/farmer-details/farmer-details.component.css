@@ -1,0 +1,31 @@
+input:read-only{
+    cursor: not-allowed;
+}
+
+.boxShadow{
+    box-shadow: 0px 0px 8px 2px #f0c104;
+}
+
+:focus {
+    background-color: #d3dbff;
+  }
+  .material-icons{
+      font-size: 16px;
+  }
+
+  button{
+    margin-right: 4px;
+  }
+
+  .table th{
+    background-color: #007ad9 !important;
+  }
+  .table-bordered, .table-bordered td, .table-bordered th {
+      border: 1px solid #c3c3c3;
+  }
+  table td {
+      background-color: #FFFFFF;
+    }
+  table tr:hover {
+    background-color: #E3EAEB;
+  }

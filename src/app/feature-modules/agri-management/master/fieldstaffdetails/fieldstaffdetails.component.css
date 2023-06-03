@@ -1,0 +1,23 @@
+.readonly-wrapper {
+    cursor: not-allowed;
+}
+
+.readonly-wrapper .readonly-block {
+    pointer-events: none;
+}
+
+.table th{
+  background-color: #007ad9 !important;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+    border: 1px solid #c3c3c3;
+}
+table td {
+    background-color: #FFFFFF;
+  }
+table tr:hover {
+  background-color: #E3EAEB;
+}
+/* :focus {
+    background-color: #faffd4;
+  } */

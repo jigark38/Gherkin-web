@@ -1,0 +1,313 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Production Process & BOM Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-accordionTab header="Production Process & BOM Details" [selected]="true">
+        <form [formGroup]="bomForm">
+            <div class="container-fluid">
+
+                <form [formGroup]="processForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Date of Creation</span>
+                                <input matInput placeholder="Please Select Date of Creation" #dateOfCreation
+                                    [matDatepicker]="ejd" formControlName="dateofCreation" class="form-control">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #ejd>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="processForm.controls.dateofCreation.invalid && processForm.controls.dateofCreation.touched"
+                                    class="error-span">
+                                    Date of Creation
+                                    is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Prepared By</span>
+                                <input type="text" formControlName="employeeID" class="form-control" value="Test"
+                                    (keydown.Tab)="onKeyTab($event)">
+                                <span
+                                    *ngIf="processForm.controls.employeeID.invalid && processForm.controls.employeeID.touched"
+                                    class="error-span">
+                                    Prepared By
+                                    is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Product Group</span>
+                                <select type="text" formControlName="fpGroupCode" class="form-control" #mySelect
+                                    (change)='onProductGroupOptionsSelected(mySelect.value)'
+                                    (keydown)='onProductNameOptionsSelected(myProductNameSelect.value)'>
+                                    <ng-container *ngFor="let productGroup of productGroups">
+                                        <option [value]="productGroup.groupCode">{{productGroup.grpName}}</option>
+                                    </ng-container>
+                                </select>
+
+                                <span
+                                    *ngIf="processForm.controls.fpGroupCode.invalid && processForm.controls.fpGroupCode.touched"
+                                    class="error-span">
+                                    Product Group
+                                    is required field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Product Name</span>
+                                <select type="text" formControlName="fpVarietyCode" class="form-control"
+                                    #myProductNameSelect
+                                    (change)='onProductNameOptionsSelected(myProductNameSelect.value)'
+                                    (keydown)='onProductNameOptionsSelected(myProductNameSelect.value)'>
+
+                                    <option *ngFor="let varietyGroup of varietyGroups"
+                                        [value]="varietyGroup.varietyCode">{{varietyGroup.varietyName}}</option>
+                                </select>
+                                <span
+                                    *ngIf="processForm.controls.fpVarietyCode.invalid && processForm.controls.fpVarietyCode.touched"
+                                    class="error-span">
+                                    Product Name
+                                    is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Production Process</span>
+                                <input *ngIf="!isBOMPressed" type="text" formControlName="productionProcessName"
+                                    class="form-control">
+                                <select *ngIf="isBOMPressed" type="text" formControlName="productionProcessName"
+                                    class="form-control" #processSelect
+                                    (change)='onProcessOptionsSelected(processSelect.value)'>
+                                    <option *ngFor="let prodProcessDetail of prodProcessDetails"
+                                        [value]="prodProcessDetail.productionProcessName">
+                                        {{prodProcessDetail.productionProcessName}}</option>
+                                </select>
+                                <span
+                                    *ngIf="processForm.controls.productionProcessName.invalid && processForm.controls.productionProcessName.touched"
+                                    class="error-span">
+                                    Production Process
+                                    is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Process Description</span>
+                                <input type="text" *ngIf="!isBOMPressed" formControlName="productionProcessDescription"
+                                    class="form-control" (keydown.Tab)="onKey($event)">
+                                <input type="text" *ngIf="isBOMPressed" formControlName="productionProcessDescription"
+                                    class="form-control" value="selectedProcessDescription" #processDescription>
+                                <!---<select *ngIf="isBOMPressed" type="text" formControlName="productionProcessDescription" class="form-control">
+                            <option *ngFor="let prodProcessDetail of prodProcessDetails" [value]="prodProcessDetail.productionProcessDescription">{{prodProcessDetail.productionProcessDescription}}</option>
+                        </select>-->
+                                <span
+                                    *ngIf="processForm.controls.productionProcessDescription.invalid && processForm.controls.productionProcessDescription.touched"
+                                    class="error-span">
+                                    Process Description
+                                    is required field.</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Media Process</span>
+                            <input type="text" formControlName="mediaProcessName" class="form-control">
+                            <span
+                                *ngIf="bomForm.controls.mediaProcessName.invalid && bomForm.controls.mediaProcessName.touched"
+                                class="error-span">
+                                Media Process
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Media Description</span>
+                            <input type="text" formControlName="mediaProcessDescription" class="form-control"
+                                (keydown.Tab)="onTabKey()">
+                            <span
+                                *ngIf="bomForm.controls.mediaProcessDescription.invalid && bomForm.controls.mediaProcessDescription.touched"
+                                class="error-span">
+                                Media Description
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Effective Date</span>
+                            <input matInput placeholder="Please Select Effective Date" [matDatepicker]="ejd1"
+                                formControlName="effectiveDate" class="form-control">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd1">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #ejd1>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="bomForm.controls.effectiveDate.invalid && bomForm.controls.effectiveDate.touched"
+                                class="error-span">
+                                Effective Date
+                                is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Std. Production Qty</span>
+                            <input type="number" min="0" formControlName="standardProductionQty" class="form-control"
+                                (keydown.Tab)="setProductionUOMList()" pattern="^(?:\d{0,4}\.\d{1,3})$|^\d{0,4}$"
+                                (keyup)="onKeyPress($event)">
+                            <span
+                                *ngIf="bomForm.controls.standardProductionQty.invalid && bomForm.controls.standardProductionQty.touched"
+                                class="error-span">
+                                Std. Production Qty
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Std. / UOM</span>
+                            <!--<input type="text" formControlName="standardProductionUOM" class="form-control">-->
+                            <app-pop-dialog [options]="productionUOMOptionsList"
+                                placeholder="Please Select Standard Production UOM"
+                                (selectedValueChangeBlur)="productionUOMValueChange($event)"
+                                [selectedValueFormControl]="bomForm.controls.standardProductionUOM" [maxLength]="20">
+                            </app-pop-dialog>
+                            <span
+                                *ngIf="bomForm.controls.standardProductionUOM.invalid && bomForm.controls.standardProductionUOM.touched"
+                                class="error-span">
+                                Std. / UOM
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Material Group</span>
+                            <select type="text" formControlName="rawMaterialGroupCode" class="form-control"
+                                #myMaterialSelect (change)='onRawMaterialSelected(myMaterialSelect.value)'
+                                (keyup)='setkey()' (keydown)='onRawMaterialSelected(myMaterialSelect.value)'>
+                                <option *ngFor="let rawMaterialGroup of rawMaterialGroups"
+                                    [value]="rawMaterialGroup.rawMaterialGroupCode">
+                                    {{rawMaterialGroup.rawMaterialGroup}}</option>
+
+                            </select>
+                            <span
+                                *ngIf="bomForm.controls.rawMaterialGroupCode.invalid && bomForm.controls.rawMaterialGroupCode.touched"
+                                class="error-span">
+                                Material Group
+                                is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Material Name</span>
+                            <select type="text" formControlName="rawMaterialDetailsCode" class="form-control">
+                                <ng-container *ngFor="let rawMaterialDetailsGroup of rawMaterialDetailsGroups">
+                                    <option [value]="rawMaterialDetailsGroup.rawMaterialDetailsCode">
+                                        {{rawMaterialDetailsGroup.rawMaterialDetailsName}}</option>
+                                </ng-container>
+                            </select>
+                            <span
+                                *ngIf="bomForm.controls.rawMaterialDetailsCode.invalid && bomForm.controls.rawMaterialDetailsCode.touched"
+                                class="error-span">
+                                Material Name
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Quantity Std.</span>
+                            <input type="number" min="0" formControlName="standardQuantity" class="form-control"
+                                (keydown.Tab)="setBOMUOMList()" pattern="^(?:\d{0,4}\.\d{1,3})$|^\d{0,4}$"
+                                (keyup)="onKeyBOMPress($event)">
+                            <span
+                                *ngIf="bomForm.controls.standardQuantity.invalid && bomForm.controls.standardQuantity.touched"
+                                class="error-span">
+                                Quantity Std.
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">UOM</span>
+                            <!---- <input type="text" formControlName="standardBOMUOM" class="form-control" (keydown.Tab)="openDialog()">-->
+                            <app-pop-dialog [options]="bomUOMOptionsList" placeholder="Please Select Standard BOM UOM"
+                                (selectedValueChangeBlur)="bomUOMValueChange($event)"
+                                [selectedValueFormControl]="bomForm.controls.standardBOMUOM" [maxLength]="20"
+                                (keydown.Tab)="openDialog()">
+                            </app-pop-dialog>
+                            <span
+                                *ngIf="bomForm.controls.standardBOMUOM.invalid && bomForm.controls.standardBOMUOM.touched"
+                                class="error-span">
+                                UOM
+                                is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pull-right m-b-30 m-r-10">
+                    <div class="col-md-12">
+                        <button pButton type="submit" label="New Process" class="ui-button-rounded"
+                            (click)="onNewProcess()" [disabled]="disableNewButton"></button>
+                        <button pButton type="submit" label="BOM" class="ui-button-rounded"
+                            [disabled]="disableBOMButton" (click)="onBOM()"></button>
+                        <button pButton type="submit" label="Save" class="ui-button-rounded"
+                            [disabled]="disableSaveButton" (click)="onSave()" #saveFocus></button>
+                        <!--<button pButton type="submit" label="Modify" class="ui-button-rounded" [disabled]="disableModifyButton"></button>-->
+                        <button pButton type="submit" label="Clear" class="ui-button-rounded" (click)="clearForm()"
+                            [disabled]="disableClearButton"></button>
+                    </div>
+                </div>
+                <div style="height: 20px;"></div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+    <p-accordionTab header="Process & BOM Details" [selected]="true">
+        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+            <tbody>
+                <tr>
+                    <th>Sl.No</th>
+                    <th>Production Process</th>
+                    <th>Media Process</th>
+                    <th>Std. Prod Qty / UOM</th>
+                    <th>Material Name</th>
+                    <th>Std. Qty / UOM</th>
+                </tr>
+                <tr *ngFor="let bomCol of bomCols">
+                    <ng-container>
+                        <td>
+                            {{bomCol.id}}
+                        </td>
+                        <td>
+                            {{bomCol.productionProcessName}}
+                        </td>
+                        <td>
+                            {{bomCol.mediaProcessName}}
+                        </td>
+                        <td>
+                            {{bomCol.standardProductionQty + '/' + bomCol.standardProductionUOM}}
+                        </td>
+                        <td>
+                            {{bomCol.rawMaterialName}}
+                        </td>
+                        <td>
+                            {{bomCol.standardQunatity + '/' + bomCol.standardBOMUOM}}
+                        </td>
+                    </ng-container>
+                </tr>
+            </tbody>
+        </table>
+    </p-accordionTab>
+
+
+    <div style="height: 28px;"></div>
+</p-accordion>

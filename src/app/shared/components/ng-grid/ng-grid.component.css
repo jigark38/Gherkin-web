@@ -1,0 +1,19 @@
+.grid-icon {
+    margin-right: .5em;
+    color: white;
+    border-radius: 6px;
+}
+
+.ui-toast .ui-toast-message.ui-toast-message-warn {
+    background-color: white !important;
+}
+
+.grid-link {
+    color: blue !important;
+    cursor: pointer !important;
+}
+
+a:hover {
+    text-decoration: underline !important;
+    ;
+}

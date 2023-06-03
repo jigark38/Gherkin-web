@@ -1,0 +1,439 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Purchase Management</a></li>
+        <li class="active"><span> Greens Agent Supplier Details</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Greens Agent Supplier Details" [selected]="true">
+        <div class="row  ml-2 mr-2 mt-2 maindiv">
+            <div class="col-md-12 cleartop">
+                <div class="row pl-1 pr-1 align-items-center" [formGroup]="greensAgentSupplierForm">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control"> Date of Entry </span>
+                            <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                [matDatepicker]="eDate" formControlName="agentCreationDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #eDate>
+                            </mat-datepicker>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentCreationDate').valid && greensAgentSupplierForm.get('agentCreationDate').touched)">Date
+                                of Entry
+                                is required!</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control"> Login User Name<span class="text-danger">*</span></span>
+                            <input type="text" class="form-control" formControlName="empCreatedName"
+                                placeholder="Login User Name">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('empCreatedName').valid && greensAgentSupplierForm.get('empCreatedName').touched)">Login
+                                User Name
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4" [hidden]="!showAgntNameTxtBox">
+                        <div class="form-group">
+                            <span class="label-control">Name of Agent<span class="text-danger">*</span></span>
+                            <input type="text" class="form-control" formControlName="agentOrganisationName"
+                                placeholder="Enter name of agent">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentOrganisationName').valid && greensAgentSupplierForm.get('agentOrganisationName').touched)">Name
+                                of Agent
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4" [hidden]="showAgntNameTxtBox">
+                        <div class="form-group">
+                            <span class="label-control">Name of Agent<span class="text-danger">*</span></span>
+                            <input type="text" #agentOrgDetail matInput class="form-control"
+                                [formControl]="agentOrgDetailControl" [matAutocomplete]="agent"
+                                autocomplete="new-password">
+                            <mat-autocomplete #agent="matAutocomplete" [displayWith]="displayAgentOrgDetail.bind(this)"
+                                (optionSelected)="getAgentDetail()">
+                                <mat-option *ngFor="let AgentOrg of filteredAgentOrgDetail  | async"
+                                    [value]="AgentOrg.agentOrgID">
+                                    {{AgentOrg.agentOrganisationName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Legal Status<span class="text-danger">*</span></span>
+                            <input type="text" class="form-control" formControlName="agentOrganisationLegalStatus"
+                                placeholder="Enter legal status">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentOrganisationLegalStatus').valid && greensAgentSupplierForm.get('agentOrganisationLegalStatus').touched)">Legal
+                                Status
+                                is required!</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Address<span class="text-danger">*</span></span>
+                            <textarea maxlength="200" type="text" class="form-control"
+                                formControlName="agentOrganisationAddress" placeholder="Enter address"></textarea>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentOrganisationAddress').valid && greensAgentSupplierForm.get('agentOrganisationAddress').touched)">Address
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country<span class="text-danger">*</span></span>
+                            <!-- <input type="text" matInput class="form-control" formControlName="countryCode"
+                                [matAutocomplete]="auto" autocomplete="new-password" placeholder="Select country name">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCountry.bind(this)"
+                                (optionSelected)="getState($event.option.value)">
+                                <mat-option *ngFor="let country of filteredCountry  | async"
+                                    [value]="country.countryCode ">
+                                    {{country.countryName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete> -->
+                            <app-auto-complete [options]="countryOptionsList" placeholder="Please Select Country"
+                                (selectedValueChangeBlur)="changeCountryValue($event)" (input)="greensAgentSupplierForm.patchValue({countryCode:
+                                $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="greensAgentSupplierForm.controls.countryCode"
+                                (saveitemToList)="saveCountry($event)" [maxLength]="20"></app-auto-complete>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('countryCode').valid && greensAgentSupplierForm.get('countryCode').touched)">Country
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">State<span class="text-danger">*</span></span>
+                            <!-- <input type="text" matInput class="form-control" formControlName="stateCode"
+                                [matAutocomplete]="state" autocomplete="new-password" placeholder="Select state name">
+                            <mat-autocomplete #state="matAutocomplete" [displayWith]="displayState.bind(this)"
+                                (optionSelected)="getDistrict($event.option.value)">
+                                <mat-option *ngFor="let state of filteredState  | async" [value]="state.stateCode ">
+                                    {{state.stateName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete> -->
+                            <app-auto-complete [options]="stateOptionsList" placeholder="Please Select State"
+                                (selectedValueChangeBlur)="changeStateValue($event)" (input)="greensAgentSupplierForm.patchValue({stateCode:
+                              $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="greensAgentSupplierForm.controls.stateCode"
+                                (saveitemToList)="saveState($event)" [maxLength]="20"></app-auto-complete>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('stateCode').valid && greensAgentSupplierForm.get('stateCode').touched)">State
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">District<span class="text-danger">*</span></span>
+                            <!-- <input type="text" matInput class="form-control" formControlName="districtCode"
+                                [matAutocomplete]="district" autocomplete="new-password" placeholder="Select district">
+                            <mat-autocomplete #district="matAutocomplete" [displayWith]="displayDistrict.bind(this)"
+                                (optionSelected)="getPlace($event.option.value)">
+                                <mat-option *ngFor="let district of filteredDistrict  | async"
+                                    [value]="district.districtCode ">
+                                    {{district.districtName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete> -->
+                            <app-auto-complete [options]="districtOptionsList" placeholder="Please Select District"
+                                (selectedValueChangeBlur)="changeDistrictValue($event)" (input)="greensAgentSupplierForm.patchValue({districtCode:
+                              $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="greensAgentSupplierForm.controls.districtCode"
+                                (saveitemToList)="saveDistrict($event)" [maxLength]="20"></app-auto-complete>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('districtCode').valid && greensAgentSupplierForm.get('districtCode').touched)">District
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Place / City<span class="text-danger">*</span></span>
+                            <!-- <input type="text" matInput class="form-control" formControlName="placeCode"
+                                [matAutocomplete]="place" autocomplete="new-password" placeholder="Select Place / City">
+                            <mat-autocomplete #place="matAutocomplete" [displayWith]="displayPlace.bind(this)"
+                                (optionSelected)="setPlace($event.option.value)">
+                                <mat-option *ngFor="let place of filteredPlace  | async" [value]="place.PlaceCode ">
+                                    {{place.PlaceName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete> -->
+                            <app-auto-complete [options]="placeOptionsList" placeholder="Please Select Place / City"
+                                (selectedValueChangeBlur)="placeValueChange($event)"
+                                (saveitemToList)="savePlaceToList($event)"
+                                (input)="greensAgentSupplierForm.patchValue({placeCode: $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="greensAgentSupplierForm.controls.placeCode"
+                                [maxLength]="20">
+                            </app-auto-complete>
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('placeCode').valid && greensAgentSupplierForm.get('placeCode').touched)">>Place
+                                / City
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">PIN Code</span>
+                            <input numeric maxlength="6" type="text" class="form-control" formControlName="agentPINCode"
+                                placeholder="Enter Pincode">
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Management Name<span class="text-danger">*</span></span>
+                            <input maxlength="50" type="text" class="form-control" formControlName="agentManagementName"
+                                placeholder="Enter management name">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentManagementName').valid && greensAgentSupplierForm.get('agentManagementName').touched)">Management
+                                Name
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Designation<span class="text-danger">*</span></span>
+                            <input maxlength="30" type="text" class="form-control"
+                                formControlName="agentManagementDesignation" placeholder="Enter destination">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentManagementDesignation').valid && greensAgentSupplierForm.get('agentManagementDesignation').touched)">Designation
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Mang. Contact Number</span>
+                            <input numeric maxlength="13" type="text" class="form-control"
+                                formControlName="agentManagementCN" placeholder="Enter Mang. contatct number">
+                            <small class="form-text text-danger"
+                                *ngIf="(!greensAgentSupplierForm.get('agentManagementCN').valid && greensAgentSupplierForm.get('agentManagementCN').touched)">Mang.
+                                Contact Number
+                                is required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Correspondance Mail ID</span>
+                            <input maxlength="30" type="text" class="form-control" formControlName="agentManagementMID"
+                                placeholder="Enter correspondance mail id">
+                            <small Class="form-text text-danger" *ngIf="!(greensAgentSupplierForm.get('agentManagementMID').valid) && (greensAgentSupplierForm.get('agentManagementMID').touched) 
+                                && greensAgentSupplierForm.get('agentManagementMID').errors?.email">Enter a valid email
+                                id</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Office Number</span>
+                            <input numeric maxlength="13" type="text" class="form-control"
+                                formControlName="agentOrganisationOfficeNumber" placeholder="Enter office number">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Activity</span>
+                            <mat-select class="form-control" formControlName="agentOrganisationActivity"
+                                placeholder="Select activity">
+                                <mat-option value="Greens Producer">Greens Producer</mat-option>
+                                <mat-option value="Trader">Trader</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">GST No</span>
+                            <input maxlength="15" type="text" class="form-control"
+                                formControlName="agentOrganisationGSTN" placeholder="Enter GST number">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Website</span>
+                            <input maxlength="30" type="text" class="form-control"
+                                formControlName="agentOrganisationWebsite" placeholder="Enter Website URL">
+
+                            <small Class="form-text text-danger" *ngIf="!(greensAgentSupplierForm.get('agentOrganisationWebsite').valid) && (greensAgentSupplierForm.get('agentOrganisationWebsite').touched) 
+                                && greensAgentSupplierForm.get('agentOrganisationWebsite').errors">Enter a valid web
+                                url!</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div [hidden]="addBankBtnClicked" style="height: 28px;"></div>
+<p-accordion [hidden]="(addBankBtnClicked || findBtnClicked)">
+    <p-accordionTab header="Agents Documents" [selected]="true">
+        <div class="container-fluid" [formGroup]="agentDocumentForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Name of the Document</span>
+                        <input type="text" class="form-control" formControlName="agentDocumentName"
+                            placeholder="Enter Name of the Document">
+                        <!-- <span *ngIf="employeeInformationForm.controls.NameOfDocument.errors?.required
+                                &&
+                                employeeInformationForm.controls.NameOfDocument.touched" class="error-span">Name of the
+              Document is
+              required
+              field.</span> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Document Upload</span>
+                        <input type="file" class="form-control" accept="application/pdf, image/jpeg, image/png"
+                            formControlName="documentPath" (change)="onFileChange($event)">
+                        <!-- <span *ngIf="isFileError" class="error-span">Please
+              upload file type of jpeg/png/pdf.</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 28px;"></div>
+<p-accordion [hidden]="(findBtnClicked || modifyBtnClicked)">
+    <p-accordionTab header="Account Details" [selected]="true">
+        <div class="container-fluid" [formGroup]="agentBankDetailsForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Name of the Bank</span>
+                        <input type="text" #bankName class="form-control" formControlName="agentOrganisationBankName"
+                            placeholder="Enter Name of the Bank">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Branch Name</span>
+                        <input type="text" class="form-control" formControlName="agentOrganisationBankBranch"
+                            placeholder="Enter Name of the Branch">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Account Number</span>
+                        <input type="text" class="form-control" formControlName="agentOrganisationBankAccountNo"
+                            placeholder="Enter Account Number">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">IFSC Code</span>
+                        <input type="text" class="form-control" formControlName="agentOrganisationBankIFSC"
+                            placeholder="Enter IFSC Code">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Preffered Bank</span>
+                        <mat-select class="form-control" formControlName="preferredBank" (selectionChange)="addMore()"
+                            placeholder="Select Preffered Bank">
+                            <mat-option value="Yes">Yes</mat-option>
+                            <mat-option value="No"> No </mat-option>
+                        </mat-select>
+                        <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion *ngIf="!(addBankBtnClicked || findBtnClicked || modifyBtnClicked)">
+    <p-accordionTab header="Added Documents" [selected]="true">
+        <div class="container-fluid">
+            <table class="table
+                                                        table-striped
+                                                        table-bordered
+                                                        dt-responsive
+                                                        nowrap" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Documnet Name</th>
+                        <th *ngIf="modifyBtnClicked">Action</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="documentList.length>0">
+                    <tr *ngFor="let doc of documentList; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{doc.agentDocumentName}}</td>
+                        <td *ngIf="modifyBtnClicked"><a (click)="deleteDoc(doc, i)">Delete</a></td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Bank Details" [selected]="true">
+        <div class="container-fluid">
+            <table class="table
+                                                        table-striped
+                                                        table-bordered
+                                                        dt-responsive
+                                                        nowrap" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Bank Name</th>
+                        <th>Branch Name</th>
+                        <th>Account No</th>
+                        <th>IFS Code</th>
+                        <th>Preferred Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let bankDetail of agntBankDetailList; let j=index">
+                        <td>{{j+1}}</td>
+                        <td>{{bankDetail.agentOrganisationBankName}}</td>
+                        <td>{{bankDetail.agentOrganisationBankBranch}}</td>
+                        <td>{{bankDetail.agentOrganisationBankAccountNo}}</td>
+                        <td>{{bankDetail.agentOrganisationBankIFSC}}</td>
+                        <td>{{bankDetail.preferredBank}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right mb-5">
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+            <button pButton type="button" label="Add Greens Agent Supplier" class="ui-button-rounded"
+                (click)="onAddGreensClick()" [disabled]="addGreensBtnDisable"></button>
+            <button pButton type="button" label="Add Bank Accounts" class="ui-button-rounded" (click)="onAddBankClick()"
+                [disabled]="addBankBtnDisable"></button>
+            <button pButton type="button" label="Save" class="ui-button-rounded" (click)="onSaveGreensClick()"
+                [disabled]="greensAgentSupplierForm.invalid" #saveBtn></button>
+            <button pButton type="button" label="Find" class="ui-button-rounded" [disabled]="findBtnDisable"
+                (click)="onFindClick()"></button>
+            <button pButton type="button" label="Modify" class="ui-button-rounded" (click)="onModifyClick()"
+                [disabled]="modifyBtnDisable"></button>
+            <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="clearAndReset()"></button>
+        </div>
+    </div>
+</div>
+<div style="height: 28px;"></div>

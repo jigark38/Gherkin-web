@@ -1,0 +1,859 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">To be decided</a></li>
+        <li class="active"><span>Daily Harvest Details</span></li>
+    </ol>
+</div>
+<div style="height: 28px;"></div>
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton (click)="newHarvest()" label="Hervest Details" class="ui-button-rounded"></button>
+        <button pButton label="Next" class="ui-button-rounded"></button>
+        <button pButton [disabled]="!form1.valid || !isCrateGridValid || !isDurationCorrect || !isKmsCorrect"
+            label="Save" class="ui-button-rounded" (click)="saveDailyHarvest()"></button>
+        <button pButton label="Modify" class="ui-button-rounded"></button>
+        <button pButton label="Clear" class="ui-button-rounded"></button>
+    </div>
+</div>
+<div style="height: 14px;"></div>
+<p-accordion>
+    <p-tabView (onChange)="onTabChange($event)">
+        <p-tabPanel header="Harvest Details">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Harvest Date</span>
+                                <input [matDatepicker]="harvestDatepicker" class="form-control"
+                                    [(ngModel)]="dailyHarvest.HarvestDate" name="HarvestDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                    [for]="harvestDatepicker">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #harvestDatepicker>
+                                </mat-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Area / Branch Name</span>
+                                <select class="form-control" (change)="getAllDetails()"
+                                    [(ngModel)]="dailyHarvest.AreaId" name="AreaId" #AreaId="ngModel">
+
+                                    <ng-container *ngFor="let area of allAreas">
+                                        <option [value]="area.areaId">{{area.name}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Group</span>
+                                <select class="form-control">
+                                    <ng-container *ngFor="let crop of cropGroupList">
+                                        <option [value]="crop.cropGroupCode">{{crop.cropGroupName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Name</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.CropNameCode" name="CropNameCode"
+                                    (change)="getCropSchemeCode()">
+                                    <ng-container *ngFor="let crop of cropNameList">
+                                        <option [value]="crop.cropNameCode">{{crop.name}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Season From/To</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.PsNumber" #PsNumber="ngModel"
+                                    name="PsNumber" (change)="getFarmers()">
+                                    <ng-container *ngFor="let season of seasonList">
+                                        <option [value]="season.psNumber">{{season.seasonFrom | date:'dd-MMM-yyyy' }} /
+                                            {{season.seasonTo   | date:'dd-MMM-yyyy' }}
+                                        </option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Country</span>
+                                <select class="form-control">
+                                    <ng-container *ngFor="let cnt of countryList">
+                                        <option>{{cnt.countryName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">State </span>
+                                <select class="form-control" (change)="getDistrict()" [(ngModel)]="stateCode"
+                                    name="stateCode">
+                                    <ng-container *ngFor="let state of stateList">
+                                        <option [value]="state.stateCode">{{state.stateName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">District</span>
+                                <select class="form-control" (change)="getMandal()" [(ngModel)]="districtCode"
+                                    name="districtCode">
+                                    <ng-container *ngFor="let dist of districtList">
+                                        <option [value]="dist.districtCode">{{dist.districtName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Mandal</span>
+                                <select class="form-control" (change)="getVillage()" [(ngModel)]="mandalCode"
+                                    name="mandalCode">
+                                    <ng-container *ngFor="let mandal of mandalList">
+                                        <option [value]="mandal.mandalCode">{{mandal.mandalsName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Village </span>
+                                <select class="form-control">
+                                    <ng-container *ngFor="let village of villageList">
+                                        <option>{{village.villageName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Search</span>
+                                <textarea type="text" class="form-control" [(ngModel)]="searchText"
+                                    name="seachText"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Farmers Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Farmer Name</th>
+                                <th>Account No</th>
+                                <th>Acres</th>
+                                <th>Village</th>
+                                <th>Select</th>
+                            </tr>
+                            <ng-container
+                                *ngFor="let farmer of allFarmers | filter : 'farmersName' : searchText let i = index">
+                                <tr>
+                                    <td>
+
+                                        {{farmer.farmersName}}
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{farmer.farmersNoofAcresArea}}
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                        <input type="checkbox" (change)="addFarmerToHarvest($event,farmer, i)">
+
+                                    </td>
+
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+        <p-tabPanel header=" Harvest Procurement Details">
+            <form #form1="ngForm">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Havest Date</span>
+                                <input [matDatepicker]="harvestDate" class="form-control"
+                                    [(ngModel)]="dailyHarvest.HarvestDate" name="HarvestDate" #HarvestDate="ngModel"
+                                    required>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="harvestDate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #harvestDate>
+                                </mat-datepicker>
+
+                                <span *ngIf="HarvestDate.touched && HarvestDate.invalid" class="text-danger">
+                                    Harvest Date is required **
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control">Area / Branch Name</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.AreaId" name="AreaId"
+                                    #AreaId="ngModel" disabled required>
+                                    <ng-container *ngFor="let area of allAreas">
+                                        <option [value]="area.areaId">{{area.name}}</option>
+                                    </ng-container>
+                                </select>
+                                <span *ngIf="AreaId.touched && !AreaId.valid" class="text-danger">
+                                    Area name is required **
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control">Crop Name</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.CropNameCode" name="CropNameCode"
+                                    #CropNameCode="ngModel" disabled required>
+                                    <ng-container *ngFor="let crop of cropNameList">
+                                        <option [value]="crop.cropNameCode">{{crop.name}}</option>
+                                    </ng-container>
+                                </select>
+
+                                <span *ngIf="CropNameCode.touched && !CropNameCode.valid" class="text-danger">
+                                    Crop name is required **
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Season From/To</span>
+                                    <select class="form-control" [(ngModel)]="dailyHarvest.PsNumber" #PsNumber="ngModel"
+                                        name="PsNumber" disabled required>
+                                        <ng-container *ngFor="let season of seasonList">
+                                            <option [value]="season.psNumber">
+                                                {{season.seasonFrom | date:'dd-MMM-yyyy' }} /
+                                                {{season.seasonTo   | date:'dd-MMM-yyyy' }}
+                                            </option>
+                                        </ng-container>
+                                    </select>
+
+                                    <span *ngIf="PsNumber.touched && !PsNumber.valid" class="text-danger">
+                                        Season From / To is required **
+                                    </span>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Buyer Supervisor</span>
+                                    <select class="form-control" (change)="convertIdToNo(1)"
+                                        [(ngModel)]="dailyHarvest.BuyingSupervisorEmployeeId"
+                                        name="BuyingSupervisorEmployeeId" #BuyingSupervisorEmployeeId="ngModel"
+                                        required>
+                                        <ng-container *ngFor="let emp of employeeList">
+                                            <option [value]="emp.employeeId">{{emp.employeeName}}</option>
+                                        </ng-container>
+                                    </select>
+
+
+                                    <span
+                                        *ngIf="BuyingSupervisorEmployeeId.touched && !BuyingSupervisorEmployeeId.valid"
+                                        class="text-danger">
+                                        Buyer Supervisor is required **
+                                    </span>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Buying Assistant</span>
+                                    <select type="text" class="form-control"
+                                        [(ngModel)]="dailyHarvest.BuyingAsstEmployeeId" (change)="convertIdToNo(2)"
+                                        name="BuyingAsstEmployeeId" #BuyingAsstEmployeeId="ngModel">
+                                        <ng-container *ngFor="let emp of employeeList">
+                                            <option [value]="emp.employeeId">{{emp.employeeName}}</option>
+                                        </ng-container>
+                                    </select>
+
+                                    <span *ngIf="BuyingAsstEmployeeId.touched && !BuyingAsstEmployeeId.valid"
+                                        class="text-danger">
+                                        Buyer Assistant is required **
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Vehicle Number</span>
+                                    <input type="text" class="form-control" [(ngModel)]="dailyHarvest.VehicleNumber"
+                                        name="VehicleNumber" #VehicleNumber="ngModel" maxlength="20" required>
+
+
+                                    <span *ngIf="VehicleNumber.touched && !VehicleNumber.valid" class="text-danger">
+                                        Vehicle Number is required **
+                                    </span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Driver Name</span>
+                                    <input type="text" class="form-control" [(ngModel)]="dailyHarvest.VehicleDriverName"
+                                        name="VehicleDriverName" #VehicleDriverName="ngModel" required>
+
+                                    <span *ngIf="VehicleDriverName.touched && !VehicleDriverName.valid"
+                                        class="text-danger">
+                                        Driver Name is required **
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control" style="display:block;margin-bottom: 10px;">Starting
+                                    Time</span>
+                                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                                    [maxDate]="dailyHarvest.HarvestEndingTime" (onBlur)="calDuration()"
+                                    [(ngModel)]="dailyHarvest.HarvestStartingTime" [timeOnly]="true"
+                                    #HarvestStartingTime="ngModel" name="HarvestStartingTime" required></p-calendar>
+
+                                <span *ngIf="HarvestStartingTime.touched && !HarvestStartingTime.valid"
+                                    class="text-danger">
+                                    Starting Time is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control">Starting Reading</span>
+                                <input type="number" class="form-control" pattern="^\d{0,7}$" step="0.01" onkeydown="return
+                                        event.keyCode!== 69 && event.keyCode!== 189"
+                                    [(ngModel)]="dailyHarvest.HarvestStartingKms" name="HarvestStartingKms"
+                                    (blur)="calDistance()" #HarvestStartingKms="ngModel" required>
+                                <span *ngIf="HarvestStartingKms.touched && !HarvestStartingKms.valid "
+                                    class="text-danger">
+                                    <span *ngIf="HarvestStartingKms.errors?.required"> Starting Reading is required
+                                        **</span>
+                                    <span *ngIf="HarvestStartingKms.errors?.pattern"> Starting Reading should be of the
+                                        form 00000000
+                                        **</span>
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control" style="display:block;margin-bottom: 10px;">Ending
+                                    Time</span>
+                                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                                    (onBlur)="calDuration()" [minDate]="dailyHarvest.HarvestStartingTime"
+                                    [(ngModel)]="dailyHarvest.HarvestEndingTime" name="HarvestEndingTime"
+                                    #HarvestEndingTime="ngModel" required [timeOnly]="true"></p-calendar>
+
+                                <div *ngIf="!isDurationCorrect" class="text-danger"> Ending time cannot be less than or
+                                    equal to starting time</div>
+                                <div *ngIf="HarvestEndingTime.touched && !HarvestEndingTime.valid" class="text-danger">
+                                    Ending time is required</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                                <span class="label-control">Ending Reading</span>
+                                <input type="number" class="form-control" pattern="^\d{0,7}$" step="0.01" onkeydown="return
+                                event.keyCode!== 69 && event.keyCode!== 189"
+                                    [(ngModel)]="dailyHarvest.HarvestEndingKMS" name="HarvestEndingKMS"
+                                    (blur)="calDistance()" #HarvestEndingKMS="ngModel" required>
+                                <span *ngIf="HarvestEndingKMS.touched && !HarvestEndingKMS.valid " class="text-danger">
+                                    <span *ngIf="HarvestEndingKMS.errors?.required"> Ending Reading is required
+                                        **</span>
+                                    <span *ngIf="HarvestEndingKMS.errors?.pattern"> Ending Reading should be of the
+                                        form 00000000
+                                        **</span>
+                                </span>
+
+                                <span *ngIf="!isKmsCorrect" class="text-danger"> Ending Reading should be more than
+                                    starting reading
+                                    **</span>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Time Duration</span>
+                                <input type="text" class="form-control" [(ngModel)]="timeDuration" name="timeDuration"
+                                    disabled>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">No. of KMS</span>
+                                <input type="number" class="form-control"
+                                    [(ngModel)]="dailyHarvest.HarvestKmsTotalReading" name="HarvestKmsTotalReading"
+                                    #HarvestKmsTotalReading="ngModel" disabled>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Vehicle Charges</span>
+                                <input type="number" class="form-control" [(ngModel)]="dailyHarvest.VehicleCharges"
+                                    pattern="^\d{0,6}$" step="0.01" onkeydown="return
+                                event.keyCode!== 69 && event.keyCode!== 189" name="VehicleCharges"
+                                    #VehicleCharges="ngModel" required>
+                                <span *ngIf="VehicleCharges.touched && !VehicleCharges.valid " class="text-danger">
+                                    <span *ngIf="VehicleCharges.errors?.required"> Vehicle Charges is required
+                                        **</span>
+                                    <span *ngIf="VehicleCharges.errors?.pattern"> Vehicle Charges should be of the
+                                        form 0000000
+                                        **</span>
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Other Charges</span>
+                                <input type="number" class="form-control" pattern="^\d{0,6}$" step="0.01" onkeydown="return
+                                event.keyCode!== 69 && event.keyCode!== 189"
+                                    [(ngModel)]="dailyHarvest.HarvestOtherCharges" name="HarvestOtherCharges"
+                                    #HarvestOtherCharges="ngModel" required>
+
+
+                                <span *ngIf="HarvestOtherCharges.touched && !HarvestOtherCharges.valid "
+                                    class="text-danger">
+                                    <span *ngIf="HarvestOtherCharges.errors?.required"> Other Charges is required
+                                        **</span>
+                                    <span *ngIf="HarvestOtherCharges.errors?.pattern"> Other Charges should be of the
+                                        form 000000
+                                        **</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Total Quantity (KGS)</span>
+                                <input type="number" class="form-control" [(ngModel)]="dailyHarvest.TripTotalQuantity"
+                                    name="TripTotalQuantity" #TripTotalQuantity="ngModel" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Total Crates (Nos)</span>
+                                <input type="number" class="form-control" [(ngModel)]="dailyHarvest.TripTotalCrates"
+                                    name="TripTotalCrates" #TripTotalCrates="ngModel" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Remarks</span>
+                                <textarea type="text" class="form-control" [(ngModel)]="dailyHarvest.HaverstRemarks"
+                                    name="HaverstRemarks" #HaverstRemarks="ngModel" required></textarea>
+
+                                <span *ngIf="HaverstRemarks.touched && !HaverstRemarks.valid" class="text-danger">
+                                    Remarks is required **
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Entered By</span>
+                                <!-- <select class="form-control" (change)="convertIdToNo(3)"
+                                    [(ngModel)]="dailyHarvest.EmployeeId" name="EmployeeId" #EmployeeId="ngModel"
+                                    required>
+                                    <ng-container *ngFor="let emp of employeeList">
+                                        <option [value]="emp.employeeId">{{emp.employeeName}}</option>
+                                    </ng-container>
+                                </select> -->
+
+                                <input type="text" class="form-control" [(ngModel)]="loginDetails.userName"
+                                    name="userName" #userName="ngModel" required disabled>
+
+                                <span *ngIf="userName.touched && !userName.valid" class="text-danger">
+                                    Entered by is required **
+                                </span>
+
+
+                                <!-- <span *ngIf="EmployeeId.touched && !EmployeeId.valid" class="text-danger">
+                                    Entered by is required **
+                                </span> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p-accordionTab header="Farmers Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Farmer Name / AC No</th>
+                                <th>Crop Grade / Count</th>
+                                <th>Total Quantity</th>
+                                <th>Last Harvest</th>
+                                <th>Select</th>
+                            </tr>
+                            <ng-container *ngFor="let farmer of dailyHarvest.HarvestFarmersDetails; let j= index;">
+                                <tr>
+                                    <td> {{j+1}} </td>
+                                    <td> {{farmer.FarmerName}} / {{farmer.AccountNumber}}</td>
+
+
+                                    <td>{{farmer.CropSchemeCode}}/{{farmer.Count}}</td>
+
+                                    <td>{{farmer.FarmerwiseTotalQuantity}}</td>
+
+                                    <td>
+
+                                        <select class="form-control" [(ngModel)]="farmer.LastHarvestStatus"
+                                            name="LastHarvestStatus" (change)="allotLastHarvest()"
+                                            [disabled]="j != selectedFarmerIndexGrid2">
+
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+
+                                        </select>
+                                    </td>
+
+                                    <td>
+
+                                        <mat-radio-button name="select" (click)="selectFarmersForGrade(farmer,j)">
+                                        </mat-radio-button>
+
+                                    </td>
+
+
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Harvest Grade Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Crop Grade / Count</th>
+                                <th>No. of Crates</th>
+                                <th>Gross Wt.</th>
+                                <th>Tare Wt.</th>
+                                <th>Net Wt.</th>
+                            </tr>
+
+
+                            <ng-container *ngFor="let farmerCrate of selectedFarmerCrateDetails; let k = index">
+                                <tr>
+
+                                    <td>
+                                        {{k+1}}
+                                    </td>
+
+                                    <td>
+
+                                        <select class="form-control" [(ngModel)]="farmerCrate.CropSchemeCode"
+                                            name="CropSchemeCode" (change)="allotCropSign()" #CropSchemeCode="ngModel"
+                                            [disabled]="k != selectedCrateIndexGrid3" required>
+                                            <ng-container *ngFor="let crop of cropSchemeList">
+                                                <option [value]="crop.Code">{{crop.Code}}/{{crop.From}} {{' '}}
+                                                    {{crop.Sign}}</option>
+                                            </ng-container>
+                                        </select>
+
+                                        <span
+                                            *ngIf="CropSchemeCode.touched && !CropSchemeCode.valid && k === selectedCrateIndexGrid3"
+                                            class="text-danger">
+                                            Crop Grade by is required **
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+                                        <input type="number" class="form-control" pattern="^\d{0,6}$" step="0.01"
+                                            onkeydown="return
+                                        event.keyCode!== 69 && event.keyCode!== 189"
+                                            [(ngModel)]="farmerCrate.NoOfCrates" name="NoOfCrates" #NoOfCrates="ngModel"
+                                            [disabled]="k != selectedCrateIndexGrid3" required>
+
+                                        <span *ngIf="NoOfCrates.touched && !NoOfCrates.valid " class="text-danger">
+                                            <span *ngIf="NoOfCrates.errors?.required"> Number of crates is required
+                                                **</span>
+                                            <span *ngIf="NoOfCrates.errors?.pattern"> Number of crates should be of
+                                                the
+                                                form 000000
+                                                **</span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control"
+                                            pattern="^(?:\d{0,5}\.\d{1,3})$|^\d{0,5}$" step="0.01" onkeydown="return
+                                        event.keyCode!== 69 && event.keyCode!== 189"
+                                            [(ngModel)]="farmerCrate.GrossWeight" name="GrossWeight"
+                                            #GrossWeight="ngModel" [disabled]="k != selectedCrateIndexGrid3" required>
+
+                                        <span *ngIf="GrossWeight.touched && !GrossWeight.valid " class="text-danger">
+                                            <span *ngIf="GrossWeight.errors?.required"> Gross Weight is required
+                                                **</span>
+                                            <span *ngIf="GrossWeight.errors?.pattern"> Gross Weight should be of the
+                                                form 00000.000
+                                                **</span>
+                                        </span>
+
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control"
+                                            pattern="^(?:\d{0,5}\.\d{1,3})$|^\d{0,5}$" step="0.01" onkeydown="return
+                                        event.keyCode!== 69 && event.keyCode!== 189" (blur)="calNetWeight()"
+                                            [(ngModel)]="farmerCrate.Tareweight" name="Tareweight" #Tareweight="ngModel"
+                                            [disabled]="k != selectedCrateIndexGrid3" required>
+
+                                        <span *ngIf="Tareweight.touched && !Tareweight.valid " class="text-danger">
+                                            <span *ngIf="Tareweight.errors?.required"> Tare Weight is required
+                                                **</span>
+                                            <span *ngIf="Tareweight.errors?.pattern"> Tare Weight should be of the
+                                                form 00000.000
+                                                **</span>
+
+                                        </span>
+
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control"
+                                            [(ngModel)]="farmerCrate.CrateswiseNetWeight" name="CrateswiseNetWeight"
+                                            #CrateswiseNetWeight="ngModel" disabled>
+
+                                    </td>
+
+
+                                </tr>
+
+                            </ng-container>
+
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+        <p-tabPanel header="Procurement Summary">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Area</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.AreaId" name="AreaId"
+                                    #AreaId="ngModel" disabled>
+                                    <ng-container *ngFor="let area of allAreas">
+                                        <option [value]="area.areaId">{{area.name}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Buying Supervisor</span>
+                                <select class="form-control" [(ngModel)]="dailyHarvest.BuyingSupervisorEmployeeId"
+                                    name="BuyingSupervisorEmployeeId" disabled>
+                                    <ng-container *ngFor="let emp of employeeList">
+                                        <option [value]="emp.employeeId">{{emp.employeeName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Buying Assistant</span>
+                                <select type="text" class="form-control" [(ngModel)]="dailyHarvest.BuyingAsstEmployeeId"
+                                    name="BuyingAsstEmployeeId" disabled>
+                                    <ng-container *ngFor="let emp of employeeList">
+                                        <option [value]="emp.employeeId">{{emp.employeeName}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total k.m.</span>
+                            <input type="text" class="form-control" [(ngModel)]="dailyHarvest.HarvestKmsTotalReading"
+                                name="HarvestKmsTotalReading" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Quantity</span>
+                            <input type="text" class="form-control" [(ngModel)]="dailyHarvest.TripTotalQuantity"
+                                name="TripTotalQuantity" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Crates</span>
+                            <input type="text" class="form-control" [(ngModel)]="dailyHarvest.TripTotalCrates"
+                                name="TripTotalCrates" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Summary  Material Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Farmer Name/ AC No</th>
+                                <th>Nos.</th>
+                                <ng-container *ngFor="let crop of cropSchemeList">
+
+                                    <th> Grade {{crop.From}} {{' '}} {{crop.Sign}}</th>
+
+                                </ng-container>
+
+                            </tr>
+
+                            <ng-container *ngFor="let farmer of procurementSummaryList; let ind =index">
+
+                                <tr>
+
+                                    <td>{{ind + 1}}</td>
+
+                                    <td>{{farmer.farmerName}} / {{farmer.accountNumber}}</td>
+
+                                    <td>{{farmer.totalCrates}} </td>
+
+                                    <ng-container *ngFor="let crop of cropSchemeList">
+
+                                        <td> {{generateGradeQuantity(farmer,crop)}}</td>
+
+                                    </ng-container>
+
+
+
+
+                                </tr>
+
+
+
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+    </p-tabView>
+</p-accordion>
+
+
+
+<div class="modal fade" id="continueModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="continueModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:
+                        white;border:1.5px solid black;">
+            <div class="modal-header" style="background-color:#0F204B;">
+                <h5 class="modal-title" id="continueModalLabel" style="color:white;margin-bottom:5px;">
+                    Add Transaction Details</h5>
+                <button type="button" style="color:white" class="close" data-dismiss="modal"
+                    (click)="addCrateToHarvest(0)" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6> Do you wish to continue ?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="addCrateToHarvest(0)">No</button>
+                <button type="button" class="btn btn-primary
+                                        btn-sm" data-dismiss="modal" (click)="addCrateToHarvest(1)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

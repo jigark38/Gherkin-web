@@ -1,0 +1,209 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#"> Purchase Management </a></li>
+        <li class="active"><span>Inward & Gate Pass</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height"></div>
+<p-tabView>
+    <p-tabPanel header="Material Inward Entry">
+        <div class="card" [formGroup]="inwardGatePassForm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="label-control">Unit / Location</span>
+                        <mat-select class="form-control" formControlName="unitLocation" #unitLocationField
+                            placeholder="Please Select Unit Location">
+                            <mat-option [value]="item.orgOfficeNo" *ngFor="let item of officeLocationList">
+                                {{item.orgOfficeName}}</mat-option>
+                        </mat-select>
+                        <span
+                            *ngIf="inwardGatePassForm.controls.unitLocation.errors?.required && inwardGatePassForm.controls.unitLocation.touched"
+                            class="error-span">Unit / Location
+                            is
+                            required field.</span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="label-control">Inward Type</span>
+                        <mat-select class="form-control" (selectionChange)="changeInwardType($event)"
+                            formControlName="inwardType" #inwardTypeElement placeholder="Please Select Inward Type">
+                            <mat-option value="Greens">Greens</mat-option>
+                            <mat-option value="Other Raw Materials">Other Raw Materials</mat-option>
+                            <mat-option value="Dispatch Vehicles">Dispatch Vehicles</mat-option>
+                            <mat-option value="Greens Agent Supplier">Greens Agent Supplier</mat-option>
+                            <mat-option value="Others">Others</mat-option>
+
+                        </mat-select>
+                        <span
+                            *ngIf="inwardGatePassForm.controls.inwardType.errors?.required && inwardGatePassForm.controls.inwardType.touched"
+                            class="error-span">Inward Type
+                            is
+                            required field.</span>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Inward Date & Time</span>
+                            <input matInput class="form-control border-bottom-1"
+                                placeholder="Please Select Inward Date & Time" [matDatepicker]="inwardDateTimeField"
+                                formControlName="inwardDateTime">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                [for]="inwardDateTimeField">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #inwardDateTimeField>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="inwardGatePassForm.controls.inwardDateTime.errors?.required && inwardGatePassForm.controls.inwardDateTime.touched"
+                                class="error-span">Inward Date & Time
+                                is
+                                required field.</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Inward No.</span>
+                            <input type="text" class="form-control" placeholder="Inward No. Auto Generated."
+                                formControlName="inwardNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Supplier/Transporter</span>
+                            <input type="text" class="form-control" maxlength="50"
+                                placeholder="Please Enter Supplier/Transporter"
+                                formControlName="supplierTransporterName">
+                            <span
+                                *ngIf="inwardGatePassForm.controls.supplierTransporterName.errors?.required && inwardGatePassForm.controls.supplierTransporterName.touched"
+                                class="error-span">Supplier/Transporter
+                                is
+                                required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Place</span>
+                            <input type="text" class="form-control" maxlength="30" placeholder="Please Enter Place"
+                                formControlName="supplierTransportPlace">
+                            <span
+                                *ngIf="inwardGatePassForm.controls.supplierTransportPlace.errors?.required && inwardGatePassForm.controls.supplierTransportPlace.touched"
+                                class="error-span">Place
+                                is
+                                required field.</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Invoice/DC No.</span>
+                            <input type="text" class="form-control" placeholder="Please Enter Invoice/DC No."
+                                formControlName="invDcNo">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Invoice/DC Date</span>
+                            <input matInput class="form-control border-bottom-1"
+                                placeholder="Please Select Invoice/DC Date" [matDatepicker]="InvoiceDateTimeField"
+                                formControlName="invDcDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                [for]="InvoiceDateTimeField">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #InvoiceDateTimeField>
+                            </mat-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Vehicle No.</span>
+                            <input type="text" class="form-control" maxlength="30"
+                                placeholder="Please Enter Vehicle No." formControlName="invVehicleNo">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Driver Name</span>
+                            <input type="text" class="form-control" maxlength="30"
+                                placeholder="Please Enter Driver Name" formControlName="driverName">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Material Name</span>
+                            <input type="text" class="form-control" maxlength="30"
+                                placeholder="Please Enter Material Name" formControlName="receivedMaterialName">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Quantity</span>
+                            <input type="text" class="form-control" placeholder="Please Enter Quantity"
+                                formControlName="receivedQuantity">
+                            <span
+                                *ngIf="inwardGatePassForm.get('receivedQuantity').errors?.pattern && inwardGatePassForm.controls.receivedQuantity.touched"
+                                class="error-span">Quantity
+                                can be numberics only. format XXXXXXX.XXX</span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Entered By</span>
+                            <input type="text" class="form-control" maxlength="20" placeholder="Please Enter Entered By"
+                                formControlName="employeeNo">
+                            <span
+                                *ngIf="inwardGatePassForm.controls.employeeNo.errors?.required && inwardGatePassForm.controls.employeeNo.touched"
+                                class="error-span">Entered By
+                                is
+                                required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Remarks</span>
+                            <textarea type="text" class="form-control" maxlength="200" (blur)="blurRemarks()"
+                                placeholder="Please Enter Remarks" formControlName="inwardRemarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+<p-tabView>
+    <p-tabPanel header="Inward Details">
+        <div class="card-body" style="overflow-y:auto">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <app-ng-grid [cols]="orgCols" [actions]="actions" [data]="inwardGatePassList"
+                        (editHandler)="getEditItem($event)"></app-ng-grid>
+                </div>
+            </div>
+            <div class="row pull-right m-b-30 m-r-10">
+                <div class="col-md-12">
+                    <button pButton type="submit" label="New Inward" [disabled]="!enableNewInward" (click)="newInward()"
+                        class="ui-button-rounded"></button>
+                    <button pButton type="submit" label="Save"
+                        [disabled]="!enableSave || !this.inwardGatePassForm.valid" (click)="save()" #saveButton
+                        class="ui-button-rounded"></button>
+                    <button pButton type="submit" label="Find" [disabled]="!enableFind" (click)="find()"
+                        class="ui-button-rounded"></button>
+                    <button pButton type="submit" label="Modify" (click)="modify()" [disabled]="!enableModify"
+                        class="ui-button-rounded"></button>
+                    <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>

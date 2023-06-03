@@ -1,0 +1,323 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Agri Management</a></li>
+    <li class="active"><span>Crop Rate</span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+  <p-accordionTab header="Crop Rate" [selected]="true">
+    <div class="container-fluid" [formGroup]="cropRateForm">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Date of Entry</span>
+            <!-- <input formControlName="dateOfEntry" type="date" class="form-control"
+                                                [class.error-crops]="cropRateForm.controls.dateOfEntry.invalid && cropRateForm.controls.dateOfEntry.touched"
+                                                required> -->
+            <input [matDatepicker]="ejd" #dateOfEntry class="form-control" placeholder="Please Select Date of Entry"
+              formControlName="dateOfEntry">
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+            </mat-datepicker-toggle>
+            <mat-datepicker #ejd>
+            </mat-datepicker>
+            <span *ngIf="cropRateForm.controls.dateOfEntry.invalid && cropRateForm.controls.dateOfEntry.touched"
+              class="error-span">Date
+              of Entry
+              is required field.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Prepared By</span>
+            <input
+              [class.error-crops]="cropRateForm.controls.preparedBy.invalid && cropRateForm.controls.preparedBy.touched"
+              formControlName="preparedBy" type="text" list="exampleList" placeholder="Please Enter Prepared By"
+              class="form-control">
+
+            <!-- <app-auto-complete [options]="options" [(selectedValue)]="preparedBy"
+                                                [selectedValueFormControl]="cropRateForm.controls.preparedBy"
+                                                (saveitemToList)="savePreparedByIndividually($event)">
+                                        </app-auto-complete> -->
+            <!-- <datalist id="exampleList">
+                                                <option value="A">
+                                                <option value="B">
+                                        </datalist> -->
+            <span *ngIf="cropRateForm.controls.preparedBy.invalid && cropRateForm.controls.preparedBy.touched"
+              class="error-span">Prepared By
+              is required field.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Crop Group</span>
+            <mat-select placeholder="Please Select Crop Group"
+              [class.error-crops]="cropRateForm.controls.cropGroup.invalid && cropRateForm.controls.cropGroup.touched"
+              formControlName="cropGroup" class="form-control" (selectionChange)="cropGroupChange($event)">
+              <mat-option *ngFor="let crop of cropGroupList" [value]="crop.cropGroupCode">
+                {{crop.cropGroupName}}</mat-option>
+
+            </mat-select>
+            <!-- <mat-progress-bar *ngIf="" mode="indeterminate"></mat-progress-bar> -->
+            <span *ngIf="cropRateForm.controls.cropGroup.invalid && cropRateForm.controls.cropGroup.touched"
+              class="error-span">Crop Group
+              is required field.</span>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Crop Name</span>
+            <mat-select placeholder="Please Select Crop Name"
+              [class.error-crops]="cropRateForm.controls.cropName.invalid && cropRateForm.controls.cropName.touched"
+              formControlName="cropName" class="form-control" (selectionChange)="cropNameChange($event)">
+              <!-- <mat-option disabled value="NA">--Select Status--</mat-option> -->
+              <mat-option *ngFor="let crop of cropNameList" [value]="crop.cropNameCode">{{crop.name | uppercase}}
+              </mat-option>
+
+            </mat-select>
+            <span *ngIf="cropRateForm.controls.cropName.invalid && cropRateForm.controls.cropName.touched"
+              class="error-span">{{cropRateForm.controls.cropName.errors?.error}}</span>
+            <span *ngIf="cropGroupError" class="error-span">Crop Name not
+              found for selected
+              Crop Group.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Area Name</span>
+            <mat-select placeholder="Please Select Area Name"
+              [class.error-crops]="cropRateForm.controls.areaName.invalid && cropRateForm.controls.areaName.touched"
+              formControlName="areaName" class="form-control" (selectionChange)="areaChange($event)">
+              <mat-option *ngFor="let area of cropAreaList" [value]="area.areaId">
+                {{area.name | uppercase}}</mat-option>
+
+            </mat-select>
+            <span *ngIf="cropRateForm.controls.areaName.invalid && cropRateForm.controls.areaName.touched"
+              class="error-span">Area Name
+              is required field.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Village Name</span>
+            <mat-select placeholder="Please Select Village Name"
+              [class.error-crops]="cropRateForm.controls.villageName.invalid && cropRateForm.controls.villageName.touched"
+              formControlName="villageName" class="form-control">
+              <mat-option *ngFor="let village of villageList" [value]="village.villageCode">
+                {{village.name | uppercase}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="cropRateForm.controls.villageName.invalid && cropRateForm.controls.villageName.touched"
+              class="error-span">Village Name
+              is required field.</span>
+            <span *ngIf="VillageNameError" class="error-span">Village Name
+              not found for
+              selected Area Name.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Season From / To</span>
+            <mat-select #seasonDDL placeholder="Please Select Season From / To"
+              [class.error-crops]="cropRateForm.controls.sessionFromTo.invalid && cropRateForm.controls.sessionFromTo.touched"
+              formControlName="sessionFromTo" class="form-control" (selectionChange)="seasonChange($event)">
+              <mat-option *ngFor="let season of seasonFromToList" [value]="season.psNumber">
+                {{season.seasonFrom | date:'dd-MMM-yyyy' }} -
+                {{season.seasonTo | date:'dd-MMM-yyyy'}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="cropRateForm.controls.sessionFromTo.invalid && cropRateForm.controls.sessionFromTo.touched"
+              class="error-span">Season From / To
+              is required field.</span>
+            <span class="error-span" *ngIf="seasonFromToError">Season From /
+              To not found
+              for selected Crop Name.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Effective Date</span>
+            <!-- <input [class.error-crops]="cropRateForm.controls.effectiveDate.invalid && cropRateForm.controls.effectiveDate.touched"
+                                                formControlName="effectiveDate" type="date" class="form-control"> -->
+            <input [matDatepicker]="efd" class="form-control" placeholder="Please Select Effective Date"
+              formControlName="effectiveDate">
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="efd">
+            </mat-datepicker-toggle>
+            <mat-datepicker #efd>
+            </mat-datepicker>
+            <span *ngIf="cropRateForm.controls.effectiveDate.invalid && cropRateForm.controls.effectiveDate.touched"
+              class="error-span">Effective Date
+              is required field.</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Fruit Size (Count)</span>
+            <mat-select #fruiteSizeMMDDL placeholder="Please Select Fruit Size (Count)"
+              [class.error-crops]="cropRateForm.controls.fruitSizeMM.invalid && cropRateForm.controls.fruitSizeMM.touched"
+              formControlName="fruitSizeMM" class="form-control" (selectionChange)="fruitSizeValueChange($event)">
+              <!-- <mat-option *ngFor="let size of fruiteSizeMMList" [value]="size.cropSchemeCode">{{size.cropCountMM }}
+                {{size.cropSchemeSign}}
+              </mat-option> -->
+              <mat-option *ngFor="let item of fruitSizeCountList" [value]="item.cropSchemeCode">
+                {{item.cropSchemeFrom}}
+                {{item.cropSchemeSign}} / {{item.cropCountMM }}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="cropRateForm.controls.fruitSizeMM.invalid && cropRateForm.controls.fruitSizeMM.touched"
+              class="error-span">Fruit Size (Count)
+              is required field.</span>
+            <span *ngIf="FruitSizeMMError" class="error-span">Fruit Size not
+              found for
+              selected Season.</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Fruit Size (MM)</span>
+            <mat-select formControlName="fruitSizeCount" class="form-control" [disabled]="true"
+              placeholder="Please Select Fruit Size (MM)" (selectionChange)="fruiteSizeMMChange($event)">
+              <!-- <mat-option *ngFor="let item of fruitSizeCountList" [value]="item.cropSchemeFrom">
+                {{item.cropSchemeFrom}}
+              </mat-option> -->
+              <mat-option *ngFor="let size of fruiteSizeMMList" [value]="size.cropCountMM">{{size.cropCountMM }}
+              </mat-option>
+            </mat-select>
+            <span
+              *ngIf="cropRateForm.controls.fruitSizeCount.errors?.required && cropRateForm.controls.fruitSizeCount.touched"
+              class="error-span">Fruit Size (MM)
+              is required field.</span>
+            <!-- <span
+              *ngIf="!cropRateForm.controls.fruitSizeCount.errors?.required && cropRateForm.get('fruitSizeCount').invalid && cropRateForm.controls.fruitSizeCount.touched"
+              class="error-span">{{cropRateForm.get('fruitSizeCount').errors?.error}}</span> -->
+            <span *ngIf="fruitSizeCountError" class="error-span">Fruit Size
+              MM not found
+              for selected Fruit Size (Count)</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Association Rate</span>
+            <input
+              [class.error-crops]="cropRateForm.controls.associationRate.invalid && cropRateForm.controls.associationRate.touched"
+              formControlName="associationRate" type="number" class="form-control" #associationRate
+              (blur)="associationRateBlur()" placeholder="Please Enter Association Rate">
+            <span
+              *ngIf="cropRateForm.get('associationRate').errors?.required && cropRateForm.controls.associationRate.touched"
+              class="error-span">Association Rate
+              is required field.</span>
+            <span
+              *ngIf="cropRateForm.get('associationRate').errors?.pattern && cropRateForm.controls.associationRate.touched"
+              class="error-span">Association Rate
+              is not valid. i.e. : 000.00</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <span class="label-control">Rate / UOM</span>
+            <!-- <input [class.error-crops]="cropRateForm.controls.rateUOM.invalid && cropRateForm.controls.rateUOM.touched"
+                                                formControlName="rateUOM" type="text" (blur)="rateUOMblur()"
+                                                class="form-control"> -->
+            <input matInput #biometric class="form-control" maxlength="10" placeholder="Please Select Rate / UOM"
+              [formControl]="cropRateForm.controls.rateUOM" (blur)="rateUOMblur()" [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+              (optionSelected)="optionSelectedRateUOM($event)">
+              <mat-option *ngFor="let option of ratesUOMList" [value]="option">
+                {{option | uppercase}}
+              </mat-option>
+            </mat-autocomplete>
+
+            <span *ngIf="cropRateForm.controls.rateUOM.errors?.required && cropRateForm.controls.rateUOM.touched"
+              class="error-span">Rate / UOM
+              is required field.</span>
+            <span *ngIf="cropRateForm.get('rateUOM').errors?.pattern && cropRateForm.controls.rateUOM.touched"
+              class="error-span">Rate / UOM can not contain
+              numbers.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+
+  <p-accordionTab header="Price Details" [selected]="true">
+    <div class="container-fluid">
+      <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+        id="grdOrganizations">
+        <tbody>
+          <tr>
+            <th>S.No</th>
+            <th>Effective Date</th>
+            <th>Fruit Size (Count)</th>
+            <th>Fruit Size (mm)</th>
+            <th>Association Rate</th>
+            <th>Rate / UOM</th>
+            <th *ngIf="isFindClicked || isModifyClicked">Select For
+              Edit</th>
+            <th *ngIf="isFindClicked || isModifyClicked">Delete</th>
+          </tr>
+          <tr *ngFor="let cropRate of cropRatesToBeSaved;  index as i">
+            <td class="text-align-center vertical-middle">
+              <span>{{i+1}}</span>
+            </td>
+            <td class="text-align-center vertical-middle">
+              <span>{{cropRate.cropRateEffectiveDate | date : 'dd-MMM-yyyy'}}</span>
+            </td>
+            <td class="text-align-center vertical-middle">
+              <span>{{cropRate.cropSchemeFrom}} {{cropRate.cropSchemeSign}}</span>
+            </td>
+            <td class="text-align-center vertical-middle">
+              <span> {{cropRate.cropCount}}
+              </span>
+            </td>
+
+            <td class="text-align-center vertical-middle">
+              <span>{{cropRate.cropRateAsperAssociation}}</span>
+            </td>
+            <td class="text-align-center vertical-middle">
+              <span>{{cropRate.cropRatePerUOM}}</span>
+            </td>
+            <td class="text-align-center vertical-middle" *ngIf="isFindClicked || isModifyClicked">
+              <mat-radio-button name="select" (click)="selectCropRateToEdit(cropRate)">
+              </mat-radio-button>
+            </td>
+            <td class="text-align-center vertical-middle" *ngIf="isFindClicked || isModifyClicked">
+              <mat-icon class="cursor-pointer" (click)="deleteCropRate(cropRate)">
+                delete</mat-icon>
+            </td>
+          </tr>
+          <tr *ngIf="cropRatesToBeSaved && cropRatesToBeSaved.length == 0">
+            <td colspan="8" class="text-align-center vertical-middle">
+              <span>No Record Found.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+
+  <div class="col-md12">
+    <button pButton type="submit" label="New Crop Rates" (click)="newCropRate()" [disabled]="disableButton || !isNewOn"
+      class="ui-button-rounded"></button>
+    <button pButton type="submit" #saveCommand label="Save" (click)="saveCropRates()"
+      [disabled]="disableButton  || !isSaveOn || !cropRateForm.valid" class="ui-button-rounded"></button>
+    <button pButton type="submit" label="Find" (click)="findClick()" [disabled]="disableButton  || !isFindOn"
+      class="ui-button-rounded"></button>
+    <button pButton type="submit" label="Modify" (click)="modifyClick()" [disabled]="disableButton  || !isModifyOn"
+      class="ui-button-rounded"></button>
+    <button pButton type="submit" label="Clear" (click)="clearForm()"
+      class="ui-button-rounded"></button>
+  </div>
+</div>

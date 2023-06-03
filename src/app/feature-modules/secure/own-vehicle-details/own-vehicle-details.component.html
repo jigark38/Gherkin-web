@@ -1,0 +1,273 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Transport & Vehicle Management</a></li>
+        <li class="active"><span>Own Vehicles Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<form [formGroup]="vehicleForm" #formDirective="ngForm">
+    <p-accordion>
+        <p-accordionTab header="Own Vehicle Details" [selected]="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Entered By</span>
+                            <input type="text" formControlName="EnteredBy" class="form-control" maxlength="20"
+                                placeholder="Please Select Login User Name">
+                            <span *ngIf="vehicleForm.controls.EnteredBy.errors?.required
+                                    &&
+                                    vehicleForm.controls.EnteredBy.touched" class="error-span">Login
+                                Entered By is
+                                required
+                                field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Entry</span>
+                            <div>
+                                <input matInput class="form-control
+                                                  border-bottom-1" placeholder="Please Select Date Of Entry"
+                                    #dateOfEntry [matDatepicker]="doe" formControlName="DateOfEntry">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="doe">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #doe>
+                                </mat-datepicker>
+                                <span *ngIf="vehicleForm.controls.DateOfEntry.errors?.required
+                                                  &&
+                                                  vehicleForm.controls.DateOfEntry.touched" class="error-span">Date
+                                    of Entry is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Vehicle Type</span>
+                            <mat-select class="form-control" formControlName="VehicleType" placeholder="Please
+                        Select
+                        Vehicle Type">
+                                <mat-option value="Commercial">Commercial</mat-option>
+                                <mat-option value="Passenger">Passenger</mat-option>
+                            </mat-select>
+                            <span *ngIf="vehicleForm.controls.VehicleType.errors?.required
+                        &&
+                        vehicleForm.controls.VehicleType.touched" class="error-span">Vehicle type is
+                                required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Vehicle Make</span>
+                            <input type="text" class="form-control" placeholder="Please Enter Vehicle Make"
+                                formControlName="VehicleMake" maxlength="30" />
+                            <span *ngIf="vehicleForm.controls.VehicleMake.errors?.required
+                                &&
+                                vehicleForm.controls.VehicleMake.touched" class="error-span">Vehicle Make is required
+                                field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Purchase</span>
+                            <div>
+                                <input matInput class="form-control
+                                                  border-bottom-1" placeholder="Please Select Date Of Purchase"
+                                    #dateOfPurchase [matDatepicker]="dop" formControlName="DateOfPurchase">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dop">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dop>
+                                </mat-datepicker>
+                                <span *ngIf="vehicleForm.controls.DateOfPurchase.errors?.required
+                                                  &&
+                                                  vehicleForm.controls.DateOfPurchase.touched" class="error-span">Date
+                                    of Purchase is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Registration Number</span>
+                            <input [hidden]="isFindOn || isModifyOn" type="text" class="form-control"
+                                placeholder="Please Enter Registration Number" formControlName="RegistrationNumber"
+                                maxlength="20" #registrationNumber (blur)="RegistrationNumberBlur()" />
+                            <mat-select [hidden]="!isFindOn && !isModifyOn" class="form-control"
+                                formControlName="RegistrationNumber" placeholder="Please Select Registration Number"
+                                (selectionChange)="optionSelectedRegistrationNumber($event)" #registrationNumberSelect>
+                                <mat-option *ngFor="let item of RegistrationNumberListOptions" [value]="item">
+                                    {{item}}</mat-option>
+                            </mat-select>
+
+                            <span *ngIf="vehicleForm.controls.RegistrationNumber.errors?.required
+                                &&
+                                vehicleForm.controls.RegistrationNumber.touched" class="error-span">Registration number
+                                is required
+                                field.</span>
+                            <span *ngIf="registrationNumberError" class="error-span">Registration Number
+                                alreay exist, Please enter unique
+                                one.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Chassis No</span>
+                            <input type="text" class="form-control" placeholder="Please Enter Chassis No"
+                                formControlName="ChassisNumber" maxlength="30" (blur)="ChasisNumberBlur()" />
+                            <span *ngIf="vehicleForm.controls.ChassisNumber.errors?.required
+                                &&
+                                vehicleForm.controls.ChassisNumber.touched" class="error-span">Chassis No is required
+                                field.</span>
+                            <span *ngIf="chasisNumberError" class="error-span">Chasis No
+                                alreay exist, Please enter unique
+                                one.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">No. of Tyres</span>
+                            <input type="number" formControlName="Tyres" placeholder="Please Enter No of Tyres"
+                                class="form-control" min="0" max="99">
+                            <span *ngIf="vehicleForm.controls.Tyres.errors?.required
+                                &&
+                                vehicleForm.controls.Tyres.touched" class="error-span">No of Tyres is required
+                                field.</span>
+                            <span *ngIf="vehicleForm.controls.Tyres.errors?.pattern &&
+                                vehicleForm.controls.Tyres.touched" class="error-span">
+                                Only 2 digit numbers are allowed from 0 to 99.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Average Mileage / Ltr.</span>
+                            <input type="number" formControlName="Mileage"
+                                placeholder="Please Enter Average Mileage / Ltr" class="form-control" max="99.99"
+                                min="0">
+                            <span *ngIf="vehicleForm.controls.Mileage.errors?.required
+                                &&
+                                vehicleForm.controls.Mileage.touched" class="error-span">Average Mileage / Ltr is
+                                required
+                                field.</span>
+                            <span *ngIf="vehicleForm.controls.Mileage.errors?.pattern &&
+                                vehicleForm.controls.Mileage.touched" class="error-span">
+                                Only 2 digit numbers with maximum 2 decimal values are allowed from 0 to 99.99</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Permit Renewal Duration</span>
+                            <input type="number" formControlName="PermitDuration"
+                                placeholder="Please Enter Permit Renewal Duration" class="form-control" max="99"
+                                min="0">
+                            <span *ngIf="vehicleForm.controls.PermitDuration.errors?.required
+                                &&
+                                vehicleForm.controls.PermitDuration.touched" class="error-span">Permit Renewal Duration
+                                is
+                                required
+                                field.</span>
+                            <span *ngIf="vehicleForm.controls.PermitDuration.errors?.pattern &&
+                                vehicleForm.controls.PermitDuration.touched" class="error-span">
+                                Only 2 digit numbers are allowed from 0 to 99.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Capacity in Kgs</span>
+                            <input type="number" formControlName="Capacity" placeholder="Please Enter Capacity in Kgs"
+                                class="form-control" max="99999" min="0">
+                            <span *ngIf="vehicleForm.controls.Capacity.errors?.required
+                                &&
+                                vehicleForm.controls.Capacity.touched" class="error-span">Capacity
+                                is
+                                required
+                                field.</span>
+                            <span *ngIf="vehicleForm.controls.Capacity.errors?.pattern &&
+                                vehicleForm.controls.Capacity.touched" class="error-span">
+                                Only 5 digit numbers are allowed from 0 to 99999.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">GPS Tracking Device No</span>
+                            <input type="text" class="form-control" placeholder="Please Enter GPS Tracking Device No"
+                                formControlName="GPSDeviceNumber" maxlength="30" (blur)="GPSDeviceBlur()" />
+                            <span *ngIf="gpsDeviceError" class="error-span">GPS Device No
+                                alreay exist, Please enter unique
+                                one.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Document Name</span>
+                            <input type="text" class="form-control" placeholder="Please Enter Document Name"
+                                formControlName="DocumentName" maxlength="30" #documentName />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Upload</span>
+                            <input type="file" class="form-control" formControlName="UploadDocument"
+                                accept="application/pdf, image/jpeg, image/png" (change)="onFileChange($event)">
+                            <span *ngIf="isFileError" class="error-span">Please
+                                upload file type of jpeg/png/pdf.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+    <p-accordion>
+        <p-accordionTab header="Vehicle Documents Details" [selected]="true">
+            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                <tbody>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Document Name</th>
+                    </tr>
+                    <tr *ngFor="let document of documentList;let
+                                        i=
+                                        index">
+                        <td class="text-align-center">
+                            <span>{{i+1}}</span>
+                        </td>
+                        <td class="text-align-center">
+                            <span>
+                                <a class="text-deco-underline"
+                                    (click)="downloadFile(document)">{{document.documentName}}</a></span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </p-accordionTab>
+    </p-accordion>
+    <div style="height: 28px;"></div>
+    <div class="mgt-20 pull-right">
+        <mat-progress-bar *ngIf="disableButton" mode="indeterminate"></mat-progress-bar>
+        <div class="col-md-12">
+            <button pButton type="submit" [disabled]="disableButton || !enableNew" label="New" class="ui-button-rounded"
+                (click)="addNewVehicle()"></button>
+            <button pButton type="submit"
+                [disabled]="disableButton || !enableSave || !vehicleForm.valid || registrationNumberError || registrationNumberError==null || gpsDeviceError || gpsDeviceError==null || chasisNumberError || chasisNumberError==null"
+                #saveButton label="Save" class="ui-button-rounded" (click)="saveVehicle()"></button>
+            <button pButton type="submit" [disabled]="disableButton || !enableFind" label="Find"
+                class="ui-button-rounded" (click)="findVehicle()"></button>
+            <button pButton type="submit" [disabled]="disableButton || !enableModify" #modifyButton label="Modify"
+                class="ui-button-rounded" (click)="modifyClick()"></button>
+            <button pButton type="reset" [disabled]="disableButton" label="Clear" class="ui-button-rounded"
+                (click)="clearVehicleDetails()"></button>
+        </div>
+    </div>
+    <div style="height: 28px;"></div>
+</form>

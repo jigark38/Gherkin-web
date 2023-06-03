@@ -1,0 +1,326 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Yearly Holidays List</span></li>
+    </ol>
+</div>
+
+<p-accordion>
+    <p-accordionTab header="Yearly Calender" class="card" [selected]="yearlyCalenderClicked" tabindex="-1"
+        [disabled]="!yearlyCalenderClicked">
+        <!-- the farmers report code -->
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <form [formGroup]="yearlyCalenderDetailsForm">
+                    <div class="row pl-1 pr-1">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Date of Entry</span>
+                                <input [matDatepicker]="ejd" placeholder="dd-MMM-yyyy" class="form-control"
+                                    formControlName="dateOfEntry" #PsDate>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #ejd>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="yearlyCalenderDetailsForm.controls.dateOfEntry.invalid && yearlyCalenderDetailsForm.controls.dateOfEntry.touched"
+                                    class="error-span">Date
+                                    of Entry
+                                    is required field.</span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Login User Name</span>
+                                <input type="text" placeholder="" class="form-control" formControlName="employeeId"
+                                    placeholder="User Name">
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Calender Year From Date</span>
+                                <input [matDatepicker]="fromdate" class="form-control"
+                                    placeholder="Enter year from date" formControlName="calenderYearFromDate" #FromDate>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="fromdate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #fromdate>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="yearlyCalenderDetailsForm.controls.calenderYearFromDate.invalid && yearlyCalenderDetailsForm.controls.calenderYearFromDate.touched"
+                                    class="error-span">From Date
+                                    is required field.</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Calender Year To Date</span>
+                                <input [matDatepicker]="todate" class="form-control" placeholder="Enter year to date"
+                                    formControlName="calenderYearToDate" #PsFromDt>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="todate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #todate>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="yearlyCalenderDetailsForm.controls.calenderYearToDate.invalid && yearlyCalenderDetailsForm.controls.calenderYearToDate.touched"
+                                    class="error-span">To Date
+                                    is required field.</span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Compulsory No. of Holidays a Year</span>
+                                <input type="number" placeholder="" class="form-control"
+                                    placeholder="Enter No. of holiday a year"
+                                    formControlName="yearlyStatutoryHolidayCount" (blur)="focusSave()">
+                                <span
+                                    *ngIf="yearlyCalenderDetailsForm.controls.yearlyStatutoryHolidayCount.invalid && yearlyCalenderDetailsForm.controls.yearlyStatutoryHolidayCount.touched"
+                                    class="error-span">Enter valid number of holidays</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </p-accordionTab>
+    <p-accordionTab header="Weekdays Holiday" class="card" [selected]="weeklyHolidayClicked" tabindex="-1"
+        [disabled]="!weeklyHolidayClicked">
+        <div class="row pl-3 pr-3 ml-2 mr-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <form [formGroup]="weeklyHolidaysForm">
+                    <div class="row pl-1 pr-1 mb-4">
+
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Calender Year</span>
+                                <mat-select class="form-control" formControlName="holidayPassingNo"
+                                    #WeeklyholidaysPassingNoDDL (blur)="getDays()">
+                                    <mat-option *ngFor="let calendarDetail of yearlyCalendarDetailList"
+                                        [value]="calendarDetail.holidaysPassingNo">
+                                        {{calendarDetail.calenderYearFromDate | date: 'dd-MMM-yyyy'}} /
+                                        {{calendarDetail.calenderYearToDate | date: 'dd-MMM-yyyy'}}
+                                    </mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="weeklyHolidaysForm.controls.holidayPassingNo.invalid && weeklyHolidaysForm.controls.holidayPassingNo.touched"
+                                    class="error-span">Please select a year</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Weekly Holidays</span>
+                                <mat-select class="form-control" multiple formControlName="weekDaysId"
+                                    [(ngModel)]="selectedDays" (closed)="focusSave()">
+                                    <mat-option *ngFor="let weekDays of weekDaysList" [value]="weekDays.weekdaysId"
+                                        [disabled]="dayAlreadyExist(weekDays.weekdaysId)">
+                                        {{weekDays.weekdaysName | uppercase}}</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="weeklyHolidaysForm.controls.weekDaysId.invalid && weeklyHolidaysForm.controls.weekDaysId.touched"
+                                    class="error-span">Please select a day(s)</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </p-accordionTab>
+    <p-accordionTab header="Statutory Holidays Details" class="card" [selected]="statutoryHolidayClicked"
+        [disabled]="!statutoryHolidayClicked" tabindex="-1">
+        <!-- the farmers report code -->
+        <div class="row pl-3 pr-3 ml-2 mr-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <form [formGroup]="statutoryHolidaysForm" (ngSubmit)="onSubmit()">
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Calender Year</span>
+                                <mat-select class="form-control" formControlName="holidaysPassingNum"
+                                    #StatutoryholidaysPassingNoDDL (blur)="onStatutoryControlBlur();setDateRange()">
+                                    <mat-option *ngFor="let calendarDetail of yearlyCalendarDetailList"
+                                        [value]="calendarDetail.holidaysPassingNo">
+                                        {{calendarDetail.calenderYearFromDate | date: 'dd-MMM-yyyy'}} /
+                                        {{calendarDetail.calenderYearToDate | date: 'dd-MMM-yyyy'}}
+                                    </mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="statutoryHolidaysForm.controls.holidaysPassingNum.invalid && statutoryHolidaysForm.controls.holidaysPassingNum.touched"
+                                    class="error-span">Please select a year</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Number</span>
+                                <input type="text" placeholder="" class="form-control"
+                                    placeholder="Enter holiday number" formControlName="statutoryHolidaysNo"
+                                    (blur)="onStatutoryControlBlur()">
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Date</span>
+                                <input [matDatepicker]="statutoryholidaysDate" class="form-control" [min]="minDate"
+                                    [max]="maxDate" placeholder="Enter holiday date" formControlName="holidaysDate"
+                                    #StatutoryholidaysDate (blur)="onStatutoryControlBlur()"
+                                    (dateInput)="filterDaybyDate($event.value)">
+                                <mat-datepicker-toggle class=" date-picker-icon-position" matSuffix
+                                    [for]="statutoryholidaysDate" (blur)="onStatutoryControlBlur()">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #statutoryholidaysDate>
+                                </mat-datepicker>
+                                <span
+                                    *ngIf="statutoryHolidaysForm.controls.holidaysDate.invalid && statutoryHolidaysForm.controls.holidaysDate.touched"
+                                    class="error-span">Please select holiday date</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Weekday</span>
+                                <mat-select class="form-control" formControlName="weekDaysId"
+                                    [(ngModel)]="selectedDayId">
+                                    <mat-option *ngFor="let weekDays of dayByDate" [value]="weekDays.weekdaysId">
+                                        {{weekDays.weekdaysName | uppercase}}
+                                    </mat-option>
+                                    <!-- <mat-option *ngFor="let weekDays of weekDaysList" [value]="weekDays.weekdaysId">
+                                        {{weekDays.weekdaysName | uppercase}}</mat-option> -->
+                                </mat-select>
+                                <span
+                                    *ngIf="statutoryHolidaysForm.controls.weekDaysId.invalid && statutoryHolidaysForm.controls.weekDaysId.touched"
+                                    class="error-span">Please select day</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Holiday Occation</span>
+                                <input type="text" placeholder="" class="form-control" formControlName="holidayOccasion"
+                                    placeholder="Enter holiday occation" (focusout)="onStatutoryControlBlur()">
+                                <span
+                                    *ngIf="statutoryHolidaysForm.controls.holidayOccasion.invalid && statutoryHolidaysForm.controls.holidayOccasion.touched"
+                                    class="error-span">Please enter holiday occasion</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion tabindex="-1">
+    <p-accordionTab header="Yearly Holidays Details" class="card" [selected]="true" tabindex="-1" activeIndex="0">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Holidays Calender Year</th>
+                            <th>Weekly Holidays</th>
+                            <th>Holiday No</th>
+                            <th>Holiday Date / Weekday</th>
+                            <th>Holiday Occasion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let groupRowData of yearlyCalendarDetailList; let $index1 = index;">
+                            <tr *ngIf="min <= $index1 && max > $index1">
+                                <td>
+                                    {{$index1+1}}
+                                </td>
+                                <td>
+                                    {{ groupRowData.calenderYearFromDate | date: 'dd-MMM-yyyy'}} /
+                                    {{groupRowData.calenderYearToDate | date: 'dd-MMM-yyyy'}}</td>
+                                <td class="customTd">
+                                    <ul>
+                                        <div *ngFor="let obj of groupRowData.weeklyHolidaysList">
+                                            {{getWeekdayName(obj.weekDaysId)}}
+                                        </div>
+                                    </ul>
+                                </td>
+                                <td class="customTd">
+                                    <ul>
+                                        <div
+                                            *ngFor=" let $index = index; let requestDetailData of groupRowData.statutoryHolidaysList;">
+                                            {{$index+1}}
+                                        </div>
+                                    </ul>
+                                </td>
+                                <td class="customTd">
+                                    <ul>
+                                        <div
+                                            *ngFor=" let $index = index; let requestDetailData of groupRowData.statutoryHolidaysList;">
+                                            {{ requestDetailData.holidaysDate | date: 'dd-MMM-yyyy'}} /
+                                            {{ getWeekdayName(requestDetailData.weekDaysId)}}
+                                        </div>
+                                    </ul>
+                                </td>
+                                <td class="customTd">
+                                    <ul>
+                                        <div
+                                            *ngFor=" let $index = index; let requestDetailData of groupRowData.statutoryHolidaysList;">
+                                            {{ requestDetailData.holidayOccasion}}
+                                        </div>
+                                    </ul>
+
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="3" [totalRecords]="yearlyCalendarDetailList.length"
+                    (onPageChange)="paginate($event)">
+                </p-paginator>
+                <!-- <mat-paginator *ngIf="yearlyCalendarDetailList.length>0" [length]="yearlyCalendarDetailList.length-1"
+                    [pageSize]="3" [pageSizeOptions]="pageSizeOptions" (page)="pageEvent = filterHolidayData($event)">
+                </mat-paginator> -->
+            </div>
+
+
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="button" label="Yealy Calender" class="ui-button-rounded"
+                (click)="onYealyCalenderClick()" tabindex="-1" [disabled]="yearlyCalenderBtnDisable"></button>
+            <button pButton type="button" label="Weekdays Holiday" class="ui-button-rounded"
+                (click)="onWeekDaysHolidayClick()" tabindex="-1" [disabled]="weekdayHolidayBtnDisable"></button>
+            <button pButton type="button" label="Statutory Holidays" class="ui-button-rounded"
+                (click)="onStatutoryHolidayClick()" tabindex="-1" [disabled]="statutoryHolidayBtnDisable"></button>
+            <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="onSubmit()" #SaveCommand
+                [disabled]="saveBtnDisable"></button>
+            <button pButton type="button" label="Modify" class="ui-button-rounded"
+                [disabled]="modifyBtnDisable"></button>
+            <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="clear()"></button>
+
+        </div>
+    </div>
+</div>
+
+<jw-modal id="save-holidays-Modal">
+    <h6>Do you want to add holidays?</h6>
+    <div class="row pull-right bottom-right">
+        <input type="button" class="btn btn-info" #yesBtn (click)="onAddMoreHoliday();" value="yes" />
+        <input type="button" class="btn btn-info" (click)="onNoMoreHoliday();" value="No" />
+    </div>
+
+</jw-modal>

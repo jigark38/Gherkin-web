@@ -1,0 +1,877 @@
+<div class="row pull-right" id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+                <li><a href="#">Agri Management</a></li>
+                <li class="active"><span>Farmers Agreement</span></li>
+        </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+        <p-accordionTab header="Farmers Agreement" [selected]="true">
+                <div class="container-fluid">
+                        <form #form="ngForm" (ngSubmit)="saveAgmt()">
+                                <div class="row">
+
+                                        <div class="col-md-4">
+
+                                                <div class="form-group">
+                                                        <span class="label-control">Agreement
+                                                                Date</span>
+                                                        <input [matDatepicker]="agreementDate" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.FarmersAgreementDate"
+                                                                name="FarmersAgreementDate"
+                                                                #FarmersAgreementDate="ngModel" required [disabled]="disableFarmerFields
+                                                                ||
+                                                                isSearchResults" placeholder="Select Agreement Date">
+                                                        <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                matSuffix [for]="agreementDate">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #agreementDate>
+                                                        </mat-datepicker>
+
+                                                        <span *ngIf="FarmersAgreementDate.touched
+                                                                &&
+                                                                !FarmersAgreementDate.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Date is required
+                                                                **
+                                                        </span>
+
+
+
+                                                </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Agreement
+                                                                No</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.FarmersAgreementCode"
+                                                                name="FarmersAgreementCode"
+                                                                #FarmersAgreementCode="ngModel" disabled required
+                                                                placeholder="Agreement No">
+
+                                                        <span *ngIf="FarmersAgreementCode.touched
+                                                                &&
+                                                                !FarmersAgreementCode.valid" class="text-danger">
+                                                                Agreement Code
+                                                                is
+                                                                required **
+                                                        </span>
+
+                                                </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Area Name</span>
+                                                        <mat-select class="form-control" [(ngModel)]="farmerAgmt.AreaID"
+                                                                (selectionChange)="allotAreaCode()" name="AreaID"
+                                                                #AreaID="ngModel" [disabled]="disableFarmerFields
+                                                                ||
+                                                                isSearchResults" required
+                                                                placeholder="Select Area Name">
+                                                                <mat-option *ngFor="let area of allAreas"
+                                                                        [value]="area.areaId">
+                                                                        {{area.areaName | uppercase}}
+                                                                </mat-option>
+
+                                                        </mat-select>
+
+                                                        <span *ngIf="AreaID.touched
+                                                                &&
+                                                                !AreaID.valid &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Area Name is
+                                                                required **
+                                                        </span>
+
+
+                                                </div>
+
+
+                                        </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Area
+                                                                Code</span>
+                                                        <input type="number" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.AreaCode" name="AreaCode"
+                                                                #AreaCode="ngModel" disabled
+                                                                placeholder="Enter Area Code">
+                                                        <span *ngIf="AreaCode.touched
+                                                                &&
+                                                                !AreaCode.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Area Code is
+                                                                required **
+                                                        </span>
+
+
+                                                </div>
+
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Field Staff</span>
+
+                                                        <div *ngIf="this.filteredEmployeeList.length>0"
+                                                                class="filtered-employees">
+                                                                <mat-select class="form-control"
+                                                                        [(ngModel)]="farmerAgmt.EmployeeID"
+                                                                        name="EmployeeID" #EmployeeID="ngModel"
+                                                                        [disabled]="disableFarmerFields ||isSearchResults"
+                                                                        required placeholder="Select Field Staff">
+
+                                                                        <mat-option [value]="emp.employeeID"
+                                                                                *ngFor="let emp of this.filteredEmployeeList">
+                                                                                {{emp.employeeName | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <span *ngIf="EmployeeID.touched
+                                                                &&
+                                                                !EmployeeID.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                        Field Staff is
+                                                                        required **
+                                                                </span>
+                                                        </div>
+                                                        <div *ngIf="!(this.filteredEmployeeList.length>0)"
+                                                                class="filtered-employees">
+                                                                <input type="text" class="form-control"
+                                                                        placeholder="Employees are not available!"
+                                                                        [disabled]="disableFarmerFields || isSearchResults">
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Village Name</span>
+                                                        <mat-select class="form-control"
+                                                                (selectionChange)="getFarmerDetails()"
+                                                                [(ngModel)]="farmerAgmt.VillageCode" name="VillageCode"
+                                                                required #VillageCode="ngModel" [disabled]="disableFarmerFields
+                                                                ||
+                                                                isSearchResults" placeholder="Select Village Name">
+                                                                <mat-option [value]="vl.villageCode" *ngFor="let
+                                                                        vl
+                                                                        of
+                                                                        villageList">
+                                                                        {{vl.name | uppercase}}
+                                                                </mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="VillageCode.touched
+                                                                &&
+                                                                !VillageCode.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Village Name is
+                                                                required
+                                                                **
+                                                        </span>
+
+                                                        <span *ngIf="!isVillage" class="text-danger">
+                                                                No Villages exist for chosen village</span>
+                                                </div>
+
+                                        </div>
+                                </div>
+
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Farmers Name</span>
+                                                        <mat-select class="form-control"
+                                                                (selectionChange)="allotDistrictState()"
+                                                                [(ngModel)]="farmerAgmt.FarmerCode" name="FarmerCode"
+                                                                #FarmerCode="ngModel" [disabled]="disableFarmerFields
+                                                                ||
+                                                                isSearchResults" required
+                                                                placeholder="Select Farmers Name">
+                                                                <mat-option [value]="fm.farmerCode" *ngFor="let
+                                                                        fm
+                                                                        of
+                                                                        allFarmers">
+                                                                        {{fm.farmerName | uppercase}}
+                                                                </mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="FarmerCode.touched
+                                                                &&
+                                                                !FarmerCode.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Farmer Name is
+                                                                required
+                                                                **
+                                                        </span>
+
+                                                        <!-- <span *ngIf="!isFarmer" class="text-danger">
+                                                                No farmers exist for chosen village</span> -->
+                                                </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Address</span>
+                                                        <textarea class="form-control" [(ngModel)]="farmerAgmt.Address"
+                                                                name="Address" #Address="ngModel" disabled
+                                                                placeholder="Enter your address"></textarea>
+                                                        <span [hidden]="Address.valid
+                                                                ||
+                                                                Address.pristine" class="text-danger">
+                                                                Address is
+                                                                required **
+                                                        </span>
+
+
+                                                </div>
+
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Mandal/District</span>
+                                                        <input type="text" class="form-control"
+                                                                value="{{farmerAgmt.DistrictName | uppercase}}/{{farmerAgmt.MandalName | uppercase}}"
+                                                                disabled placeholder="Enter Mandal/District">
+
+
+                                                </div>
+
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">State</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.StateName" name="StateName"
+                                                                #StateName="ngModel" disabled placeholder="Enter State">
+
+                                                        <span [hidden]="StateName.valid
+                                                                ||
+                                                                StateName.pristine" class="text-danger">
+                                                                State name is
+                                                                required
+                                                                **
+                                                        </span>
+
+                                                </div>
+
+
+
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Country</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.CountryName" name="CountryName"
+                                                                #CountryName="ngModel" disabled
+                                                                placeholder="Enter Country">
+                                                        <span [hidden]="CountryName.valid
+                                                                ||
+                                                                CountryName.pristine" class="text-danger">
+                                                                Country name is
+                                                                required
+                                                                **
+                                                        </span>
+
+                                                </div>
+
+                                        </div>
+                                        <div class="col-md-4" [hidden]="isFindClicked || isModifyClicked">
+                                                <div class="form-group">
+                                                        <span class="label-control">Account No.</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.FarmersAccountNo"
+                                                                name="FarmersAccountNo" #FarmersAccountNo="ngModel"
+                                                                (keyup)="filterFarmersByAccountNo(); validateFarmerAccount()"
+                                                                [disabled]="disableFarmerFields && !isSearchResults"
+                                                                required placeholder="Search Account No.">
+                                                        <span [hidden]="FarmersAccountNo.valid
+                                                                ||
+                                                                FarmersAccountNo.pristine" class="text-danger">
+                                                                Account No is
+                                                                required
+                                                                **
+                                                        </span>
+
+                                                        <!-- <span *ngIf="accountNumberFound"
+                                                                [hidden]="accountNumberFound" class="text-danger">
+                                                                Account No. Not found!
+                                                        </span> -->
+                                                        <span class="text-danger" *ngIf="!isAccountNumberValid">This
+                                                                account number already exists!</span>
+
+                                                </div>
+
+
+                                        </div>
+                                        <div class="col-md-4" *ngIf="(isFindClicked || isModifyClicked)">
+                                                <div class="form-group">
+                                                        <span class="label-control">Account No.</span>
+                                                        <input type="text" #farmerAccount matInput class="form-control"
+                                                                [value]="(!isFindClicked?farmerAccControl.value:'') "
+                                                                [formControl]="farmerAccControl"
+                                                                [matAutocomplete]="auto">
+                                                        <mat-autocomplete #auto="matAutocomplete"
+                                                                (optionSelected)="getFarmerDetailsByAccount($event)">
+                                                                <mat-option
+                                                                        *ngFor="let item of filteredOptions  | async"
+                                                                        [value]="item ">
+                                                                        {{item}}
+                                                                </mat-option>
+                                                        </mat-autocomplete>
+                                                        <!-- <small Class="form-text text-danger"
+                                                                *ngIf="cropGroupAlreadyExist && isSubmittClicked">Already
+                                                                have same crop group</small>
+                                                        <small Class="form-text text-danger"
+                                                                *ngIf="(myControl.value == null || myControl.value == '') && addCropGrpBtnClicked || isSubmittClicked">Please
+                                                                enter a crop group</small> -->
+
+                                                </div>
+
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Crop
+                                                                Group</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.CropGroupCode"
+                                                                (selectionChange)="getCropNameCodeList()"
+                                                                name="CropGroupCode" #CropGroupCode="ngModel"
+                                                                [disabled]="(disableFarmerFields
+                                                                ||
+                                                                isSearchResults) && !enableSearch" required
+                                                                placeholder="Select Crop group">
+                                                                <mat-option [value]="cg.CropGroupCode" *ngFor="let
+                                                                        cg
+                                                                        of
+                                                                        cropGroup">{{cg.Name | uppercase}}
+                                                                </mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="CropGroupCode.touched
+                                                                &&
+                                                                !CropGroupCode.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Crop Group is
+                                                                required
+                                                                **
+                                                        </span>
+                                                </div>
+
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Crop
+                                                                Name</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.CropNameCode" [disabled]="(disableFarmerFields
+                                                                ||
+                                                                isSearchResults) && !enableSearch"
+                                                                (openedChange)="openCropName()"
+                                                                (selectionChange)="getCropSeason()" name="CropNameCode"
+                                                                #CropNameCode="ngModel" required
+                                                                placeholder="Select Crop Name">
+                                                                <mat-option [value]="cropName.cropNameCode" *ngFor="let
+                                                                        cropName
+                                                                        of
+                                                                        cropNameList">
+                                                                        {{cropName.name |uppercase}}</mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="CropNameCode.touched
+                                                                &&
+                                                                !CropNameCode.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Crop Name is
+                                                                required **
+                                                        </span>
+                                                </div>
+
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Season
+                                                                From / To</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.PSNumber" [disabled]="(disableFarmerFields
+                                                                ||
+                                                                isSearchResults) && !enableSearch"
+                                                                (selectionChange)="getFruitSizemm(); validateFarmerAccount(); getAccList()"
+                                                                name="PSNumber" #PSNumber="ngModel" required
+                                                                placeholder="Select Season From / To">
+                                                                <mat-option [value]="season.psNumber" *ngFor="let
+                                                                        season
+                                                                        of
+                                                                        seasonList">
+                                                                        {{season.seasonFrom
+                                                                                |
+                                                                                date:'dd-MMM-yyyy'}}
+                                                                        /
+                                                                        {{season.seasonTo
+                                                                                |
+                                                                                date:'dd-MMM-yyyy'}}
+                                                                </mat-option>
+                                                        </mat-select>
+                                                        <span *ngIf="PSNumber.touched
+                                                                &&
+                                                                !PSNumber.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Season From / To
+                                                                is
+                                                                required **
+                                                        </span>
+
+                                                </div>
+
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">No.
+                                                                of Acres</span>
+                                                        <input type="number" class="form-control"
+                                                                style="font-weight:600;font-size:11px"
+                                                                pattern="^(?:\d{0,4}\.\d{1,3})$|^\d{0,4}$" step="0.01"
+                                                                onkeydown="return
+                                                                event.keyCode
+                                                                !== 69 &&
+                                                                event.keyCode
+                                                                !== 189" [(ngModel)]="farmerAgmt.FarmersNoOfAcersArea"
+                                                                name="FarmersNoOfAcersArea"
+                                                                #FarmersNoOfAcersArea="ngModel" [disabled]="disableFarmerFields
+                                                                &&
+                                                                !isSearchResults" required
+                                                                placeholder="Enter no. of Acres ">
+                                                        <span *ngIf="FarmersNoOfAcersArea.touched
+                                                                &&
+                                                                !FarmersNoOfAcersArea.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                <span *ngIf="FarmersNoOfAcersArea.errors.required">
+                                                                        No. of
+                                                                        Acres
+                                                                        is
+                                                                        required
+                                                                        **</span>
+                                                                <span *ngIf="FarmersNoOfAcersArea.errors?.pattern">
+                                                                        Acres
+                                                                        should
+                                                                        of
+                                                                        format
+                                                                        0000.000</span>
+                                                        </span>
+
+
+                                                </div>
+
+
+
+
+
+
+                                        </div>
+
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Agriculture
+                                                                Drip / NonDrip</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.AgricultureDripNonDrip"
+                                                                name="AgricultureDripNonDrip"
+                                                                #AgricultureDripNonDrip="ngModel" [disabled]="disableFarmerFields
+                                                                ||
+                                                                isSearchResults" required placeholder="Enter Agriculture
+                                                                Drip / NonDrip ">
+                                                                <mat-option [value]="size " *ngFor="let
+                                                                size
+                                                                of
+                                                                ['Drip','NonDrip']">
+                                                                        {{size}}
+                                                                </mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="AgricultureDripNonDrip.touched
+                                                                &&
+                                                                !AgricultureDripNonDrip.valid
+                                                                &&
+                                                                !disableFarmerFields" class="text-danger">
+                                                                Agriculture Drip
+                                                                /
+                                                                NonDrip required
+                                                                **
+                                                        </span>
+                                                </div>
+
+
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Boarder Crop</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.BoarderCrop"
+                                                                #BoarderCrop="ngModel" name="BoarderCrop"
+                                                                placeholder="Enter Boarder Crop">
+                                                                <mat-option value=""></mat-option>
+                                                                <mat-option value="YES">YES</mat-option>
+                                                                <mat-option value="NO">NO</mat-option>
+                                                        </mat-select>
+                                                </div>
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Previous Crop</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmt.PreviousCrop"
+                                                                name="PreviousCrop" #PreviousCrop="ngModel"
+                                                                placeholder="Enter Previous Crop">
+                                                </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Mulching Sheet</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmt.MulchingSheet"
+                                                                #MulchingSheet="ngModel" name="MulchingSheet"
+                                                                placeholder="Enter Mulching Sheet">
+                                                                <mat-option value=""></mat-option>
+                                                                <mat-option value="YES">YES</mat-option>
+                                                                <mat-option value="NO">NO</mat-option>
+                                                        </mat-select>
+                                                </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">FYM</span>
+                                                        <mat-select class="form-control" [(ngModel)]="farmerAgmt.FYM"
+                                                                #FYM="ngModel" name="FYM" placeholder="Enter FYM">
+                                                                <mat-option value=""></mat-option>
+                                                                <mat-option value="YES">YES</mat-option>
+                                                                <mat-option value="NO">NO</mat-option>
+                                                        </mat-select>
+                                                </div>
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Fruit
+                                                                Size (Count)</span>
+                                                        <mat-select class="form-control"
+                                                                [(ngModel)]="farmerAgmtSize.CropSchemeCode"
+                                                                (selectionChange)="getFruitCount()" name="CropCount"
+                                                                #CropCount="ngModel"
+                                                                [disabled]="disableFarmerFields  || isSaved " required
+                                                                placeholder="Enter Fruit Size(Count)">
+                                                                <mat-option [value]="size.cropSchemeCode " *ngFor="let
+                                                                        size
+                                                                        of
+                                                                        fruitSizeList">
+                                                                        {{size.fruit_size_count}} / {{size.cropCountMM}}
+                                                                </mat-option>
+                                                        </mat-select>
+
+                                                        <span *ngIf="CropCount.touched
+                                                                &&
+                                                                !CropCount.valid" class="text-danger">
+                                                                <span *ngIf="CropCount.errors?.required">
+                                                                        Fruit
+                                                                        Size is
+                                                                        required
+                                                                        **</span>
+                                                        </span>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Fruit
+                                                                Size (mm)</span>
+                                                        <input type="text" class="form-control"
+                                                                [(ngModel)]="farmerAgmtSize.CropCount"
+                                                                #CropSchemeFromSign="ngModel" name="CropSchemeFromSign"
+                                                                disabled required placeholder="Enter Fruit Size(mm)">
+                                                        <span [hidden]="CropSchemeFromSign.valid
+                                                                ||
+                                                                CropSchemeFromSign.pristine" class="text-danger">
+                                                                Fruit Count is
+                                                                required
+                                                                **
+                                                        </span>
+                                                </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Association
+                                                                Rate</span>
+                                                        <input type="number" class="form-control"
+                                                                [(ngModel)]="farmerAgmtSize.CropRateAsPerAssociation"
+                                                                name="CropRateAsPerAssociation"
+                                                                #CropRateAsPerAssociation="ngModel" disabled
+                                                                plcaceholder="Enter Association Rate">
+                                                </div>
+
+                                        </div>
+
+                                </div>
+
+                                <div class="row">
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Rate
+                                                                per UOM</span>
+                                                        <input type="text" class="form-control" maxlength="10"
+                                                                [(ngModel)]="farmerAgmtSize.CropRatePerUOM"
+                                                                name="CropRatePerUOM" #CropRatePerUOM="ngModel" disabled
+                                                                required placeholder="Enter Rate per UOM">
+                                                        <span [hidden]="CropRatePerUOM.valid
+                                                                ||
+                                                                CropRatePerUOM.pristine" class="text-danger">
+                                                                Rate per UOM is
+                                                                required
+                                                                **
+                                                        </span>
+                                                </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Rate</span>
+                                                        <input type="number" class="form-control" step="0.01"
+                                                                pattern="^(?:\d{0,3}\.\d{1,2})$|^\d{0,3}$" onkeydown="return
+                                                                event.keyCode
+                                                                !== 69 &&
+                                                                event.keyCode
+                                                                !== 189"
+                                                                [(ngModel)]="farmerAgmtSize.CropRateAsPerOurAgreement"
+                                                                #CropRateAsPerOurAgreement="ngModel"
+                                                                (blur)="updateRates()" name="CropRateAsPerOurAgreement"
+                                                                [disabled]="isSearchResults" required
+                                                                placeholder="Enter Rate">
+
+                                                        <!-- disableFarmerFields -->
+
+
+                                                        <span *ngIf="CropRateAsPerOurAgreement.touched
+                                                                &&
+                                                                !CropRateAsPerOurAgreement.valid" class="text-danger">
+                                                                <span
+                                                                        *ngIf="CropRateAsPerOurAgreement.errors?.required">
+                                                                        Rate
+                                                                        is
+                                                                        required
+                                                                        **</span>
+                                                                <span *ngIf="CropRateAsPerOurAgreement.errors?.pattern">
+                                                                        Rate
+                                                                        should
+                                                                        be of
+                                                                        the
+                                                                        form 000
+                                                                        /
+                                                                        000.00
+                                                                        **</span>
+                                                        </span>
+                                                </div>
+
+
+                                        </div>
+
+
+                                        <div class="col-md-4">
+                                                <div class="form-group">
+                                                        <span class="label-control">Remarks</span>
+                                                        <textarea class="form-control" (blur)="openPopup(form)"
+                                                                [(ngModel)]="farmerAgmtSize.CropRatesRemarks"
+                                                                #CropRatesRemarks="ngModel" name="CropRatesRemarks"
+                                                                required placeholder="Enter Remarks"></textarea>
+
+                                                        <!-- disableFarmerFields || !isSaved  -->
+                                                        <span *ngIf="CropRatesRemarks.touched
+                                                                &&
+                                                                !CropRatesRemarks.valid" class="text-danger"
+                                                                placeholder="Enter Remarks">
+                                                                <span *ngIf="CropRatesRemarks.errors?.required">
+                                                                        Remarks
+                                                                        is
+                                                                        required
+                                                                        **
+                                                                </span>
+                                                        </span>
+
+                                                </div>
+
+
+                                        </div>
+
+                                </div>
+                        </form>
+                </div>
+        </p-accordionTab>
+</p-accordion>
+
+<!-- // -----------------------------------------       Grid             --------------------------------------- -->
+<p-accordion>
+        <p-accordionTab header="Price Agreement" [selected]="true">
+                <div class="container-fluid">
+                        <div class="row m-b-25">
+                                <div class="col-md-12">
+                                        <div>
+                                                <table class="table
+                                                        table-striped
+                                                        table-bordered
+                                                        dt-responsive
+                                                        nowrap" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                                                        <tbody>
+                                                                <tr>
+                                                                        <th>S.No</th>
+                                                                        <th>Fruit
+                                                                                Size
+                                                                                (Count)</th>
+                                                                        <th>Fruit
+                                                                                Size
+                                                                                (mm)</th>
+                                                                        <th>Association
+                                                                                Rate</th>
+                                                                        <th>Agreed
+                                                                                Rate</th>
+                                                                        <th>Remarks</th>
+                                                                        <th *ngIf="isModifyClicked">Select
+                                                                                For
+                                                                                Edit</th>
+                                                                        <th *ngIf="isModifyClicked">Delete</th>
+                                                                </tr>
+                                                                <tr *ngFor="let
+                                                                        fa
+                                                                        of
+                                                                        farmerAgmt.FarmersAgreementSizes;let
+                                                                        i=
+                                                                        index;">
+                                                                        <td>{{i+
+                                                                                1}}</td>
+                                                                        <td>{{fa.CropSchemeFromSign}}</td>
+                                                                        <td>{{fa.CropCount}}</td>
+                                                                        <td>{{fa.CropRateAsPerAssociation}}
+                                                                                /
+                                                                                {{fa.CropRatePerUOM}}</td>
+                                                                        <td>{{fa.CropRateAsPerOurAgreement}}</td>
+                                                                        <td>{{fa.CropRatesRemarks | uppercase}}</td>
+                                                                        <td class="text-align-center"
+                                                                                *ngIf="isModifyClicked">
+                                                                                <mat-radio-button name="select"
+                                                                                        [checked]="i==selectedFruitSizeIndex"
+                                                                                        (click)="ontableItemSelect(fa,i)">
+                                                                                </mat-radio-button>
+                                                                        </td>
+                                                                        <td class="text-align-center"
+                                                                                *ngIf="isModifyClicked">
+                                                                                <mat-icon class="cursor-pointer"
+                                                                                        (click)="deleteConfirm(fa,
+                                                                                        i)">
+                                                                                        delete</mat-icon>
+                                                                        </td>
+                                                                </tr>
+                                                        </tbody>
+                                                </table>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+        </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+        <div class="col-md-12">
+                <button pButton class="ui-button-rounded" [disabled]="disableButton||!enableNew" (click)="newAgmt();"
+                        label="New Agreement"></button>
+                <button pButton type="submit" [disabled]="disableButton || !enableSave  || !isAccountNumberValid"
+                        (click)="saveAgmt()" class="ui-button-rounded" label="Save"></button>
+                <button pButton class="ui-button-rounded" [disabled]=" disableButton || !isFindEnabled"
+                        (click)="findAgmtClicked()" label="Find"></button>
+                <button pButton class="ui-button-rounded" [disabled]="disableButton || !isEditEnabled"
+                        (click)="modifyAgmt()" label="Modify"></button>
+                <button pButton class="ui-button-rounded" [disabled]="disableButton" (click)="clrAgmt()"
+                        label="Clear"></button>
+        </div>
+</div>
+
+
+<div class="modal fade" id="continueModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+        aria-labelledby="continueModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+                <div class="modal-content" style="background-color:
+                        white;border:1.5px solid black;">
+                        <div class="modal-header" style="background-color:#0F204B;">
+                                <h5 class="modal-title" id="continueModalLabel" style="color:white;margin-bottom:5px;">
+                                        Add Fruit Sizes</h5>
+                                <button type="button" style="color:white" class="close" data-dismiss="modal"
+                                        (click)="addPriceToGrid(0)" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                                <h6> Do you wish to continue ?</h6>
+                        </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        (click)="addPriceToGrid(0)">No</button>
+                                <button type="button" class="btn btn-primary
+                                        btn-sm" data-dismiss="modal" (click)="addPriceToGrid(1)">Yes</button>
+                        </div>
+                </div>
+        </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+        aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+                <div class="modal-content" style="background-color:
+                        white;border:1.5px solid black;">
+                        <div class="modal-header" style="background-color:#0F204B;">
+                                <h5 class="modal-title" id="deleteModalLabel" style="color:white;margin-bottom:5px;">
+                                        Delete Selected Fruit Size</h5>
+                                <button type="button" style="color:white" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                                <h6> Do you want to delete the Fruit Size ?</h6>
+                        </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary
+                                        btn-sm" data-dismiss="modal" (click)="deleteFarmerAgmtSize()">Yes</button>
+                        </div>
+                </div>
+        </div>
+</div>

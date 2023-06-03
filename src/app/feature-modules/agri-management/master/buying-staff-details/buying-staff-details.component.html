@@ -1,0 +1,211 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span> Buying Staff Details</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Buying Staff Details" [selected]="true">
+        <form [formGroup]="buyingStaffDetailsForm">
+            <div class="row  ml-2 mr-2 mt-2 maindiv">
+                <div class="col-md-12 cleartop">
+                    <div class="row pl-1 pr-1 align-items-center">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control"> Date of Entry </span>
+                                <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                    [matDatepicker]="eDate" formControlName="bsEntryDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate>
+                                </mat-datepicker>
+                                <!-- <small Class="form-text text-danger">Received Date is
+                                required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Login User Name</span>
+                                <input type="text" class="form-control" formControlName="bsEnteredEmpName">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Department</span>
+                                <mat-select class="form-control" formControlName="department" #department
+                                    (selectionChange)="getSubDepertment()">
+                                    <mat-option *ngFor="let dept of deprtList" [value]="dept.departmentCode">
+                                        {{dept.departMentName | uppercase}}</mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Sub Department</span>
+                                <mat-select class="form-control" formControlName="subDepartment"
+                                    (selectionChange)="GetDesigination()">
+                                    <mat-option *ngFor="let subDept of subDepartmentList"
+                                        [value]="subDept.subDepartmentCode">{{subDept.subDepartmentName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Designation</span>
+                                <mat-select class="form-control" formControlName="designation"
+                                    (selectionChange)="GetEpmByDesg()">
+                                    <mat-option *ngFor="let desg of desginationList" [value]="desg.designationCode">
+                                        {{desg.designattionName | uppercase}}</mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Incharge/Field staff</span>
+                                <mat-select class="form-control" formControlName="employeeStatus">
+                                    <mat-option value="buyingSupervisor">BUYING SUPERVISOR</mat-option>
+                                    <mat-option value="buyingExecutive">BUYING EXECUTIVE</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger"
+                                    *ngIf="!(buyingStaffDetailsForm.get('employeeStatus').valid) && (isSaveClicked)">Please
+                                    select Incharge/Field staff!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Employee Name</span>
+                                <mat-select class="form-control" formControlName="employeeID"
+                                    (selectionChange)="findByEpmloyee()">
+                                    <mat-option *ngFor="let emp of employees" [value]="emp.employeeId">
+                                        {{emp.employeeName | uppercase}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger"
+                                    *ngIf="!(buyingStaffDetailsForm.get('employeeID').valid) && (isSaveClicked)">Please
+                                    select Employee Name</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control"> Effective Date </span>
+                                <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                    [matDatepicker]="eDate1" formControlName="bsEffectiveDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate1">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate1>
+                                </mat-datepicker>
+                                <small Class="form-text text-danger"
+                                    *ngIf="!(buyingStaffDetailsForm.get('bsEffectiveDate').valid) && (isSaveClicked)">Please
+                                    select Effective Date</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Area Name</span>
+                                <mat-select class="form-control" formControlName="areaID" #area
+                                    (selectionChange)="setAreaCode()">
+                                    <mat-option *ngFor="let area of harvestAreas" [value]="area.areaId">
+                                        {{area.areaName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger"
+                                    *ngIf="!(buyingStaffDetailsForm.get('areaID').valid) && (isSaveClicked)">Please
+                                    select Area Name</small>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Area Code </span>
+                                <input type="text" class="form-control" formControlName="areaCode">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 28px;"></div>
+
+<p-accordion>
+    <p-accordionTab header="Field Staff Details" [selected]="true">
+        <form>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                cellpadding="4">
+                                <tbody>
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Area Code</th>
+                                        <th>Area Name</th>
+                                        <th>Effective Date</th>
+                                        <th *ngIf="isModifyClicked">Edit Button</th>
+                                    </tr>
+                                    <tr *ngFor="let areaDetl of HarvestAreaBuyingStaffList;let i = index"
+                                        (click)="selecetedToModify(areaDetl)">
+                                        <td class="text-center">
+                                            {{i+1}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{getAreaCodeById(areaDetl.areaID)}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{getAreaNameById(areaDetl.areaID)}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{areaDetl.bsEffectiveDate | date : 'dd-MMM-yyyy'}}
+                                        </td>
+                                        <td class="text-center" *ngIf="isModifyClicked">
+                                            <mat-icon class="cursor-pointer"
+                                                (click)="deleteBuyingStaffDetails(areaDetl.employeeID, areaDetl.areaID)">
+                                                delete</mat-icon>
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+    <div class="mgt-20 pull-right">
+        <div class="row pull-right btSection">
+            <div class="col-md-12">
+                <button pButton type="button" label="New Buying Staff" class="ui-button-rounded"
+                    (click)="OnNewBuyingStaffClick()" [disabled]="disblNewBuyingStaffBtn"></button>
+                <button pButton type="button" label="Save" class="ui-button-rounded" (click)="OnSaveClick()" #saveBtn
+                    [disabled]="disblSaveBtn"></button>
+                <button pButton type="button" label="Find" class="ui-button-rounded" (click)="OnFindClick()"
+                    [disabled]="disblFindBtn"></button>
+                <button pButton type="button" label="Modify" class="ui-button-rounded" (click)="OnModifyClick()"
+                    [disabled]="disblModifyBtn"></button>
+                <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="OnClearClick()"></button>
+            </div>
+        </div>
+    </div>

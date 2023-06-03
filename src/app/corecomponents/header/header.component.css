@@ -1,0 +1,145 @@
+.header {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    /*  top: 0;
+    left: 0;*/
+    background-color: #0051a5;
+    height: 61px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding-right: 1.5rem;
+    transition: background-color 1s, box-shadow 1s;
+    box-shadow: 0 0 13px rgba(0, 0, 0, .22);
+}
+
+.ft-16 {
+    font-size: 12px;
+}
+
+.header::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.navigation-trigger {
+    height: 100%;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 1.65rem;
+    transition: opacity .1s;
+    display: none!important
+}
+
+.search {
+    flex: 1;
+    margin-right: 2.5rem;
+    position: relative;
+}
+
+.search__inner[_ngcontent-pmc-c1] {
+    position: relative;
+    width: 529px !important;
+}
+
+.search__inner h1 {
+    color: #fff;
+}
+
+.JmeFont {
+    font-size: 18px !important;
+    /* font-family: 'Anastasia Regular' !important; */
+    font-family: 'Roboto' !important;
+    margin-top: 5px;
+    padding-left: 29px;
+}
+
+.time>span:not(:last-child):after {
+    content: ':';
+    width: 10px;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    right: -2px;
+}
+
+.clock {
+    background: rgba(255, 255, 255, .08);
+    line-height: 100%;
+    padding: .7rem 1rem;
+    font-size: 10px;
+    margin-left: 1rem;
+}
+
+.clock {
+    border-radius: 2px;
+}
+
+.top-nav {
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none
+}
+
+.top-nav>li {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.top-nav>li>a:not(.header__nav__text) {
+    padding: .65rem .15rem;
+    min-width: 50px;
+}
+
+.top-nav>li>a {
+    display: block;
+    color: #fff;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 100%;
+    position: relative;
+    transition: background-color .3s;
+}
+
+.show>a {
+    outline: 0;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: .8rem 0;
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, .85);
+    text-align: left;
+    background-color: rgba(0, 0, 0, .96);
+    background-clip: padding-box;
+    border: 0 solid transparent;
+    border-radius: 2px;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: .3s;
+    animation-duration: .3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .5);
+    transform: translate3d(-80px, 27px, 0px);
+    top: 0px;
+    left: 0px;
+    will-change: transform;
+}

@@ -1,0 +1,136 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Product Grade Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-accordionTab header="Product Grade Details" [selected]="true">
+        <div class="container-fluid" [formGroup]="pGradeForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Date of Creation</span>
+                        <input matInput class="form-control border-bottom-1" formControlName="dateOfCreation"
+                            placeholder="Please Select Date Of Creation" #dateOfCreation [matDatepicker]="dp">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #dp>
+                        </mat-datepicker>
+                        <span
+                            *ngIf="pGradeForm.controls.dateOfCreation.errors?.required && pGradeForm.controls.dateOfCreation.touched"
+                            class="error-span">Date of Creation is required field.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Product Group</span>
+                        <app-auto-complete [options]="pGroupOptionsList" placeholder="Please Select Product Group"
+                            (selectedValueChangeBlur)="pGroupValueChange($event)"
+                            [selectedValueFormControl]="pGradeForm.controls.productGroup"
+                            (saveitemToList)="savesPGroupToList($event)" [maxLength]="20"></app-auto-complete>
+                        <span
+                            *ngIf="pGradeForm.controls.productGroup.errors?.required && pGradeForm.controls.productGroup.touched"
+                            class="error-span">Product Group is required field.
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Scientific Name</span>
+                        <input type="text" class="form-control" placeholder="Please enter Scientific Name"
+                            formControlName="scientificName">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Variety Name</span>
+                        <app-auto-complete [options]="pVarietyOptionsList" placeholder="Please Select Variety Name"
+                            (selectedValueChangeBlur)="pVarietyValueChange($event)"
+                            [selectedValueFormControl]="pGradeForm.controls.variety"
+                            (saveitemToList)="savePVarietyToList($event)" [maxLength]="20"></app-auto-complete>
+                        <span
+                            *ngIf="pGradeForm.controls.variety.errors?.required && pGradeForm.controls.variety.touched"
+                            class="error-span">Variety is required field.
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Grade From</span>
+                        <input type="text" class="form-control" placeholder="Please enter Grade From"
+                            formControlName="gradeFrom" maxlength="3"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                        <span
+                            *ngIf="pGradeForm.controls.gradeFrom.errors?.required && pGradeForm.controls.gradeFrom.touched"
+                            class="error-span">GradeFrom is required field.
+                        </span>
+                        <span *ngIf="pGradeForm.controls.gradeFrom.errors?.max && pGradeForm.controls.gradeFrom.touched"
+                            class="error-span">Value must be greater then 0.
+                        </span>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Grade To</span>
+                        <input type="text" class="form-control" placeholder="Please enter Grade To value"
+                            formControlName="gradeTo" maxlength="3"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                        <span
+                            *ngIf="pGradeForm.controls.gradeTo.errors?.required && pGradeForm.controls.gradeTo.touched"
+                            class="error-span">GradeTo is required field.
+                        </span>
+                        <span *ngIf="pGradeForm.controls.gradeTo.errors?.min && pGradeForm.controls.gradeTo.touched"
+                            class="error-span">Value must be greater then 0.
+                        </span>
+                        <span class="error-span">{{getGradeFromToErrorMessage()}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+    <p-accordionTab header="Product Grade List" [selected]="true">
+        <div class="container-fluid">
+            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+                id="grdOrganizations">
+                <tbody>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Products Group</th>
+                        <th>Variety Name</th>
+                        <th>Scientific Name</th>
+                        <th>Grade From - To</th>
+                    </tr>
+                    <tr *ngFor="let product of productDetailsList; let i = index">
+                        <td> <span>{{i+1}}</span> </td>
+                        <td> {{product.grpName}} </td>
+                        <td> {{product.varietyName}} </td>
+                        <td> {{product.scintificName}} </td>
+                        <td> {{product.gradefromTo }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </p-accordionTab>
+
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+    <div class="col-md12">
+        <!-- <input type="submit" value="Create group" class="ui-button-rounded">
+            <input type="submit" value="Create Variety" class="ui-button-rounded"> -->
+        <button pButton type="submit" [disabled]="disableNewButton" (click)="onNewClick()" label="Create Grade"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableSaveButton" (click)="onSaveProductGrade()" label="Save"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableClearButton" label="Clear" (click)="onClearClick()"
+            class="ui-button-rounded"></button>
+    </div>
+</div>

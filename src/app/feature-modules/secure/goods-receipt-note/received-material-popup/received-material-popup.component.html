@@ -1,0 +1,393 @@
+<div class="row" style="padding-bottom: 20px;">
+    <div class="col-lg-10">
+        <h5>Material Received</h5>
+    </div>
+    <div class="col-lg-2 cursor-pointer" style="text-align: right;" (click)="onNoClick()">
+        <mat-icon>close</mat-icon>
+    </div>
+</div>
+<div [formGroup]="batchMaterialDetailForm">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Inward Date / IGP No</span>
+                <input type="text" formControlName="inwardDate" placeholder="Please Enter Inward Date / IGP No"
+                    class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">PO Date / PO No</span>
+                <input type="text" formControlName="poDate" placeholder="Please Enter PO Date / PO No"
+                    class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Supplier Name</span>
+                <input type="text" formControlName="supplierName" placeholder="Please Enter Supplier Name"
+                    class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Material Name</span>
+                <input type="text" formControlName="materialName" placeholder="Please Enter Material Name"
+                    class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">PO Qty</span>
+                <input type="text" formControlName="poQty" placeholder="Please Enter PO Qty" class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Till Recd. Qty</span>
+                <input type="text" formControlName="tillReceivedQty" placeholder="Please Enter Till Recd. Qty"
+                    class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Pending Qty</span>
+                <input type="text" formControlName="pendingQty" placeholder="Please Enter Pending Qty"
+                    class="form-control" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Batch No</span>
+                <input type="text" matInput maxlength="20" formControlName="batchNo" required
+                    placeholder="Please Enter Batch No" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.controls.batchNo.errors?.required
+                                    &&
+                                    batchMaterialDetailForm.controls.batchNo.touched" class="error-span">Batch No is
+                    required
+                    field.</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Mafg. Date</span>
+                <input matInput class="form-control
+                    border-bottom-1" placeholder="Please Select Mafg. Date" [matDatepicker]="mafgDate"
+                    formControlName="mafgDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="mafgDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #mafgDate>
+                </mat-datepicker>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Exp. Date</span>
+                <input matInput class="form-control
+                    border-bottom-1" placeholder="Please Enter Exp. Date" [matDatepicker]="expDate"
+                    formControlName="expDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="expDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #expDate>
+                </mat-datepicker>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Bag/Pack size</span>
+                <input type="text" (blur)="changebagPackSize()" matInput formControlName="bagPackSize"
+                    placeholder="Please Enter Bag/Pack size" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('bagPackSize').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.bagPackSize.touched" class="error-span">Bag/Pack size should
+                    be
+                    numerics
+                    only in format of XXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">UOM</span>
+                <!-- <input type="text" matInput maxlength="20" formControlName="uom" placeholder="Please Enter UOM"
+                    class="form-control" /> -->
+                <mat-select class="form-control" formControlName="uom" placeholder="Please Select UOM"
+                    (selectionChange)="changeUOM()">
+                    <mat-option value="NOS">NOS</mat-option>
+                    <mat-option value="GRAMS">GRAMS</mat-option>
+                    <mat-option value="KGS">KGS</mat-option>
+                    <mat-option value="MT">MT</mat-option>
+                    <mat-option value="LTS">LTS</mat-option>
+                    <mat-option value="ML">ML</mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">No. bags/packs</span>
+                <input matInput type="text" maxlength="9" formControlName="noBagPacks"
+                    placeholder="Please Enter No bags/packs" class="form-control" (blur)="changebagPackSize()" />
+                <span *ngIf="batchMaterialDetailForm.get('noBagPacks').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.noBagPacks.touched" class="error-span">No. bags/packs should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Total Qty</span>
+                <input type="text" matInput formControlName="totalQty" placeholder="Please Enter Total Qty"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('totalQty').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.totalQty.touched" class="error-span">Total Qty should
+                    be
+                    numerics
+                    only in format of XXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Unit</span>
+                <mat-select class="form-control" formControlName="unit" placeholder="Please Select Unit"
+                    (selectionChange)="changeUnit()">
+                    <mat-option value="NOS">NOS</mat-option>
+                    <mat-option value="GRAMS">GRAMS</mat-option>
+                    <mat-option value="KGS">KGS</mat-option>
+                    <mat-option value="MT">MT</mat-option>
+                    <mat-option value="LTS">LTS</mat-option>
+                    <mat-option value="ML">ML</mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Bill Rate</span>
+                <input type="text" matInput (blur)="changeBillRate()" formControlName="billRate"
+                    placeholder="Please Enter Bill Rate" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('billRate').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.billRate.touched" class="error-span">Bill Rate should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Total amount</span>
+                <input matInput type="text" formControlName="totalAmount" placeholder="Please Enter Total amount"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('billRate').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.billRate.touched" class="error-span">Total amount should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free Batch No</span>
+                <input type="text" matInput maxlength="20" formControlName="freeBatchNo"
+                    placeholder="Please Enter Free Batch No" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free mafg. date</span>
+                <input matInput class="form-control
+                    border-bottom-1" placeholder="Please Enter Free mafg. date" [matDatepicker]="freeMafgDate"
+                    formControlName="freeMafgDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="freeMafgDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #freeMafgDate>
+                </mat-datepicker>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free Exp date</span>
+                <input matInput class="form-control
+                    border-bottom-1" placeholder="Please Enter Free mafg. date" [matDatepicker]="freeExpDate"
+                    formControlName="freeExpDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="freeExpDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #freeExpDate>
+                </mat-datepicker>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free Bag/Pack size</span>
+                <input type="text" (blur)="changeFreebagPackSize()" matInput formControlName="freeBagPackSize"
+                    placeholder="Please Enter Free Bag/Pack size" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('freeBagPackSize').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.freeBagPackSize.touched" class="error-span">Free Bag/Pack size
+                    should
+                    be
+                    numerics
+                    only in format of XXXXX.XXX</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free UOM</span>
+                <mat-select class="form-control" formControlName="freeUom" placeholder="Please Select Free UOM">
+                    <mat-option value="NOS">NOS</mat-option>
+                    <mat-option value="GRAMS">GRAMS</mat-option>
+                    <mat-option value="KGS">KGS</mat-option>
+                    <mat-option value="MT">MT</mat-option>
+                    <mat-option value="LTS">LTS</mat-option>
+                    <mat-option value="ML">ML</mat-option>
+                </mat-select>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free No. bags/packs</span>
+                <input type="text" matInput (blur)="changeFreebagPackSize()" formControlName="freeNoBagPacks"
+                    placeholder="Please Enter Free No. bags/packs" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('freeNoBagPacks').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.freeNoBagPacks.touched" class="error-span">Free No. bags/packs
+                    should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Free Total Qty</span>
+                <input type="text" matInput formControlName="freeTotalQty" placeholder="Please Enter Free Total Qty"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('freeTotalQty').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.freeTotalQty.touched" class="error-span">Total Qty should
+                    be
+                    numerics
+                    only in format of XXXXXXX.XXX</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Gross Quatity</span>
+                <input type="text" matInput formControlName="grossQty" placeholder="Please Enter Gross Quatity"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('grossQty').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.grossQty.touched" class="error-span">Gross Quatity should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Gross Amount</span>
+                <input type="text" matInput formControlName="grossAmount" placeholder="Please Enter Gross Amount"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('grossAmount').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.grossAmount.touched" class="error-span">Gross Amount should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Discount Amount</span>
+                <input type="text" matInput (blur)="calculateNetAmount()" formControlName="discountAmount"
+                    placeholder="Please Enter Discount Amount" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('discountAmount').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.discountAmount.touched" class="error-span">Discount Amount should
+                    be
+                    numerics
+                    only in format of XXXXXXXXX.XXX</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Net Material Amount</span>
+                <input type="text" matInput formControlName="netMaterialAmount"
+                    placeholder="Please Enter Net Material Amount" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('netMaterialAmount').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.netMaterialAmount.touched" class="error-span">Net Material Amount
+                    should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Net Material Rate</span>
+                <input type="text" matInput formControlName="netMaterialRate"
+                    placeholder="Please Enter Net Material Rate" class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.get('netMaterialRate').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.netMaterialRate.touched" class="error-span">Net Material Rate
+                    should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <span class="label-control">Received Quantity</span>
+                <input type="text" matInput formControlName="receivedQty" placeholder="Please Enter Received Quantity"
+                    class="form-control" />
+                <span *ngIf="batchMaterialDetailForm.controls.receivedQty.errors?.required
+                    &&
+                    batchMaterialDetailForm.controls.receivedQty.touched" class="error-span">Received Quantity is
+                    required
+                    field.</span>
+                <span *ngIf="batchMaterialDetailForm.get('receivedQty').errors?.pattern
+                    &&
+                    batchMaterialDetailForm.controls.receivedQty.touched" class="error-span">Received Quantity
+                    should
+                    be
+                    numerics
+                    only in format of XXXXXXXXXX.XXX</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2">
+        <button [disabled]="disableButton" pButton type="submit" label="Save" (click)="save()"
+            class="ui-button-rounded"></button>
+    </div>
+    <div class="col-lg-2" style="padding-left: 45px;">
+        <button pButton type="submit" label="Cancel" (click)="cancel()" class="ui-button-rounded"></button>
+    </div>
+</div>

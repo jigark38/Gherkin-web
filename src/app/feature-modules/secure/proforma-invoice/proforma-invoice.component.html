@@ -1,0 +1,827 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Sales & CRM</a></li>
+        <li class="active"><span>Proforma Invoice</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="SS TAB1" [selected]="true">
+        <form #form1="ngForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Proforma Invoice No.</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.profInvNo" name="profInvNo"
+                                #profInvNo="ngModel" disabled required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date</span>
+                            <input [matDatepicker]="profDate" class="form-control" [(ngModel)]="profInvoice.profInvDate"
+                                name="profInvDate" #profInvDate="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="profDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #profDate>
+                            </mat-datepicker>
+
+                            <span *ngIf=" profInvDate.touched && !profInvDate.valid && !disableProformaFields"
+                                class="text-danger">
+                                Date is required **
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Export / Domestic Sales</span>
+                            <select type="text" class="form-control" [(ngModel)]="profInvoice.exportDomesticsales"
+                                name="exportDomesticsales" #exportDomesticsales="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults">
+                                <option value="Export Sales">Export Sales</option>
+                                <option value="Domestic Sales">Domestic Sales</option>
+                            </select>
+
+                            <span
+                                *ngIf=" exportDomesticsales.touched && !exportDomesticsales.valid && !disableProformaFields"
+                                class="text-danger">
+                                Please select Sales Type
+                            </span>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="labelcontrol">Ref. No. & Date</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.exportersRefNo"
+                                name="exportersRefNo" #exportersRefNo="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults">
+
+                            <span *ngIf=" exportersRefNo.touched && !exportersRefNo.valid && !disableProformaFields"
+                                class="text-danger">
+                                Ref. No. required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">IGST / GST</span>
+                            <select type="text" class="form-control" [(ngModel)]="profInvoice.iGSTSGST" name="iGSTSGST"
+                                #iGSTSGST="ngModel" required [disabled]="disableProformaFields || isSearchResults">
+                                <option value="IGST">IGST</option>
+                                <option value="SGST">SGST</option>
+                            </select>
+
+                            <span *ngIf=" iGSTSGST.touched && !iGSTSGST.valid && !disableProformaFields"
+                                class="text-danger">
+                                Please select an option **
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Consignee Name</span>
+                            <select class="form-control" (change)="allocateConsigneeCountry()"
+                                [(ngModel)]="profInvoice.consigneeCbCode" name="consigneeCbCode"
+                                #consigneeCbCode="ngModel" [disabled]="disableProformaFields || isSearchResults">
+                                <ng-container *ngFor="let consignee of consigneeBuyerList">
+                                    <option *ngIf="consignee.consgbuyerType==='1'" [value]="consignee.cbCode">
+                                        {{consignee.cbName}}</option>
+
+                                </ng-container>
+                            </select>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Address</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.consigneeAddress"
+                                name="consigneeAddress" #consigneeAddress="ngModel" disabled>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.consigneeCountry"
+                                name="consigneeCountry" #consigneeCountry="ngModel" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country of Final Destination</span>
+                            <select class="form-control" [(ngModel)]="profInvoice.wCountryId" name="wCountryId"
+                                #wCountryId="ngModel" required [disabled]="disableProformaFields || isSearchResults">
+                                <ng-container *ngFor="let country of countryOverSeasList">
+                                    <option [value]="country.countryId">{{country.countryName}}</option>
+                                </ng-container>
+
+                            </select>
+
+                            <span *ngIf=" wCountryId.touched && !wCountryId.valid && !disableProformaFields"
+                                class="text-danger">
+                                Country is required **
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Buyer Name</span>
+                            <select class="form-control" (change)="allocateBuyerCountry()"
+                                [(ngModel)]="profInvoice.buyerCBCode" name="buyerCBCode" #buyerCBCode="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults">
+
+                                <ng-container *ngFor="let buyer of consigneeBuyerList">
+                                    <option *ngIf="buyer.consgbuyerType==='0'" [value]="buyer.cbCode">
+                                        {{buyer.cbName}}
+                                    </option>
+                                </ng-container>
+
+                            </select>
+
+                            <span *ngIf=" buyerCBCode.touched && !buyerCBCode.valid && !disableProformaFields"
+                                class="text-danger">
+                                Buyer Name is required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Address</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.buyerAddress"
+                                name="buyerAddress" #buyerAddress="ngModel" disabled required>
+
+                            <span *ngIf=" buyerAddress.touched && !buyerAddress.valid && !disableProformaFields"
+                                class="text-danger">
+                                Buyer Address is required **
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.buyerCountry"
+                                name="buyerCountry" #buyerCountry="ngModel" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Buyer PO No.</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.buyerOrderNo"
+                                name="buyerOrderNo" #buyerOrderNo="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">PO Date</span>
+                            <input [matDatepicker]="poDate" class="form-control"
+                                [(ngModel)]="profInvoice.buyerOrderDate" name="buyerOrderDate" #buyerOrderDate="ngModel"
+                                required [disabled]="disableProformaFields || isSearchResults">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="poDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #poDate>
+                            </mat-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Pre Carriage By</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.preCarriageBy"
+                                name="preCarriageBy" #preCarriageBy="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Place of Receipt of Pre-Carrier</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.placeOfReceiptPC"
+                                name="placeOfReceiptPC" #placeOfReceiptPC="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Vessel No.</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.vesselFlightNo"
+                                name="vesselFlightNo" #vesselFlightNo="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Port of Loading</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.portOfLoading"
+                                name="portOfLoading" #portOfLoading="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults">
+
+                            <span *ngIf=" portOfLoading.touched && !portOfLoading.valid && !disableProformaFields"
+                                class="text-danger">
+                                Port of Loading is required **
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Port of Discharge</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.portOfDischarge"
+                                name="portOfDischarge" #portOfDischarge="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Final Destination</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.finalDestination"
+                                name="finalDestination" #finalDestination="ngModel"
+                                [disabled]="disableProformaFields || isSearchResults" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Shipment Date</span>
+                            <input [matDatepicker]="shipDate" class="form-control"
+                                [(ngModel)]="profInvoice.shipmentDate" name="shipmentDate" #shipmentDate="ngModel"
+                                required [disabled]="disableProformaFields || isSearchResults">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="shipDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #shipDate>
+                            </mat-datepicker>
+
+                            <span *ngIf=" shipmentDate.touched && !shipmentDate.valid && !disableProformaFields"
+                                class="text-danger">
+                                Shipment Date is required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Currency</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.currency" name="currency"
+                                #currency="ngModel" required [disabled]="disableProformaFields || isSearchResults"
+                                list="currency">
+                            <datalist id="currency">
+                                <option value="INR">
+                                <option value="NPR">
+                            </datalist>
+
+                            <span *ngIf=" currency.touched && !currency.valid && !disableProformaFields"
+                                class="text-danger">
+                                Currency is required **
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Terms of Delivery & Payment</span>
+                            <textarea type="text" class="form-control" [(ngModel)]="profInvoice.paymentTerms"
+                                name="paymentTerms" #paymentTerms="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults"></textarea>
+
+                            <span *ngIf=" paymentTerms.touched && !paymentTerms.valid && !disableProformaFields"
+                                class="text-danger">
+                                Terms of Delivery is required **
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Terms and Conditions</span>
+                            <textarea type="text" class="form-control" [(ngModel)]="profInvoice.termsConditions"
+                                name="termsConditions" #termsConditions="ngModel" required
+                                [disabled]="disableProformaFields || isSearchResults"></textarea>
+
+                            <span *ngIf=" termsConditions.touched && !termsConditions.valid && !disableProformaFields"
+                                class="text-danger">
+                                <span class="label-control">Terms and Conditions</span>
+                                is required **
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Benificiary Bank Details</span>
+                            <select class="form-control" [(ngModel)]="profInvoice.bankCode" name="bankCode"
+                                #bankCode="ngModel" required [disabled]="disableProformaFields || isSearchResults">
+                                <ng-container *ngFor="let bank of bankAccDetails">
+                                    <option [value]="bank.bankCode">{{bank.bankAccountNumber}} / {{bank.bankName}}
+                                    </option>
+
+                                </ng-container>
+                            </select>
+
+                            <span *ngIf=" bankCode.touched && !bankCode.valid && !disableProformaFields"
+                                class="text-danger">
+                                Bank detail is required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total No of Drums </span>
+                            <input type="number" class="form-control" [(ngModel)]="profInvoice.totalNos" name="totalNos"
+                                #totalNos="ngModel" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Proforma Invoice Amount</span>
+                            <input type="number" class="form-control" [(ngModel)]="profInvoice.profInvoiceAmount"
+                                name="profInvoiceAmount" #profInvoiceAmount="ngModel" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Ocean Freight</span>
+                            <input type="number" class="form-control" step="0.01"
+                                pattern="^(?:\d{0,6}\.\d{1,2})$|^\d{0,6}$"
+                                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                [(ngModel)]="profInvoice.oceanFreight" name="oceanFreight" #oceanFreight="ngModel"
+                                required (blur)="focusToProduct()"
+                                [disabled]="disableProformaFields || isSearchResults">
+
+                            <span *ngIf=" oceanFreight.touched && !oceanFreight.valid && !disableProformaFields"
+                                class="text-danger">
+
+                                <span *ngIf="oceanFreight.errors?.requird">Ocean Freight is required **</span>
+                                <span *ngIf="oceanFreight.errors?.pattern">Ocean Freight should be of the form 000000/
+                                    000000.000 **</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Proforma Invoice Amount</span>
+                            <input type="number" class="form-control" [(ngModel)]="profInvoice.totalProfInvoiceAmount"
+                                name="totalProfInvoiceAmount" #totalProfInvoiceAmount="ngModel" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Net Weight in Kgs</span>
+                            <input type="number" class="form-control" [(ngModel)]="profInvoice.totalNetWtKgs"
+                                name="totalNetWtKgs" #totalNetWtKgs="ngModel" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Gross Weight In Kgs</span>
+                            <input type="number" class="form-control" [(ngModel)]="profInvoice.totalGrossWtKgs"
+                                name="totalGrossWtKgs" #totalGrossWtKgs="ngModel" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Order Prepared By</span>
+                            <input type="text" class="form-control" [(ngModel)]="loginDetails.userName" name="userName"
+                                #userName="ngModel" required disabled>
+
+                            <span *ngIf="userName.touched && !userName.valid" class="text-danger">
+                                Order Prepared By is required **
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Order Approved By</span>
+                            <input type="text" class="form-control" [(ngModel)]="profInvoice.approvedEmployeeId"
+                                name="approvedEmployeeId" #approvedEmployeeId="ngModel" required disabled>
+
+                            <span *ngIf=" approvedEmployeeId.touched && !approvedEmployeeId.valid" class="text-danger">
+                                Order Approved By is required **
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Production Details" [selected]="true">
+        <form #form2="ngForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Product Group</span>
+                            <select class="form-control" [(ngModel)]="productDetails.fPGroupCode" name="fPGroupCode"
+                                (change)="findProductVariety()" #fPGroupCode="ngModel" [disabled]="isSaved" required>
+                                <ng-container *ngFor="let group of productGroupList">
+                                    <option [value]='group.groupCode'>{{group.grpName}}</option>
+
+                                </ng-container>
+                            </select>
+
+                            <span *ngIf=" fPGroupCode.touched && !fPGroupCode.valid && !isSaved" class="text-danger">
+                                Product Group is required **
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Product Name</span>
+                            <select class="form-control" [(ngModel)]="productDetails.fPVarietyCode" name="fPVarietyCode"
+                                (change)="findProductGrade()" #fPVarietyCode="ngModel" [disabled]="isSaved" required>
+                                <ng-container *ngFor="let variety of productVarietyList">
+                                    <option [value]='variety.varietyCode'>{{variety.varietyName}}</option>
+
+                                </ng-container>
+                            </select>
+
+                            <span *ngIf=" fPVarietyCode.touched && !fPVarietyCode.valid && !isSaved"
+                                class="text-danger">
+                                Product Name is required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Grade/Size</span>
+                            <select class="form-control" [(ngModel)]="productDetails.fPGradeCode" name="fPGradeCode"
+                                (change)="allotGradeFromTo()" #fPGradeCode="ngModel" [disabled]="isSaved" required>
+                                <ng-container *ngFor="let grade of productGradeList">
+                                    <option [value]='grade.gradeCode'>{{grade.gradeFrom}} / {{grade.gradeTo}}</option>
+                                </ng-container>
+                            </select>
+
+                            <span *ngIf=" fPGradeCode.touched && !fPGradeCode.valid && !isSaved" class="text-danger">
+                                Grade/Size is required **
+                            </span>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Preserved in</span>
+                            <textarea type="text" class="form-control" [(ngModel)]="productDetails.preservedIn"
+                                name="preservedIn" #preservedIn="ngModel" [disabled]="isSaved" required></textarea>
+
+                            <span *ngIf=" preservedIn.touched && !preservedIn.valid && !isSaved" class="text-danger">
+                                Preserved in is required **
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Palletised/Non Palletised</span>
+                            <select class="form-control" [(ngModel)]="productDetails.palletisedNonpalletised"
+                                name="palletisedNonpalletised" #palletisedNonpalletised="ngModel" [disabled]="isSaved"
+                                required>
+                                <option value='Palletised'>Palletised</option>
+                                <option value="Non Palletised">Non Palletised</option>
+                            </select>
+                            <span *ngIf=" palletisedNonpalletised.touched && !palletisedNonpalletised.valid && !isSaved"
+                                class="text-danger">
+                                Please select an option **
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Process Details</span>
+                            <input type="text" class="form-control" [(ngModel)]="productDetails.processDetails"
+                                name="processDetails" #processDetails="ngModel" [disabled]="isSaved" required>
+
+                            <span *ngIf=" processDetails.touched && !processDetails.valid && !isSaved"
+                                class="text-danger">
+                                Process Details is required **
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Pack UOM</span>
+                            <select class="form-control" [(ngModel)]="productDetails.packUOM" name="packUOM"
+                                #packUOM="ngModel" [disabled]="isSaved" required>
+                                <option value="KGS">KGS</option>
+                                <option value="LBS">LBS</option>
+                            </select>
+
+                            <span *ngIf=" packUOM.touched && !packUOM.valid && !isSaved" class="text-danger">
+                                Pack UOM is required **
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Qty/Drum</span>
+                            <input type="number" class="form-control" step="0.01"
+                                pattern="^(?:\d{0,3}\.\d{1,3})$|^\d{0,3}$"
+                                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                [(ngModel)]="productDetails.qtyDrum" name="qtyDrum" #qtyDrum="ngModel"
+                                [disabled]="isSaved" (blur)="calQtyUOM()" required>
+
+
+
+
+                            <span *ngIf="qtyDrum.touched && !qtyDrum.valid && !isSaved " class="text-danger">
+                                <span *ngIf="qtyDrum.errors?.required"> Qty/Drum is required **</span>
+                                <span *ngIf="qtyDrum.errors?.pattern"> Qty/Drum should be of the form 000 /
+                                    000.000
+                                    **</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Drum Weight</span>
+                            <input type="number" class="form-control" step="0.01"
+                                pattern="^(?:\d{0,2}\.\d{1,3})$|^\d{0,2}$"
+                                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                [(ngModel)]="productDetails.drumWeight" name="drumWeight" #drumWeight="ngModel"
+                                [disabled]="isSaved" required>
+
+                            <span *ngIf="drumWeight.touched && !drumWeight.valid && !isSaved" class="text-danger">
+                                <span *ngIf="drumWeight.errors?.required"> Qty/Drum is required **</span>
+                                <span *ngIf="drumWeight.errors?.pattern"> Qty/Drum should be of the form 00 /
+                                    00.000
+                                    **</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Quanity (No. of Drum Packs)</span>
+                            <input type="number" class="form-control" step="0.01" pattern="^\d{0,6}$"
+                                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                [(ngModel)]="productDetails.orderQuantity" name="orderQuantity" #orderQuantity="ngModel"
+                                [disabled]="isSaved" (blur)="calQtyUOM()" required>
+
+                            <span *ngIf="orderQuantity.touched && !orderQuantity.valid && !isSaved" class="text-danger">
+                                <span *ngIf="orderQuantity.errors?.required"> Quanity is required **</span>
+                                <span *ngIf="orderQuantity.errors?.pattern"> Quanity should be of the form 0000000
+                                    **</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Product Quantity / UOM</span>
+                            <input type="number" class="form-control" step="0.01" [(ngModel)]="productDetails.qtyUOM"
+                                name="qtyUOM" #qtyUOM="ngModel" required disabled>
+
+                            <!-- <span *ngIf="qtyUOM.touched && !qtyUOM.valid " class="text-danger">
+                                <span *ngIf="qtyUOM.errors?.required"> Product Quantity / UOM is required **</span>
+                                <span *ngIf="qtyUOM.errors?.pattern"> Product Quantity / UOM should be of the form 00000
+                                    / 000000.000
+                                    **</span>
+                            </span> -->
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Rate UOM </span>
+                            <select class="form-control" [(ngModel)]="productDetails.rateUOM" name="rateUOM"
+                                #rateUOM="ngModel" [disabled]="isSaved" required>
+                                <option value="KGS">KGS</option>
+                                <option value="LBS">LBS</option>
+
+                                <span *ngIf="rateUOM.touched && !rateUOM.valid && !isSaved" class="text-danger">
+                                    <span *ngIf="rateUOM.errors?.required">Rate UOM is required **</span>
+                                </span>
+
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Rate</span>
+                            <input type="number" class="form-control" step="0.01"
+                                pattern="^(?:\d{0,4}\.\d{1,3})$|^\d{0,4}$" (blur)="openPopup(form2)"
+                                onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                [(ngModel)]="productDetails.orderRate" name="orderRate" #orderRate="ngModel"
+                                [disabled]="isSaved" required>
+
+                            <span *ngIf="orderRate.touched && !orderRate.valid && !isSaved" class="text-danger">
+                                <span *ngIf="orderRate.errors?.required"> Rate is required **</span>
+                                <span *ngIf="orderRate.errors?.pattern"> Rate should be of the form 0000 /
+                                    0000.000
+                                    **</span>
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Amount</span>
+                            <input type="number" class="form-control" [(ngModel)]="productDetails.productOrderAmount"
+                                name="productOrderAmount" #productOrderAmount="ngModel" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Data from above" [selected]="true">
+        <div class="container-fluid">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Product</th>
+                                <th>Grade</th>
+                                <th>Preserved In</th>
+                                <th>Pack UOM</th>
+                                <th>Quantity / Drum</th>
+                                <th>No. of Drums</th>
+                                <th>Qty/UOM</th>
+                                <th>Rate/UOM</th>
+                                <th>Amount</th>
+                            </tr>
+                            <tr *ngFor="let prof of profInvoice.productionDetails;let i = index;">
+
+                                <td>
+                                    {{i+1}}
+                                </td>
+                                <td>
+                                    {{prof.fPGroupName}} / {{prof.fPVarietyName}}
+                                </td>
+                                <td>
+                                    {{prof.fPGradeFromTo}}
+                                </td>
+                                <td>
+                                    {{prof.preservedIn}}
+
+                                </td>
+                                <td>
+                                    {{prof.packUOM}}
+
+                                </td>
+                                <td>
+                                    {{prof.qtyDrum}}
+
+                                </td>
+                                <td>
+                                    {{prof.orderQuantity}}
+
+                                </td>
+                                <td>
+                                    {{prof.qtyUOM}}
+                                </td>
+                                <td>
+                                    {{prof.orderRate}}
+                                </td>
+                                <td>
+                                    {{prof.productOrderAmount}}
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+
+
+
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton (click)="newProforma()" label="New" class="ui-button-rounded"></button>
+        <button pButton (click)="saveProforma()" [disabled]="form1.invalid || form2.invalid" label="Save"
+            class="ui-button-rounded"></button>
+        <button pButton (click)="findProforma()" label="Find" class="ui-button-rounded"></button>
+        <button pButton (click)="modifyProforma()" label="Modify" class="ui-button-rounded"></button>
+        <button pButton (click)="approveProforma()" label="Approve" class="ui-button-rounded"></button>
+        <button pButton (click)="clrProforma()" label="Clear" class="ui-button-rounded"></button>
+    </div>
+</div>
+
+
+
+
+<!----------------------------------------------------  Modal ---------------------------------------------------------------   -->
+
+
+<div class="modal fade" id="continueModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="continueModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: white;border:1.5px solid black;">
+            <div class="modal-header" style="background-color:#0F204B;">
+                <h5 class="modal-title" id="continueModalLabel" style="color:white;margin-bottom:5px;">
+                    Add Fruit Sizes</h5>
+                <button type="button" style="color:white" class="close" data-dismiss="modal"
+                    (click)="addProductToGrid(0)" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6> Do you wish to continue ?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="addProductToGrid(0)">No</button>
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"
+                    (click)="addProductToGrid(1)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: white;border:1.5px solid black;">
+            <div class="modal-header" style="background-color:#0F204B;">
+                <h5 class="modal-title" id="deleteModalLabel" style="color:white;margin-bottom:5px;">
+                    Delete Product Details</h5>
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6> Do you want to delete the Product Details ?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"
+                    (click)="deleteProductDetails()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

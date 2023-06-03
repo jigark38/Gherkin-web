@@ -1,0 +1,943 @@
+<div class="row pull-right " id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+                <li><a href="#">Purchase Management</a></li>
+                <li class="active"><span> Purchase Order</span></li>
+        </ol>
+</div>
+<div class="row pull-right " style="margin-top: 30px;clear: right;margin-right:0px">
+        <ol>
+                <li>
+                        <!-- <button pButton type="submit" label="Refresh" class="ui-button-rounded"></button> -->
+                        <button pButton type="submit" *ngIf="tabIndex == 0" label="Next" (click)="next()"
+                                class="ui-button-rounded"></button>
+                        <button pButton type="submit" *ngIf="tabIndex == 1" #saveButton label="Save"
+                                [disabled]="purchageOrderForm.invalid || disableSave" (click)="save()"
+                                class="ui-button-rounded"></button>
+                        <button pButton type="submit" *ngIf="tabIndex == 1" #findButton [disabled]="disableFind"
+                                label="Find" (click)="find()" class="ui-button-rounded"></button>
+                        <button pButton type="submit" *ngIf="tabIndex == 1" #modifyButton [disabled]="disableModify"
+                                label="Modify" (click)="modify()" class="ui-button-rounded"></button>
+                        <!-- <button pButton type="submit" label="Find" class="ui-button-rounded"></button> -->
+                        <!-- <button pButton type="submit" label="Modify" class="ui-button-rounded"></button> -->
+                        <!-- <button pButton type="submit" label="Print PO" class="ui-button-rounded"></button> -->
+                        <button pButton type="submit" label="Clear" (click)="clear()"
+                                class="ui-button-rounded"></button>
+
+                </li>
+
+        </ol>
+</div>
+<div class="mgt-20">
+
+        <p-tabView [activeIndex]="tabIndex" (onChange)="onTabChange($event)">
+                <p-tabPanel header="Indent Details">
+                        <div class="card-body" style="overflow-y:auto">
+                                <div class="row m-b-25">
+                                        <div class="col-md-12">
+                                                <!-- <app-ng-grid [cols]="orgCols1"></app-ng-grid> -->
+                                        </div>
+                                        <div class="col-md-12 ui-table-scrollable-view">
+                                                <div class="ui-table-scrollable-header ui-widget-header">
+                                                        <span *ngIf="noSelectIndent"
+                                                                class="error-span row no-selection-error">{{noSelectIndent}}</span>
+                                                        <div class="ui-table-scrollable-header-box">
+                                                                <table cellspacing="0" cellpadding="4"
+                                                                        class="ui-table table">
+                                                                        <thead class="ui-table-thead">
+                                                                                <tr>
+                                                                                        <th>Check List</th>
+
+                                                                                        <th>Indent Date / No
+                                                                                        </th>
+
+                                                                                        <th>Material Group
+                                                                                        </th>
+
+                                                                                        <th>Material Name
+                                                                                        </th>
+
+                                                                                        <th>Area / Branch</th>
+
+                                                                                        <th>Indent Quantity / UOM
+                                                                                        </th>
+
+                                                                                        <th>Total Indent Qty</th>
+
+                                                                                        <th>Available Qty</th>
+                                                                                        <th>Order Qty</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody class="ui-table-tbody">
+                                                                                <tr
+                                                                                        *ngIf="indentDetailsList && indentDetailsList.length == 0">
+                                                                                        <td colspan="9">
+                                                                                                No
+                                                                                                record
+                                                                                                found
+                                                                                        </td>
+                                                                                </tr>
+                                                                                <tr
+                                                                                        *ngFor="let indent of indentDetailsList;  index as i;let j=index">
+                                                                                        <td>
+                                                                                                <mat-checkbox
+                                                                                                        [(ngModel)]="indent.isSelected"
+                                                                                                        (change)="selectIndent(indent)">
+                                                                                                </mat-checkbox>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.indentDate | date : 'dd-MMM-yyyy'}}
+                                                                                                        /
+                                                                                                        {{indent.indentNo}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.rawMaterialGroupName}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.rawMaterialDetailsName}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.branchArea}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.indentQty}}
+                                                                                                        {{indent.indentUom}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.totalIndentQuantity}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                <span>{{indent.availableQty}}</span>
+                                                                                        </td>
+                                                                                        <td class="width-100px">
+                                                                                                <div
+                                                                                                        *ngIf="indent.isInputAllowed">
+                                                                                                        <input type="text"
+                                                                                                                class="form-control"
+                                                                                                                placeholder="Order Qty i.e. XXXXXXXXXX.XXX"
+                                                                                                                [(ngModel)]="indent.orderQty"
+                                                                                                                (blur)="validateOrderQuantity(indent);" />
+                                                                                                        <span *ngIf="!indent.isOrderQuantityValid"
+                                                                                                                class="error-span width-100pc float-left text-align-left">Required
+                                                                                                                Field.<br></span>
+                                                                                                        <span *ngIf="!indent.isOrderQuantityValid"
+                                                                                                                class="error-span width-100pc float-left text-align-left">format
+                                                                                                                should
+                                                                                                                be
+                                                                                                                XXXXXXXXXX.XXX</span>
+                                                                                                </div>
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card-body" style="overflow-y:auto">
+                                <div class="row m-b-25">
+                                        <div class="col-md-12">
+                                                <app-ng-grid [cols]="orgCols2"></app-ng-grid>
+                                        </div>
+                                </div>
+                        </div>
+                </p-tabPanel>
+                <p-tabPanel header="Purchase Order Details" [disabled]="disableNextPanel">
+                        <div class="card-body" style="overflow-y:auto">
+                                <p-tabView>
+                                        <p-tabPanel header="Order Material Details">
+
+                                                <div class="row m-b-25">
+                                                        <div class="col-md-12 ui-table-scrollable-view">
+                                                                <div
+                                                                        class="ui-table-scrollable-header ui-widget-header">
+                                                                        <div class="ui-table-scrollable-header-box">
+                                                                                <table cellspacing="0" cellpadding="4"
+                                                                                        [ngClass]="findMode?'disableTab':''"
+                                                                                        class="ui-table table">
+                                                                                        <thead class="ui-table-thead">
+                                                                                                <tr>
+                                                                                                        <th>Sl. No.</th>
+
+                                                                                                        <th>Material
+                                                                                                                Name
+                                                                                                        </th>
+
+                                                                                                        <th>Order
+                                                                                                                Quantity
+                                                                                                        </th>
+
+                                                                                                        <th>Quotation
+                                                                                                                Date
+                                                                                                        </th>
+
+                                                                                                        <th>Quotation
+                                                                                                                No.</th>
+
+                                                                                                        <th>Quoted Rate
+                                                                                                        </th>
+
+                                                                                                        <th>PO Rate</th>
+
+                                                                                                        <th>Amount</th>
+                                                                                                        <th>Tax(%)</th>
+                                                                                                        <th>Tax Amount
+                                                                                                        </th>
+                                                                                                        <th>Total Amount
+                                                                                                        </th>
+                                                                                                </tr>
+                                                                                        </thead>
+                                                                                        <tbody class="ui-table-tbody"
+                                                                                                id="">
+                                                                                                <tr
+                                                                                                        *ngIf="orderMaterialDetailList && orderMaterialDetailList.length == 0">
+                                                                                                        <td
+                                                                                                                colspan="11">
+                                                                                                                No
+                                                                                                                record
+                                                                                                                found
+                                                                                                        </td>
+                                                                                                </tr>
+                                                                                                <tr
+                                                                                                        *ngFor="let material of orderMaterialDetailList;  index as i;let j=index">
+                                                                                                        <td>
+                                                                                                                <span>{{j+1}}</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.materialName}}</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.rmOrderQty}}
+                                                                                                                        {{material.orderQuantityUOM}}</span>
+                                                                                                        </td>
+                                                                                                        <td> <input matInput
+                                                                                                                        class="form-control border-bottom-1"
+                                                                                                                        placeholder="Quotation Date"
+                                                                                                                        [matDatepicker]="i"
+                                                                                                                        [(ngModel)]="material.rmQuotationDate">
+                                                                                                                <mat-datepicker-toggle
+                                                                                                                        class="date-picker-icon-position"
+                                                                                                                        matSuffix
+                                                                                                                        [for]="i">
+                                                                                                                </mat-datepicker-toggle>
+                                                                                                                <mat-datepicker
+                                                                                                                        #i>
+                                                                                                                </mat-datepicker>
+                                                                                                        </td>
+                                                                                                        <td
+                                                                                                                class="width-100px">
+                                                                                                                <input type="text"
+                                                                                                                        class="form-control"
+                                                                                                                        placeholder="Quatation No"
+                                                                                                                        [(ngModel)]="material.rmQuotationNo"
+                                                                                                                        maxlength="30" />
+                                                                                                        </td>
+                                                                                                        <td
+                                                                                                                class="width-100px">
+                                                                                                                <input type="text"
+                                                                                                                        class="form-control"
+                                                                                                                        [(ngModel)]="material.rmQuotationRate"
+                                                                                                                        placeholder="Quoted Rate"
+                                                                                                                        (blur)="validateQuotedRate(material)" />
+                                                                                                                <span *ngIf="!material.isQuotedRateValid"
+                                                                                                                        class="error-span">format
+                                                                                                                        should
+                                                                                                                        be
+                                                                                                                        XXXXXXXXXX.XX</span>
+                                                                                                        </td>
+                                                                                                        <td
+                                                                                                                class="width-100px">
+                                                                                                                <input type="text"
+                                                                                                                        class="form-control"
+                                                                                                                        placeholder="PO Rate"
+                                                                                                                        [(ngModel)]="material.rmPoRate"
+                                                                                                                        (blur)="validatePORate(material);calculateAmount();" />
+                                                                                                                <span *ngIf="!material.isPORateValid"
+                                                                                                                        class="error-span float-left">Required
+                                                                                                                        Field.<br></span>
+                                                                                                                <span *ngIf="!material.isPORateValid"
+                                                                                                                        class="error-span float-left">format
+                                                                                                                        should
+                                                                                                                        be
+                                                                                                                        XXXXXXXXXX.XXXXX</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.rmPoMaterialWiseCost}}</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.tax}}</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.taxAmount}}</span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                <span>{{material.rmPoMaterialWiseTotalCost}}</span>
+                                                                                                        </td>
+                                                                                                </tr>
+                                                                                        </tbody>
+                                                                                </table>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+
+                                        </p-tabPanel>
+                                </p-tabView>
+                                <p-tabView>
+                                        <p-tabPanel header="Order Details">
+                                                <div [formGroup]="purchageOrderForm">
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Order
+                                                                                        Date</span>
+                                                                                <!-- <input type="date" class="form-control"
+                                                                                data-format="DD/MMM/YYYY" /> -->
+                                                                                <input matInput
+                                                                                        class="form-control border-bottom-1"
+                                                                                        placeholder="Please Select Order Date"
+                                                                                        #orderDate [matDatepicker]="dp"
+                                                                                        formControlName="orderDate">
+                                                                                <mat-datepicker-toggle
+                                                                                        class="date-picker-icon-position"
+                                                                                        matSuffix [for]="dp">
+                                                                                </mat-datepicker-toggle>
+                                                                                <mat-datepicker #dp>
+                                                                                </mat-datepicker>
+                                                                                <span *ngIf="purchageOrderForm.controls.orderDate.errors?.required && purchageOrderForm.controls.orderDate.touched"
+                                                                                        class="error-span">Order Date is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <div class="form-group">
+                                                                                        <span class="label-control">Order
+                                                                                                Number</span>
+                                                                                        <!-- <input type="text"
+                                                                                                placeholder="Please Enter Order Number"
+                                                                                                formControlName="orderNumber"
+                                                                                                class="form-control"> -->
+
+                                                                                        <mat-select class="form-control"
+                                                                                                (selectionChange)="changeOrder($event)"
+                                                                                                formControlName="orderNumber"
+                                                                                                placeholder="Please Select Order Number">
+                                                                                                <mat-option
+                                                                                                        *ngFor="let ord of orderList"
+                                                                                                        [value]="ord">
+                                                                                                        {{ord}}
+                                                                                                </mat-option>
+                                                                                        </mat-select>
+                                                                                        <span *ngIf="purchageOrderForm.controls.orderNumber.errors?.required && purchageOrderForm.controls.orderNumber.touched"
+                                                                                                class="error-span">Order
+                                                                                                Number is
+                                                                                                required field.</span>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <div class="form-group">
+                                                                                        <span
+                                                                                                class="label-control">Domestic/Import</span>
+                                                                                        <mat-select class="form-control"
+                                                                                                formControlName="domesticImport"
+                                                                                                placeholder="Please Select Purchage Type">
+                                                                                                <mat-option
+                                                                                                        value="Domestic Purchase">
+                                                                                                        Domestic
+                                                                                                        Purchase
+                                                                                                </mat-option>
+                                                                                                <mat-option
+                                                                                                        value="Import Purchase">
+                                                                                                        Import Purchase
+                                                                                                </mat-option>
+                                                                                        </mat-select>
+                                                                                        <span *ngIf="purchageOrderForm.controls.domesticImport.errors?.required && purchageOrderForm.controls.domesticImport.touched"
+                                                                                                class="error-span">Domestic/Import
+                                                                                                is
+                                                                                                required field.</span>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <div class="form-group">
+                                                                                        <span class="label-control">Name
+                                                                                                of
+                                                                                                Supplier</span>
+                                                                                        <mat-select class="form-control"
+                                                                                                (selectionChange)="changeSupplier($event)"
+                                                                                                formControlName="nameOfSupplier"
+                                                                                                placeholder="Please Select Supplier Name">
+                                                                                                <mat-option
+                                                                                                        [value]="supp.supplierOrgID"
+                                                                                                        *ngFor="let supp of supplierOrgList">
+                                                                                                        {{supp.organisationName}}
+                                                                                                </mat-option>
+                                                                                        </mat-select>
+                                                                                        <span *ngIf="purchageOrderForm.controls.nameOfSupplier.errors?.required && purchageOrderForm.controls.nameOfSupplier.touched"
+                                                                                                class="error-span">Name
+                                                                                                of
+                                                                                                Supplier is
+                                                                                                required field.</span>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <div class="form-group">
+                                                                                        <span
+                                                                                                class="label-control">Place</span>
+                                                                                        <mat-select class="form-control"
+                                                                                                formControlName="place"
+                                                                                                placeholder="Please Select Place">
+                                                                                                <mat-option
+                                                                                                        [value]="place.PlaceCode"
+                                                                                                        *ngFor="let place of placeList">
+                                                                                                        {{place.PlaceName}}
+                                                                                                </mat-option>
+                                                                                        </mat-select>
+                                                                                        <span *ngIf="purchageOrderForm.controls.place.errors?.required && purchageOrderForm.controls.place.touched"
+                                                                                                class="error-span">Place
+                                                                                                is
+                                                                                                required field.</span>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <div class="form-group">
+                                                                                        <span
+                                                                                                class="label-control">State</span>
+                                                                                        <mat-select class="form-control"
+                                                                                                formControlName="state"
+                                                                                                placeholder="Please Select State">
+                                                                                                <mat-option
+                                                                                                        [value]="state.stateCode"
+                                                                                                        *ngFor="let state of stateList">
+                                                                                                        {{state.stateName}}
+                                                                                                </mat-option>
+                                                                                        </mat-select>
+                                                                                        <span *ngIf="purchageOrderForm.controls.state.errors?.required && purchageOrderForm.controls.state.touched"
+                                                                                                class="error-span">State
+                                                                                                is
+                                                                                                required field.</span>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span
+                                                                                        class="label-control">Country</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="country"
+                                                                                        placeholder="Please Select Country">
+                                                                                        <mat-option
+                                                                                                [value]="country.countryCode"
+                                                                                                *ngFor="let country of countryList">
+                                                                                                {{country.countryName}}
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.country.errors?.required && purchageOrderForm.controls.country.touched"
+                                                                                        class="error-span">Country
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span
+                                                                                        class="label-control">Currency</span>
+                                                                                <input type="text"
+                                                                                        placeholder="Please Enter Currency"
+                                                                                        formControlName="currency"
+                                                                                        class="form-control"
+                                                                                        maxlength="20">
+                                                                                <span *ngIf="purchageOrderForm.controls.currency.errors?.required && purchageOrderForm.controls.currency.touched"
+                                                                                        class="error-span">Currency
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span
+                                                                                        class="label-control">IGST/SGST</span>
+                                                                                <mat-select class="form-control"
+                                                                                        (selectionChange)="gstTypeChange($event)"
+                                                                                        formControlName="igstSgst"
+                                                                                        placeholder="Please Select IGST/SGST">
+                                                                                        <mat-option value="IGST">IGST
+                                                                                        </mat-option>
+                                                                                        <mat-option value="SGST">SGST
+                                                                                        </mat-option>
+                                                                                        <mat-option value="GsT Reverse">
+                                                                                                GST
+                                                                                                Reverse
+                                                                                        </mat-option>
+                                                                                        <mat-option
+                                                                                                value="Not Applicable">
+                                                                                                Not
+                                                                                                Applicable</mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.igstSgst.errors?.required && purchageOrderForm.controls.igstSgst.touched"
+                                                                                        class="error-span">IGST/SGST
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Through
+                                                                                        Quotation</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="throughQuotation"
+                                                                                        placeholder="Please Select Through Quotation">
+
+                                                                                        <mat-option value="Direct">
+                                                                                                Direct
+                                                                                        </mat-option>
+                                                                                        <mat-option value="Quotation">
+                                                                                                Quotation
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.throughQuotation.errors?.required && purchageOrderForm.controls.throughQuotation.touched"
+                                                                                        class="error-span">Through
+                                                                                        Quotation
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Packing
+                                                                                        Condition</span>
+
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="packingCondition"
+                                                                                        placeholder="Please Select Packing Condition">
+
+                                                                                        <mat-option value="Quantity">
+                                                                                                Quantity
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NA">Not
+                                                                                                Applicable
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.packingCondition.errors?.required && purchageOrderForm.controls.packingCondition.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Condition
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Packing
+                                                                                        Style</span>
+                                                                                <input type="text"
+                                                                                        formControlName="packingStyle"
+                                                                                        placeholder="Please Enter Packing Style"
+                                                                                        class="form-control" />
+                                                                                <span *ngIf="purchageOrderForm.controls.packingStyle.errors?.required && purchageOrderForm.controls.packingStyle.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Style
+                                                                                        is
+                                                                                        required field.</span>
+
+                                                                        </div>
+                                                                </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Packing
+                                                                                        Quantity</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="packingQuantity"
+                                                                                        maxlength="10"
+                                                                                        (blur)="calculatePackingAMount()"
+                                                                                        placeholder="Please Enter Packing Quantity">
+                                                                                <span *ngIf="purchageOrderForm.controls.packingQuantity.errors?.required && purchageOrderForm.controls.packingQuantity.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Quantity
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('packingQuantity').errors?.pattern && purchageOrderForm.controls.packingQuantity.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Quantity
+                                                                                        can be numberics only.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Packing
+                                                                                        Rate</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="packingRate"
+                                                                                        (blur)="calculatePackingAMount()"
+                                                                                        placeholder="Please Enter Packing Rate" />
+                                                                                <span *ngIf="purchageOrderForm.controls.packingRate.errors?.required && purchageOrderForm.controls.packingRate.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Rate
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('packingRate').errors?.pattern && purchageOrderForm.controls.packingRate.touched"
+                                                                                        class="error-span">Packing Rate
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXX.XX</span>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Packing
+                                                                                        Amount</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="packingAmount"
+                                                                                        [disabled]="true"
+                                                                                        placeholder="Please Enter Packing Amount" />
+                                                                                <span *ngIf="purchageOrderForm.controls.packingAmount.errors?.required && purchageOrderForm.controls.packingAmount.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Amount
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('packingAmount').errors?.pattern && purchageOrderForm.controls.packingAmount.touched"
+                                                                                        class="error-span">Packing
+                                                                                        Amount
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXXXXXXX.XX</span>
+
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Delivery
+                                                                                        Condition</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="deliveryCondition"
+                                                                                        placeholder="Please Select Delivery Condition">
+                                                                                        <mat-option value="Inclusive">
+                                                                                                Inclusive
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NET AMT">NET
+                                                                                                AMT
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NET QTY">NET
+                                                                                                QTY
+                                                                                        </mat-option>
+                                                                                        <mat-option value="RATE">RATE
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NA">NA
+                                                                                        </mat-option>
+
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.deliveryCondition.errors?.required && purchageOrderForm.controls.deliveryCondition.touched"
+                                                                                        class="error-span">Delivery
+                                                                                        Condition
+                                                                                        is
+                                                                                        required field.</span>
+
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Frieght
+                                                                                        Amount</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="frieghtAmount"
+                                                                                        placeholder="Please Enter Frieght Amount" />
+                                                                                <span *ngIf="purchageOrderForm.controls.frieghtAmount.errors?.required && purchageOrderForm.controls.frieghtAmount.touched"
+                                                                                        class="error-span">Frieght
+                                                                                        Amount
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('frieghtAmount').errors?.pattern && purchageOrderForm.controls.frieghtAmount.touched"
+                                                                                        class="error-span">Frieght
+                                                                                        Amount
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXXXXXXX.XX</span>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Insurance
+                                                                                        Condition</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="insuranceCondtion"
+                                                                                        placeholder="Please Select Insurance Condition">
+                                                                                        <mat-option value="Inclusive">
+                                                                                                Inclusive
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NET AMT">NET
+                                                                                                AMT
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NET QTY">NET
+                                                                                                QTY
+                                                                                        </mat-option>
+                                                                                        <mat-option value="RATE">RATE
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NA">NA
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.insuranceCondtion.errors?.required && purchageOrderForm.controls.insuranceCondtion.touched"
+                                                                                        class="error-span">Insurance
+                                                                                        Condition
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Insurance
+                                                                                        Amount</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="insuranceAmount"
+                                                                                        placeholder="Please Enter Insurance Amount" />
+                                                                                <span *ngIf="purchageOrderForm.controls.insuranceAmount.errors?.required && purchageOrderForm.controls.insuranceAmount.touched"
+                                                                                        class="error-span">Insurance
+                                                                                        Amount
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('insuranceAmount').errors?.pattern && purchageOrderForm.controls.insuranceAmount.touched"
+                                                                                        class="error-span">Insurance
+                                                                                        Amount
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXXXXXXX.XX</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Payment
+                                                                                        Terms</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="paymentTerms"
+                                                                                        placeholder="Please Select Payment Terms">
+                                                                                        <mat-option value="DELIVERY">
+                                                                                                DELIVERY</mat-option>
+                                                                                        <mat-option value="ADV AMT">ADV
+                                                                                                AMT</mat-option>
+                                                                                        <mat-option value="ADV%">ADV%
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NA">NA
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.paymentTerms.errors?.required && purchageOrderForm.controls.paymentTerms.touched"
+                                                                                        class="error-span">Payment
+                                                                                        Terms
+                                                                                        is
+                                                                                        required field.</span>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span
+                                                                                        class="label-control">Advance</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="advance"
+                                                                                        placeholder="Please Enter Advacne" />
+                                                                                <span *ngIf="purchageOrderForm.controls.advance.errors?.required && purchageOrderForm.controls.advance.touched"
+                                                                                        class="error-span">Advance
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('advance').errors?.pattern && purchageOrderForm.controls.advance.touched"
+                                                                                        class="error-span">Advance
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXXXXXXX.XX</span>
+
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Credit
+                                                                                        Days</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        maxlength="3"
+                                                                                        formControlName="creditDays"
+                                                                                        placeholder="Please Enter Credit Days" />
+                                                                                <span *ngIf="purchageOrderForm.controls.creditDays.errors?.required && purchageOrderForm.controls.creditDays.touched"
+                                                                                        class="error-span">Credit Days
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('creditDays').errors?.pattern && purchageOrderForm.controls.creditDays.touched"
+                                                                                        class="error-span">Credit Days
+                                                                                        can be numberics only.</span>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Delivery
+                                                                                        Date</span>
+                                                                                <input matInput
+                                                                                        class="form-control border-bottom-1"
+                                                                                        placeholder="Please Select Delivery Date"
+                                                                                        [matDatepicker]="deliveryDateField"
+                                                                                        formControlName="deliveryDate">
+                                                                                <mat-datepicker-toggle
+                                                                                        class="date-picker-icon-position"
+                                                                                        matSuffix
+                                                                                        [for]="deliveryDateField">
+                                                                                </mat-datepicker-toggle>
+                                                                                <mat-datepicker #deliveryDateField>
+                                                                                </mat-datepicker>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Delivery
+                                                                                        Days</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        (blur)="calculateTotalPOAmount()"
+                                                                                        formControlName="deliveryDays"
+                                                                                        placeholder="Please Enter Delivery Days" />
+                                                                                <span *ngIf="purchageOrderForm.controls.deliveryDays.errors?.required && purchageOrderForm.controls.deliveryDays.touched"
+                                                                                        class="error-span">Delivery Days
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('deliveryDays').errors?.pattern && purchageOrderForm.controls.deliveryDays.touched"
+                                                                                        class="error-span">Delivery Days
+                                                                                        can be numberics only.</span>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">Total PO
+                                                                                        Amount</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="totalPOAmount"
+                                                                                        placeholder="Please Enter Total PO Amount" />
+                                                                                <span *ngIf="purchageOrderForm.controls.totalPOAmount.errors?.required && purchageOrderForm.controls.totalPOAmount.touched"
+                                                                                        class="error-span">Total PO
+                                                                                        Amount
+                                                                                        is
+                                                                                        required field.</span>
+                                                                                <span *ngIf="purchageOrderForm.get('totalPOAmount').errors?.pattern && purchageOrderForm.controls.totalPOAmount.touched"
+                                                                                        class="error-span">Total PO
+                                                                                        Amount
+                                                                                        can be decimal in format of
+                                                                                        XXXXXXXXXXXXXXXXXXXX.XX</span>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">PO Valid
+                                                                                        Till</span>
+                                                                                <mat-select class="form-control"
+                                                                                        formControlName="poValidTill"
+                                                                                        placeholder="Please Select PO Valid Till">
+                                                                                        <mat-option
+                                                                                                value="Specified Days">
+                                                                                                Specified Days
+                                                                                        </mat-option>
+                                                                                        <mat-option value="Open">Open
+                                                                                        </mat-option>
+                                                                                        <mat-option value="NA">NA
+                                                                                        </mat-option>
+                                                                                </mat-select>
+                                                                                <span *ngIf="purchageOrderForm.controls.poValidTill.errors?.required && purchageOrderForm.controls.poValidTill.touched"
+                                                                                        class="error-span">PO Valid
+                                                                                        Till
+                                                                                        is
+                                                                                        required field.</span>
+
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                                <span class="label-control">PO Valid
+                                                                                        Days</span>
+                                                                                <input type="text" class="form-control"
+                                                                                        formControlName="poValidDays"
+                                                                                        placeholder="Please Enter PO Valid Days" />
+                                                                                <span *ngIf="purchageOrderForm.get('poValidDays').errors?.pattern && purchageOrderForm.controls.poValidDays.touched"
+                                                                                        class="error-span">PO Valid Days
+                                                                                        can be numberics only.</span>
+
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </p-tabPanel>
+                                </p-tabView>
+                                <p-tabView>
+                                        <p-tabPanel header="Material Conditions">
+                                                <div class="row" [formGroup]="materialConditionForm">
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span class="label-control">Particulars</span>
+                                                                        <input #particilars type="text"
+                                                                                formControlName="particulars"
+                                                                                maxlength="50"
+                                                                                placeholder="Please Enter Particulars"
+                                                                                class="form-control" />
+
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span class="label-control">Details</span>
+                                                                        <input type="text" class="form-control"
+                                                                                maxlength="50" formControlName="details"
+                                                                                placeholder="Please Enter Details" />
+
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span class="label-control">Remarks</span>
+                                                                        <textarea class="form-control" maxlength="300"
+                                                                                formControlName="remarks"
+                                                                                (blur)="blurRemarks()"
+                                                                                placeholder="Please Enter Remarks"></textarea>
+
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                <p-tabView>
+                                                        <p-tabPanel header="Material Quality Terms">
+                                                                <div class="row m-b-25">
+                                                                        <div class="col-md-12">
+                                                                                <app-ng-grid [cols]="orgCols4"
+                                                                                        (selectedRowHandler)="inwardGridSelectedRowEvent($event)"
+                                                                                        [ngClass]="findMode?'disableTab':''"
+                                                                                        [data]="materialConditionList">
+                                                                                </app-ng-grid>
+                                                                        </div>
+                                                                </div>
+                                                        </p-tabPanel>
+                                                </p-tabView>
+
+                                        </p-tabPanel>
+                                </p-tabView>
+
+                        </div>
+                </p-tabPanel>
+
+
+        </p-tabView>
+
+</div>

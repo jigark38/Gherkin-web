@@ -1,0 +1,8 @@
+.error {
+  display: block;
+  width: 100%;
+  height: 11px;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}

@@ -1,0 +1,21 @@
+.disableClick {
+    pointer-events: none;
+}
+.table tr.active td {
+    background-color: #123456 !important;
+    color: white;
+}
+.table{
+    table-layout: auto;
+    white-space: nowrap;
+}
+
+
+.maxrowheight{
+    width:1vm;
+}
+
+.tablehorizontal{
+    width: 2vm;
+    overflow-x: scroll;
+}

@@ -1,0 +1,384 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Production Process Filling & Ware House Division</a></li>
+    <li class="active"><span>Media Batch Details</span></li>
+  </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+  <p-tabView>
+    <p-tabPanel header="Schedule Order Details" [selected]="scheduleOrderSelected">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Unit</span>
+              <mat-select class="form-control" (selectionChange)="changeUnit($event.value)" #unitNameDDL>
+                <mat-option [value]="office" *ngFor="let office of officeLocationDetails">
+                  {{office.OrgOfficeName}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Media Filter</span>
+              <mat-select class="form-control" (selectionChange)="loadPendingOrderDetails($event.value)" #mediaNameDDL>
+                <mat-option [value]="media" *ngFor="let media of mediaProcessDetails">
+                  {{media.mediaProcessName}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-accordionTab header="Pending Orders Schedule Details" [selected]="true">
+        <div class="container-fluid">
+          <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+            <tbody>
+              <tr>
+                <th>Sl.No</th>
+                <th>Preserve In</th>
+                <th>Order Date</th>
+                <th>Order No</th>
+                <th>Product Name</th>
+                <th>Grade</th>
+                <th>Total Qty (KGS)</th>
+                <th>Req. Date</th>
+                <th>Select</th>
+              </tr>
+              <tr *ngIf="!pendingOrderdetails || pendingOrderdetails.length==0">
+                <td colspan="9" style="text-align: center; ">
+                  No Record Found.
+                </td>
+              </tr>
+              <tr *ngFor="let pendingOrderdetail of pendingOrderdetails; let i=index" style="text-align: center;">
+                <ng-container>
+                  <td>
+                    {{i+1}}
+                  </td>
+                  <td>{{pendingOrderdetail.mediaProcessName}}</td>
+                  <td>
+                    {{pendingOrderdetail.batchProductionDate | date:'mediumDate'}}
+                  </td>
+                  <td>
+                    {{pendingOrderdetail.batchProductionNo}}
+                  </td>
+                  <td>
+                    {{pendingOrderdetail.fPVarietyName}}
+                  </td>
+                  <td>
+                    {{pendingOrderdetail.gradeFromTo}}
+                  </td>
+                  <td>
+                    {{pendingOrderdetail.bSProductionQtyinUOM}}
+                  </td>
+                  <td>
+                    {{pendingOrderdetail.pSRequireDateBy | date:'mediumDate'}}
+                  </td>
+                  <td>
+                    <input type="checkbox" (change)="checkSelected(pendingOrderdetail)" name="optradio">
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </p-accordionTab>
+
+
+    </p-tabPanel>
+
+    <p-tabPanel header="Media Batch Details" [selected]="batchDetailsSelected">
+      <p-accordionTab header="Media Batch Details" [selected]="batchDetailsSelected">
+        <form [formGroup]="mediaBatchDetailsForm">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch Date</span>
+                  <input matInput formControlName="mediaBatchProductionDate" class="form-control border-bottom-1"
+                    (dateChange)="updatemediaBatchProductionDate($event)" placeholder="Please Select Batch Date"
+                    [matDatepicker]="hgd">
+                  <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="hgd">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #hgd>
+                  </mat-datepicker>
+                  <span
+                    *ngIf="mediaBatchDetailsForm.controls.mediaBatchProductionDate.errors?.required && mediaBatchDetailsForm.controls.mediaBatchProductionDate.touched"
+                    class="error-span">
+                    Batch Date field
+                    is required field.
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch No</span>
+                  <input type="text" formControlName="mediaBatchProductionVisibleNo" class="form-control" maxlength="20"
+                    placeholder="Please Provide Batch No" />
+                  <span
+                    *ngIf="mediaBatchDetailsForm.controls.mediaBatchProductionVisibleNo.errors?.required && mediaBatchDetailsForm.controls.mediaBatchProductionVisibleNo.touched"
+                    class="error-span">
+                    Batch No
+                    is required field.
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Scheduled By</span>
+                  <mat-select class="form-control" formControlName="employeeID" placeholder="Select Scheduled by"
+                    #unitEmployeeNameDDL>
+                    <mat-option [value]="employee.employeeId" *ngFor="let employee of employeeIDAndName">
+                      {{employee.employeeName}}
+                    </mat-option>
+                  </mat-select>
+                  <span
+                    *ngIf="mediaBatchDetailsForm.controls.employeeID.errors?.required && mediaBatchDetailsForm.controls.employeeID.touched"
+                    class="error-span">
+                    Scheduled By
+                    is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Total Quantity</span>
+                  <input type="text" formControlName="productionQuantity" class="form-control" readonly />
+                  <span *ngIf="mediaBatchDetailsForm.controls.productionQuantity.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.productionQuantity.touched" class="error-span">
+                    Total Quantity is
+                    required
+                    field.
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch Size</span>
+                  <input type="number" formControlName="mediaBatchSize" class="form-control"
+                    placeholder="Please Provide Batch Size" maxlength="5" min="0" max="99999" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.mediaBatchSize.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.mediaBatchSize.touched" class="error-span">
+                    Batch Size is
+                    required
+                    field.
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch UOM</span>
+                  <input type="text" formControlName="mediaBatchUOM" class="form-control"
+                    placeholder="Please Provide Batch UOM" maxlength="10" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.mediaBatchUOM.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.mediaBatchUOM.touched" class="error-span">
+                    Batch UOM is required field
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">S / NaOH</span>
+                  <input type="text" formControlName="sNaOH" class="form-control" placeholder="Please Provide S / NaOH"
+                    maxlength="50" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.sNaOH.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.sNaOH.touched" class="error-span">
+                    S / NaOH is required field
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">S / AgNO3</span>
+                  <input type="text" formControlName="sAgNO3" class="form-control"
+                    placeholder="Please Provide S / AgNO3" maxlength="50" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.sAgNO3.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.sAgNO3.touched" class="error-span">
+                    S / AgNO3 is required field
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">20% S / BRINE</span>
+                  <input type="text" formControlName="sBRINE" class="form-control"
+                    placeholder="Please Provide 20% S / BRINE" maxlength="50" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.sBRINE.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.sBRINE.touched" class="error-span">
+                    20% S / BRINE is required field
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">WATER</span>
+                  <input type="text" formControlName="water" class="form-control" placeholder="Please Provide water"
+                    maxlength="50" />
+                  <span *ngIf="mediaBatchDetailsForm.controls.water.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.water.touched" class="error-span">
+                    20% S / BRINE is required field
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Remarks</span>
+                  <textarea type="text" formControlName="mediaBatchRemarks" class="form-control"
+                    (focusout)="populateMediaMaterialGrid()" placeholder="Please Provide Remarks"
+                    maxlength="500"></textarea>
+                  <span *ngIf="mediaBatchDetailsForm.controls.mediaBatchRemarks.errors?.required
+                                    &&
+                                    mediaBatchDetailsForm.controls.mediaBatchRemarks.touched" class="error-span">
+                    Remarks is required field
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </p-accordionTab>
+      <p-accordionTab header="Media Material Details" [selected]="batchDetailsSelected">
+        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+          <tbody>
+            <tr>
+              <th>Sl.No</th>
+              <th>Material Name</th>
+              <th>Standard / Qty</th>
+              <th>Required Quantity</th>
+              <th>Material Batch Nos.</th>
+              <th>Consumed Quantity</th>
+              <!--<th>QC Norms</th>-->
+            </tr>
+            <tr *ngIf="!materialDetails || materialDetails.length==0">
+              <td colspan="6" style="text-align: center; ">
+                No Record Found.
+              </td>
+            </tr>
+            <ng-container *ngFor="let materialDetail of materialDetails; let i=index" style="text-align: center;">
+              <tr>
+
+                <td>{{i+1}}</td>
+                <td><a id="material{{i}}" style="cursor:pointer;color:blue;"
+                    (click)="showStockBatchDetails(materialDetail,i)">{{materialDetail.materialName}}</a></td>
+                <td>{{materialDetail.standardQty}}</td>
+                <td>{{4 * materialDetail.requiredQty}}</td>
+                <td>
+                  <span id="materialBatchNo{{i}}"></span>
+                </td>
+                <td>
+                  <span id="materialConsumedQty{{i}}"></span>
+                </td>
+
+
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </p-accordionTab>
+      <p-accordionTab header="Stock & Batch Details - Material Name " [selected]="batchDetailsSelected">
+        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+          <tbody>
+            <tr>
+              <th>Sl.No</th>
+              <th>Check Box</th>
+              <th>Batch Date / Batch No</th>
+              <th>Available Stock Qty</th>
+              <th>Issue Qty</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+            <tr *ngIf="!mediaStockAndBatchDetails || mediaStockAndBatchDetails.length==0">
+              <td colspan="7" style="text-align: center; ">
+                No Record Found.
+              </td>
+            </tr>
+            <tr *ngFor="let mediaStockAndBatchDetail of mediaStockAndBatchDetails; let i=index"
+              style="text-align: center;">
+
+              <td>{{i+1}}</td>
+              <td><input type="checkbox" (change)="onCheckboxChange($event,i)" /></td>
+              <td>
+                <div *ngIf="mediaStockAndBatchDetail.flag=='A'" style="text-align: left;">
+                  <span>{{mediaStockAndBatchDetail.rmStockLOTGRNDate | date: 'dd/MM/yyyy' }} /
+                    {{mediaStockAndBatchDetail.rmStockLOTGRNNo}}</span>
+                </div>
+                <div *ngIf="mediaStockAndBatchDetail.flag=='B'" style="text-align: left;">
+                  <span>{{mediaStockAndBatchDetail.rmGrnDate |date: 'dd/MM/yyyy' }} /
+                    {{mediaStockAndBatchDetail.rmBatchNo}}</span>
+                </div>
+              </td>
+              <td>
+                <ng-container *ngIf="mediaStockAndBatchDetail.flag=='A'" style="text-align: right;">
+                  {{mediaStockAndBatchDetail.rmStockLotGrnQty - mediaStockAndBatchDetail.rmMaterialTransferQty}}
+                </ng-container>
+                <ng-container *ngIf="mediaStockAndBatchDetail.flag=='B'" style="text-align: right;">
+                  {{mediaStockAndBatchDetail.rmGRNreceivedQty - mediaStockAndBatchDetail.rmMaterialTransferQty}}
+                </ng-container>
+              </td>
+              <td>
+                <input type="text" class="form-control" style="text-align: right;" name="issueQty{{i}}"
+                  [(ngModel)]="mediaStockAndBatchDetail.issueQty"
+                  (change)="calculateTotalIssueQty(mediaStockAndBatchDetail.issueQty,i)" />
+              </td>
+              <td>
+                <span *ngIf="mediaStockAndBatchDetail.flag=='A'" style="text-align: right;">
+                  {{mediaStockAndBatchDetail.rmStockLotGrnRate}}
+                </span>
+                <span *ngIf="mediaStockAndBatchDetail.flag=='B'" style="text-align: right;">
+                  {{mediaStockAndBatchDetail.rmGRNMaterialWiseTotalRate}}
+                </span>
+              </td>
+              <td>
+                <input type="text" name="amount{{i}}" style="text-align: right;"
+                  [ngModel]="calculateAmount(mediaStockAndBatchDetail)" readonly />
+              </td>
+
+
+            </tr>
+            <tr *ngIf="mediaStockAndBatchDetails">
+              <td>Total</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><label id="TotalissueQty"></label></td>
+              <td></td>
+              <td><label id="TotalAmount"></label></td>
+            </tr>
+          </tbody>
+        </table>
+      </p-accordionTab>
+    </p-tabPanel>
+  </p-tabView>
+
+
+  <div class="mgt-20 pull-right">
+    <div class="col-md-12">
+      <button pButton type="submit" label="Media Batch Schedule" class="ui-button-rounded"></button>
+
+      <button pButton type="submit" label="Next" class="ui-button-rounded" (click)="openNext()"></button>
+      <!--[disabled]="!showNext"-->
+      <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="saveMediaBatchDetails()"
+        [disabled]="!mediaBatchDetailsForm.valid"></button>
+      <button pButton type="submit" label="Re Adjustment" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Modify" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Clear" class="ui-button-rounded" (click)="clear()"></button>
+    </div>
+  </div>
+  <div style="height: 28px;"></div>
+</p-accordion>

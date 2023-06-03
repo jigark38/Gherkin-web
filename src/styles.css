@@ -1,0 +1,548 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@font-face {
+  font-family: 'Anastasia Regular';
+  src: url(./assets/fonts/ANASTAS.ttf);
+}
+
+*,
+::after,
+::before {
+  box-sizing: inherit;
+  font-size: 11px;
+}
+
+::selection {
+  /* background: rgba(255, 255, 255, .1); */
+  background-color: #3399ff !important;
+  color: white !important;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400;
+  line-height: 1.0;
+  color: #000;
+  background: #f1f2f7;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.JmeFont {
+  font-size: 20px !important;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 1px;
+  padding-left: 29px;
+}
+
+.ui-widget {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.font-i {
+  margin-right: .6rem;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding-left: 10px;
+}
+
+ul>li>a {
+  padding: 7px 17px;
+  border-radius: 2px;
+  border-bottom: 1px solid #eee;
+}
+
+#accordion1 li.panel {
+  margin-bottom: 2px;
+}
+
+.date-box {
+  border-width: 0 0 0 0 !important;
+}
+
+
+/* primeng start */
+
+.ui-autocomplete-loader {
+  display: none !important;
+}
+
+.ui-inputtext {
+  font-size: 11px !important;
+}
+
+.ui-autocomplete {
+  margin-top: 5px !important;
+}
+
+.ui-autocomplete>.ui-inputtext {
+  border-bottom: 1px solid black !important;
+}
+
+.ui-autocomplete>.ui-inputtext:enabled:focus:not(.ui-state-error) {
+  border-bottom: 2px solid black !important;
+  box-shadow: none !important;
+}
+
+.ui-tabview .ui-tabview-panels .ui-tabview-panel {
+  padding: 20px 10px 50px 0px !important;
+}
+
+.ui-accordion .ui-accordion-content {
+  padding: 20px 10px !important;
+  border: none !important;
+}
+
+.ui-panelmenu-panel>.ui-panelmenu .ui-panelmenu-header>a {
+  font-size: 10px !important;
+  font-weight: bold !important;
+}
+
+
+/* 
+a.ui-panelmenu-header-link,
+a.ui-menuitem-link {
+    font-size: 13px !important;
+    font-weight: bold !important;
+} */
+
+a.ui-panelmenu-header-link:hover {
+  background-color: #007ad9 !important;
+  color: white !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header:hover>a .ui-panelmenu-icon {
+  color: #0051a5 !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header.ui-state-active>a .ui-panelmenu-icon {
+  color: #0051a5 !important;
+}
+
+.ui-accordion .ui-accordion-content {
+  margin-bottom: 18px !important;
+}
+
+
+/* .ui-panelmenu .ui-panelmenu-header>a .ui-panelmenu-icon {
+    float: right !important;
+} */
+
+
+/* submenu item style */
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link:hover,
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link:hover>span.ui-panelmenu-icon,
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link:hover>span.ui-menuitem-icon,
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link:hover>span.ui-menuitem-text {
+  background-color: #0051a5 !important;
+  color: white !important;
+}
+
+
+/* grid css start */
+
+.ui-table,
+.ui-table .ui-table-wrapper table {
+  font-size: 13px !important;
+  color: inherit !important;
+}
+
+.ui-table thead th {
+  white-space: normal !important;
+}
+
+.ui-table .ui-table-thead>tr>th {
+  color: #f4f4f4 !important;
+  background-color: #007ad9 !important;
+}
+
+.ui-table .ui-table-tbody>tr>td {
+  white-space: normal !important;
+}
+
+.ui-table .ui-sortable-column:not(.ui-state-highlight):hover .ui-sortable-column-icon {
+  color: white !important;
+}
+
+tr.ui-state-highlight a {
+  color: white !important;
+}
+
+tr.ui-state-highlight a:hover {
+  color: grey !important;
+}
+
+.ui-table .ui-table-tbody>tr.ui-state-highlight {
+  background-color: #007ad9 !important;
+  color: black !important;
+}
+
+
+/* grid css end */
+
+
+/* tabview style start */
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav {
+  font-size: 14px !important;
+  font-weight: 100 !important;
+}
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
+  background-color: #007ad9 !important;
+}
+
+.ui-tabview-panels {
+  font-size: 14px !important;
+}
+
+
+/* tabview style end */
+
+
+/* button start */
+
+.ui-button {
+  background-color: #0051a5 !important;
+  border: 1px solid #0051a5 !important;
+}
+
+.ui-button.ui-button-rounded {
+  margin-left: 5px !important;
+}
+
+
+/* button end */
+
+
+/* toast confirm  */
+
+.ui-toast .ui-toast-message.ui-toast-message-warn {
+  background-color: white !important;
+}
+
+
+/* accordion start */
+
+.ui-accordion .ui-accordion-header {
+  font-size: 14px !important;
+  border-bottom: 1px solid #dfdfdf;
+}
+
+.ui-accordion .ui-accordion-header a .ui-accordion-toggle-icon {
+  float: right !important;
+  /* background-color: #FFFFFF !important; */
+  color: #545454 !important;
+}
+
+.ui-accordion .ui-accordion-content {
+  font-size: 14px !important;
+}
+
+.ui-accordion .ui-accordion-header a {
+  background-color: #FFFFFF !important;
+  color: #545454 !important;
+  font-weight: 500 !important;
+}
+
+
+/* accordion end */
+
+
+/* primeng end */
+
+.error-span {
+  color: red !important;
+}
+
+.mgt-20 {
+  margin-top: 20px !important;
+}
+
+.mgt-10 {
+  margin-top: 10px !important;
+}
+
+.mgt-5 {
+  margin-top: 5px !important;
+}
+
+.form-control:focus {
+  border-color: #007ad9 !important;
+  box-shadow: none !important;
+  background: #d6eaff;
+}
+
+.form-control {
+  margin-top: 5px !important;
+}
+
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.p-col-8 {
+  width: 72.6667% !important;
+}
+
+
+/* 6c6cea */
+
+input,
+select,
+mat-select,
+p-dropdown>.ui-dropdown {
+  outline: 0 !important;
+  border-width: 0 0 1px !important;
+  border-color: black !important;
+  /* border-radius: 5px !important; */
+}
+
+input:focus,
+select:focus,
+mat-select:focus,
+p-dropdown:focus>.ui-dropdown {
+  border-width: 0 0 2px !important;
+  border-color: black !important;
+}
+
+.grid-icon .ui-button {
+  font-size: 9px !important;
+}
+
+.ui-corner-all {
+  border-radius: none !important;
+}
+
+.ui-paginator.ui-widget {
+  font-size: 10px !important;
+}
+
+
+/* validation css */
+
+input.ng-touched.ng-invalid {
+  border-color: red !important;
+}
+
+
+/* materialcss start */
+
+.mat-datepicker-content .mat-calendar {
+  width: 296px !important;
+  height: auto !important;
+}
+
+.mat-calendar-header {
+  padding: 0px !important;
+}
+
+.mat-calendar-controls {
+  display: flex;
+  margin: 3% calc(33% / 7 - 16px) !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: #4589bd !important;
+}
+
+
+/* material end */
+
+
+/* .ui-calendar.ui-calendar-w-btn{
+display: inline-flex;
+width: inherit;
+ 
+    } */
+
+p-calendar#areaBMRD>span>.ui-inputtext {
+  width: inherit;
+  border-bottom: none;
+}
+
+p-calendar#areaBMRD>span>.ui-inputtext:disabled {
+  border-bottom: none;
+}
+
+p-calendar#areaBMRD>.ui-calendar.ui-calendar-w-btn {
+  display: inline-flex;
+  width: inherit;
+}
+
+
+/* autocomplete start*/
+
+.ng-autocomplete {
+  width: inherit !important;
+}
+
+.autocomplete-container .input-container input {
+  font-size: 11px !important;
+  padding: 0px !important;
+  height: auto !important;
+  line-height: 32px !important;
+  border-bottom: 1px solid black !important;
+}
+
+.autocomplete-container .input-container input:focus {
+  border-bottom: 2px solid black !important;
+}
+
+ng-autocomplete.ng-invalid.ng-touched .input-container input {
+  border-bottom: 1px solid red !important;
+}
+
+ng-autocomplete.ng-invalid.ng-touched .input-container input:focus {
+  border-bottom: 2px solid red !important;
+}
+
+.autocomplete-container .suggestions-container ul li a {
+  padding: 8px 8px !important;
+  font-size: 12px !important;
+}
+
+.autocomplete-container .input-container .x i {
+  font-size: 15px !important;
+}
+
+.autocomplete-container .suggestions-container ul li:hover {
+  color: white !important;
+  background-color: #007ad9 !important;
+}
+
+.autocomplete-container {
+  box-shadow: none !important;
+  height: 35px !important;
+}
+
+
+/* .input-container {
+    border-bottom: 1px solid black;
+} */
+
+
+/* autocomplete end*/
+
+.ui-panelmenu .ui-panelmenu-header>a {
+  border: none !important;
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  padding: 1.3em 0em;
+  font-weight: 300 !important;
+  position: static;
+  font-size: 13px !important;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link:focus {
+  box-shadow: none !important;
+}
+
+.ng-tns-c7-2.ui-panelmenu.ui-widget {
+  width: 279px;
+}
+
+.ui-panelmenu .ui-panelmenu-header>a {
+  padding: 9px 9px !important;
+}
+
+.ui-panelmenu .ui-panelmenu-header>a:focus {
+  box-shadow: none !important;
+}
+
+.ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+  background-color: #c4c4c4 !important;
+  border: none !important;
+}
+
+.ui-accordion .ui-accordion-header a:focus {
+  box-shadow: none !important;
+}
+
+.ui-menuitem-text {
+  font-weight: 400 !important;
+}
+
+.form-control {
+  font-size: 11px !important;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+body .pi {
+  font-size: 1em !important;
+}
+
+.pi-fw {
+  width: 1em !important;
+}
+
+.ui-button.ui-button-rounded {
+  border-radius: 3px !important;
+  padding: 0px;
+  min-width: 133px !important;
+  font-size: 15px !important;
+}
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav li a,
+body .ui-tabview.ui-tabview-bottom .ui-tabview-nav li a,
+body .ui-tabview.ui-tabview-left .ui-tabview-nav li a,
+body .ui-tabview.ui-tabview-right .ui-tabview-nav li a {
+  font-weight: 400 !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-content {
+  border: 0px !important;
+}
+
+body .ui-button.ui-button-text-only .ui-button-text {
+  padding: 0.6em 1em;
+  font-size: 12px;
+}
+
+.button-top{
+  margin-top: 10px;
+}
+
+
+.breadcrumb-height{
+height: 25px;
+}
+
+
+.breadcrumb-height-max{
+  height: 35px;
+}
+
+.bg-gray{
+  background-color: #c4c4c4 !important;
+  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 500 !important;
+  padding: 10px 14px 10px !important;
+}
+.card-padding{
+  padding:7px !important;
+}

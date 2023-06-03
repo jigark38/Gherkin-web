@@ -1,0 +1,361 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Packing & General Material Management</a></li>
+    <li class="active"><span>Stores Master Details</span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<ng-container [formGroup]="materialDetailForm">
+  <p-accordion>
+    <p-accordionTab header="Stores Master Details" [selected]="true">
+      <div class="row  ml-2 mr-2 mt-2 maindiv">
+        <div class="col-md-12 cleartop">
+          <div class="row pl-1 pr-1 align-items-center">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Entered Date</span>
+                <div>
+                  <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                         [matDatepicker]="eDate" formControlName="GSEntryDate" #gsEntryDate>
+                  <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #eDate>
+                  </mat-datepicker>
+                  <span *ngIf="materialDetailForm.controls.GSEntryDate.errors?.required &&
+                                materialDetailForm.controls.GSEntryDate.touched" class="error-span">
+                    Date of Return is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Entered By</span>
+                <div>
+                  <input matInput type="text" class="form-control" formControlName="EnteredBy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pl-1 pr-1 align-items-center">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Group Name</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100" (blur)="groupNameBlur()"
+                         placeholder="Please Enter Group Name" [formControl]="materialDetailForm.controls.GroupName"
+                         [matAutocomplete]="autoCompleteGroup" #groupName>
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteGroup="matAutocomplete"
+                                    (optionSelected)="optionSelectedGroup($event)">
+                    <mat-option *ngFor="let group of this.groupDetailList" [value]="group.gsGroupCode">
+                      {{group.gsGroupName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="materialDetailForm.controls.GroupName.errors?.required &&
+                              materialDetailForm.controls.GroupName.touched" class="error-span">
+                    Group is required field.
+                  </span>
+                  <span *ngIf="this.existingGroupNameError && !(materialDetailForm.controls.GroupName.errors?.required &&
+                                                materialDetailForm.controls.GroupName.touched)" class="error-span">
+                    Group Name already exists.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Sub Group Name</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100" (blur)="subGroupNameBlur()"
+                         placeholder="Please Enter Sub Group Name" [formControl]="materialDetailForm.controls.SubGroupName"
+                         [matAutocomplete]="autoCompleteSubGroup" #subGroupName>
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteSubGroup="matAutocomplete"
+                                    (optionSelected)="optionSelectedSubGroup($event)">
+                    <mat-option *ngFor="let subGroup of this.subGroupDetailList" [value]="subGroup.gsSubGroupCode">
+                      {{subGroup.gsSubGroupName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="materialDetailForm.controls.SubGroupName.errors?.required &&
+                                materialDetailForm.controls.SubGroupName.touched" class="error-span">
+                    Sub Group is required field.
+                  </span>
+                  <span *ngIf="this.existingSubGroupNameError && !(materialDetailForm.controls.SubGroupName.errors?.required &&
+                                                                  materialDetailForm.controls.SubGroupName.touched)" class="error-span">
+                    Sub Group Name already exists.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Material Name</span>
+                <div>
+                  <input matInput class="form-control" maxlength="100" #gsMaterialName (blur)="materialNameBlur()"
+                         placeholder="Please Enter Material Name" [matAutocomplete]="autoCompleteMaterial" formControlName="GSMaterialName">
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteMaterial="matAutocomplete"
+                                    (optionSelected)="optionSelectedMaterial($event)">
+                    <mat-option *ngFor="let material of this.materialDetailList" [value]="material.gsMaterialCode">
+                      {{material.gsMaterialName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="materialDetailForm.controls.GSMaterialName.errors?.required &&
+                                              materialDetailForm.controls.GSMaterialName.touched" class="error-span">
+                    Material Name is required field.
+                  </span>
+                  <span *ngIf="this.existingMaterialNameError && !(materialDetailForm.controls.GSMaterialName.errors?.required &&
+                                                                                                      materialDetailForm.controls.GSMaterialName.touched)" class="error-span">
+                    Material Name already exists.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Material Description</span>
+                <div>
+                  <textarea type="text" class="form-control" maxlength="300"
+                            placeholder="Please Enter Material Description" formControlName="GSMaterialDesc"></textarea>
+                  <span *ngIf="materialDetailForm.controls.GSMaterialDesc.errors?.required &&
+                                materialDetailForm.controls.GSMaterialDesc.touched" class="error-span">
+                    Material Description is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">UOM</span>
+                <div>
+                  <!-- (blur)="uomDetailBlur()" -->
+                  <input matInput class="form-control" maxlength="100"
+                         placeholder="Please Enter UOM Detail" [formControl]="materialDetailForm.controls.UOMDetail"
+                         [matAutocomplete]="autoCompleteUOMDetail" #uomDetail>
+                  <mat-autocomplete autoActiveFirstOption #autoCompleteUOMDetail="matAutocomplete"
+                                    (optionSelected)="optionSelectedUOMDetail($event)">
+                    <mat-option *ngFor="let uomDetail of this.uomDetailList" [value]="uomDetail.gscUomCode">
+                      {{uomDetail.gscUomName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span *ngIf="materialDetailForm.controls.UOMDetail.errors?.required &&
+                                                materialDetailForm.controls.UOMDetail.touched" class="error-span">
+                    UOM is required field.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Packing Size / Unit</span>
+                <div>
+                  <input matInput class="form-control" maxlength="5"
+                         placeholder="Please Enter Packing Size / Unit" formControlName="PackingSizeUnit">
+                  <span *ngIf="materialDetailForm.controls.PackingSizeUnit.errors?.pattern &&
+                                materialDetailForm.controls.PackingSizeUnit.touched" class="error-span">
+                    Packing Size / Unit can be numerics only.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Qty per Pack / Unit</span>
+                <div>
+                  <input matInput class="form-control" maxlength="5"
+                         placeholder="Please Enter Qty per Pack / Unit" formControlName="QtyPerPackUnit">
+                  <span *ngIf="materialDetailForm.controls.QtyPerPackUnit.errors?.pattern &&
+                                                materialDetailForm.controls.QtyPerPackUnit.touched" class="error-span">
+                    Qty per Pack / Unit can be numerics only.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Location</span>
+                <div>
+                  <input matInput class="form-control" maxlength="30"
+                         placeholder="Please Enter Location" formControlName="Location">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Re Order Quantity</span>
+                <div>
+                  <input matInput class="form-control" maxlength="10"
+                         placeholder="Please Enter Re Order Quantity" formControlName="ROLQuantity">
+                  <span *ngIf="materialDetailForm.controls.ROLQuantity.errors?.pattern &&
+                                materialDetailForm.controls.ROLQuantity.touched" class="error-span">
+                    Re Order Quantity should be in format of 00.000
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">HSN Code</span>
+                <div>
+                  <input matInput class="form-control" maxlength="20"
+                         placeholder="Please Enter HSN Code" formControlName="HSNCode">
+                  <span *ngIf="materialDetailForm.controls.HSNCode.errors?.pattern &&
+                                materialDetailForm.controls.HSNCode.touched" class="error-span">
+                    HSN Code can be numerics only.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">IGST Rate</span>
+                <div>
+                  <input matInput class="form-control"
+                         placeholder="Please Enter IGST Rate" formControlName="IGSTRate">
+                  <span *ngIf="materialDetailForm.controls.IGSTRate.errors?.pattern &&
+                                                materialDetailForm.controls.IGSTRate.touched" class="error-span">
+                    IGST Rate should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">CGST Rate</span>
+                <div>
+                  <input matInput class="form-control"
+                         placeholder="Please Enter CGST Rate" formControlName="CGSTRate">
+                  <span *ngIf="materialDetailForm.controls.CGSTRate.errors?.pattern &&
+                                materialDetailForm.controls.CGSTRate.touched" class="error-span">
+                    CGST Rate should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">SGST Rate</span>
+                <div>
+                  <input matInput class="form-control"
+                         placeholder="Please Enter SGST Rate" formControlName="SGSTRate">
+                  <span *ngIf="materialDetailForm.controls.SGSTRate.errors?.pattern &&
+                                                materialDetailForm.controls.SGSTRate.touched" class="error-span">
+                    SGST Rate should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+  <div style="height: 28px;"></div>
+  <p-accordion>
+    <p-accordionTab header="Opening Balance Details" [selected]="true">
+      <div class="row  ml-2 mr-2 mt-2 maindiv">
+        <div class="col-md-12 cleartop">
+          <div class="row pl-1 pr-1 align-items-center">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Stock Date</span>
+                <div>
+                  <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Stock Date"
+                         [matDatepicker]="eDate1" formControlName="OpeningStock">
+                  <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate1">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #eDate1>
+                  </mat-datepicker>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">No. of Package / Units</span>
+                <div>
+                  <input matInput class="form-control" maxlength="5"
+                         placeholder="Please Enter No. of Package / Units" formControlName="NoOfPackageUnits">
+                  <span *ngIf="materialDetailForm.controls.NoOfPackageUnits.errors?.pattern &&
+                                                materialDetailForm.controls.NoOfPackageUnits.touched" class="error-span">
+                    No. of Package / Units should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Quantity</span>
+                <div>
+                  <input matInput class="form-control" maxlength="10"
+                         placeholder="Please Enter Quantity" formControlName="OpeningStockQuantity">
+                  <span *ngIf="materialDetailForm.controls.OpeningStockQuantity.errors?.pattern &&
+                                  materialDetailForm.controls.OpeningStockQuantity.touched" class="error-span">
+                    Quantity should be in format of 00.000
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Rate</span>
+                <div>
+                  <input matInput class="form-control" maxlength="10"
+                         placeholder="Please Enter Rate" formControlName="RateRate">
+                  <span *ngIf="materialDetailForm.controls.RateRate.errors?.pattern &&
+                                              materialDetailForm.controls.RateRate.touched" class="error-span">
+                    Rate should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Stock Value</span>
+                <div>
+                  <input matInput class="form-control" maxlength="20"
+                         placeholder="Please Enter Stock Value" formControlName="OpeningStockValue">
+                  <span *ngIf="materialDetailForm.controls.OpeningStockValue.errors?.pattern &&
+                                materialDetailForm.controls.OpeningStockValue.touched" class="error-span">
+                    Stock Value should be in format of 00.00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
+
+  <div class="mgt-20 pull-right">
+    <div class="row pull-right btSection">
+      <div class="col-md-12">
+        <button pButton type="button" label="Create Group" class="ui-button-rounded"
+                (click)="createGroup()" [disabled]="disableButton || !enableNewGroupName"></button>
+        <button pButton type="button" label="Create Sub Group" class="ui-button-rounded"
+                (click)="createSubGroup()" [disabled]="disableButton || !enableNewSubGroupName"></button>
+        <button pButton type="button" label="Create Material" class="ui-button-rounded"
+                (click)="createMaterial()" [disabled]="disableButton || !enableNewMaterial"></button>
+        <button pButton type="button" label="Save" class="ui-button-rounded"
+                (click)="saveForm()" [disabled]="disableButton || !enableSave || !this.materialDetailForm.valid ||
+                this.existingGroupNameError || this.existingSubGroupNameError || this.existingUOMDetailError || this.existingMaterialNameError"></button>
+        <button pButton type="button" label="Find" class="ui-button-rounded"
+                (click)="findMaterial()" [disabled]="disableButton || !enableFind"></button>
+        <button pButton type="button" label="Modify" class="ui-button-rounded"
+                (click)="modifyMaterial()" [disabled]="disableButton || !enableModify"></button>
+        <button pButton type="button" label="Clear" class="ui-button-rounded"
+                (click)="clearForm()" [disabled]="disableButton"></button>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,16 @@
+:focus {
+  border: solid 2px #005496 !important;
+}
+
+.table thead>tr>th{
+  background: #007ad9;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+  border: 1px solid #c3c3c3;
+}
+table td {
+  background-color: #FFFFFF;
+  }
+table tr:hover {
+  background-color: #E3EAEB;
+}

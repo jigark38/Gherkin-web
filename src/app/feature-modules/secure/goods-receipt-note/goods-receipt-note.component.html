@@ -1,0 +1,782 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Purchase Management</a></li>
+    <li class="active"><span>Goods Receipt Note</span></li>
+  </ol>
+</div>
+
+<div class="row pull-right " style="margin-top: 30px;clear:right;margin-right: 0px;">
+  <ol>
+    <li>
+      <button pButton type="button" label="Refresh" class="ui-button-rounded" (click)="refreshContent()"></button>
+      <button pButton type="button" label="Next" class="ui-button-rounded" [disabled]="isDisabledNext"
+        (click)="onNextBtnClick($event)"></button>
+      <button pButton type="submit" #SaveBtn label="Save" (click)="onSaveBtnClick($event)" tabindex="25"
+        [disabled]="disabledGRN || findMode" class="ui-button-rounded"></button>
+      <button pButton type="button" label="Find" class="ui-button-rounded" [disabled]="disableFind"
+        (click)="Find()"></button>
+      <button pButton type="button" label="Modify" class="ui-button-rounded" [disabled]="disableModify"
+        (click)="Modify()"></button>
+      <button pButton type="button" label="Print GRN" class="ui-button-rounded" disabled="true"></button>
+      <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="clearContent()"></button>
+
+    </li>
+
+  </ol>
+</div>
+<div class="mgt-20">
+
+  <p-tabView [activeIndex]="activeIndex" (onChange)="handleTabViewChange($event)">
+    <p-tabPanel header="Inward Details">
+      <div class="card-body" style="overflow-y:auto">
+        <p-tabView>
+          <p-tabPanel header="Inward Details">
+            <div class="row m-b-25">
+              <div class="col-md-12">
+                <!-- <app-ng-grid [cols]="orgCols1"></app-ng-grid> -->
+                <table cellspacing="0" cellpadding="4" class="ui-table table">
+                  <thead class="ui-table-thead">
+                    <tr>
+                      <th *ngFor="let col of inwardDetailsCols">{{col.header}}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ui-table-tbody">
+                    <tr *ngIf="inwardDetailsList && inwardDetailsList.length == 0">
+                      <td [attr.colspan]="inwardDetailsCols.length">
+                        No records found
+                      </td>
+                    </tr>
+                    <tr *ngFor="let inward of inwardDetailsList;  index as i;let j=index">
+                      <td class="center-align">
+                        {{j+1}}
+                      </td>
+                      <td class="center-align">
+                        <input type="checkbox" name="inward" [(ngModel)]="inward.IsSelected"
+                          (change)="inwardDetailsChange($event,inward)" />
+                      </td>
+                      <td>
+                        <span>{{inward.InwardDateTime | date : 'dd-MMM-yyyy'}} /
+                          {{inward.InwardGatePassNo}}</span>
+                      </td>
+                      <td>
+                        <span>{{inward.SupplierTransporterName}}</span>
+                      </td>
+                      <td>
+                        <span>{{inward.SupplierTransporterPlace}}</span>
+                      </td>
+                      <td>
+                        <span>{{inward.InvDCDate | date : 'dd-MMM-yyyy'}} /
+                          {{inward.InvDCNo}}</span>
+                      </td>
+                      <td>
+                        <span>{{inward.ReceivedMaterialName}} </span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{inward.ReceivedQuantity}}</span>
+                      </td>
+                      <td>
+                        <span>{{inward.QCTest}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+
+      </div>
+      <div class="card-body" style="overflow-y:auto">
+        <p-tabView>
+          <p-tabPanel header="Pending Purchase Orders">
+            <div class="row m-b-25">
+              <div class="col-md-12">
+                <!-- <app-ng-grid [cols]="orgCols2"></app-ng-grid> -->
+                <table cellspacing="0" cellpadding="4" class="ui-table table">
+                  <thead class="ui-table-thead">
+                    <tr>
+                      <th *ngFor="let col of pendingPurchaseOrderCols">{{col.header}}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ui-table-tbody">
+                    <tr *ngIf="pendingPurchaseOrderList && pendingPurchaseOrderList.length == 0">
+                      <td [attr.colspan]="pendingPurchaseOrderCols.length">
+                        No records found
+                      </td>
+                    </tr>
+                    <tr *ngFor="let item of pendingPurchaseOrderList;  index as i;let j=index">
+                      <td class="center-align">
+                        {{j+1}}
+                      </td>
+                      <td class="center-align">
+                        <input type="checkbox" [(ngModel)]="item.IsSelected"
+                          (change)="pendingPurchaseOrderChange($event)" />
+                      </td>
+                      <td>
+                        <span>{{item.RMPODate | date : 'dd-MMM-yyyy'}} </span>
+                      </td>
+                      <td>
+                        <span>{{item.RMPONo}}</span>
+                      </td>
+                      <td>
+                        <span>{{item.SupplierOrganisationName}} / {{item.PlaceName}}</span>
+                      </td>
+                      <td>
+                        <span>{{item.RawMaterialDetaisName}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.RMOrderQty}} </span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TillNowRecordQuantity}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.PendingQuatity}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Goods Receipt Note" [disabled]="disabledGRN">
+      <div class="card-body" style="overflow-y:auto">
+        <p-tabView>
+          <p-tabPanel header="Received Material">
+
+            <div class="row m-b-25">
+              <div class="col-md-12" style="overflow: auto;">
+                <!-- <app-ng-grid [cols]="orgCols3"></app-ng-grid> -->
+                <table cellspacing="0" cellpadding="0" [ngClass]="findMode?'disableTab':''" class="ui-table table">
+                  <thead class="ui-table-thead">
+                    <tr>
+                      <th *ngFor="let col of receivedMaterialCols" [ngStyle]="col.style">
+                        {{col.header}}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ui-table-tbody">
+                    <tr *ngIf="receivedMaterialList && receivedMaterialList.length == 0">
+                      <td style="width: 100%;" [attr.colspan]="receivedMaterialCols.length">
+                        No records found
+                      </td>
+                    </tr>
+                    <tr *ngFor="let item of receivedMaterialList;  index as i;let j=index">
+                      <td><button pButton type="button" (click)="editClick(item)" style="background-color: #245ad2;"
+                          class="ui-button-success grid-icon" icon="pi pi-pencil">
+                        </button></td>
+                      <td class="center-align">
+                        {{j+1}}
+                      </td>
+                      <td>
+                        <span>{{item.InwardDateTime | date : 'dd-MMM-yyyy'}} /
+                          {{item.InwardGatePassNo}}</span>
+                      </td>
+                      <td>
+                        <span>{{item.PODate| date : 'dd-MMM-yyyy'}} / {{item.PONo}}</span>
+                      </td>
+                      <td>
+                        <span>{{item.SupplierNamePlace}}</span>
+                      </td>
+                      <td>
+                        <span>{{item.MaterialName}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.POQuantity}} </span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TillNowRecordQuantity}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.PendingQuatity}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.BillQuantity}}</span>
+                        <!-- <input type="text" tabindex="1" placeholder="Please Enter Bill Qty"
+                          [ngClass]="!item.IsBillQuantityValid?'error-border':''" class="form-control entry-box"
+                          [(ngModel)]="item.BillQuantity" (blur)="validateAndCalcInvAmt(item,'BillQuantity',3)" /> -->
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.PORate}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.BillRate}}</span>
+                        <!-- <input type="text" class="form-control entry-box" placeholder="Please Enter Bill Rate"
+                          [ngClass]="!item.IsBillRateValid?'error-border':''" [(ngModel)]="item.BillRate" tabindex="1"
+                          (blur)="validateAndCalcInvAmt(item,'BillRate',5)" /> -->
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.InvoiceAmount}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxRateIGST?item.TaxRateIGST:0}}{{ item.TaxRateIGST &&
+                          item.TaxRateIGST!=0?'%':''}}
+                        </span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxAmountIGST}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxRateCGST?item.TaxRateCGST:0}}{{item.TaxRateCGST &&
+                          item.TaxRateCGST!=0?'%':''}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxAmountCGST}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxRateSGST?item.TaxRateSGST:0}}{{item.TaxRateSGST &&
+                          item.TaxRateSGST!=0?'%':''}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TaxAmountSGST}}</span>
+                      </td>
+                      <td class="right-align">
+                        <span>{{item.TotalAmount}}</span>
+                      </td>
+                      <!-- <td class="left-align">
+
+                        <input type="text" class="entry-box form-control" tabindex="1"
+                          placeholder="Please Enter Batch No" [ngClass]="!item.IsBatchNoValid?'error-border':''"
+                          [(ngModel)]="item.BatchNo" (blur)="validateBatchNo(item)" />
+                      </td> -->
+                      <td class="right-align">
+                        <span>{{item.ReceivedQuantity}}</span>
+                        <!-- <input type="text" class="form-control entry-box" tabindex="1"
+                          placeholder="Please Enter Recd. Qty" [ngClass]="!item.IsReceivedQuantity?'error-border':''"
+                          [(ngModel)]="item.ReceivedQuantity" (blur)="validateReceivedQuantity(item)" /> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </p-tabPanel>
+        </p-tabView>
+        <p-tabView>
+          <p-tabPanel header="Order Details">
+            <form [formGroup]="orderDetailsForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <!-- <span class="label-control">GRN Date</span>
+                                        <input type="text" class="form-control" #RMGRNDate
+                                            formControlName="RMGRNDate" /> -->
+                    <input [matDatepicker]="ejd1" #dateOfEntry class="form-control" placeholder="Please GRN Select Date"
+                      formControlName="RMGRNDate" #RMGRNDate>
+                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd1">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #ejd1>
+                    </mat-datepicker>
+                    <small Class="form-text text-danger"
+                      *ngIf="!(orderDetailsForm.get('RMGRNDate').valid) && (orderDetailsForm.get('RMGRNDate').touched)">
+                      GRN Date is Required!</small>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <span class="label-control">GRN No</span>
+                      <!-- <input type="text" class="form-control" formControlName="RMGRNNo" /> -->
+                      <mat-select class="form-control" (selectionChange)="changeGRNNo($event)" formControlName="RMGRNNo"
+                        placeholder="Please Select GRN No">
+                        <mat-option [value]="GRNCode" *ngFor="let GRNCode of GRNCodes">
+                          {{GRNCode}}
+                        </mat-option>
+                      </mat-select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="label-control-dpw label-control">Domestic/Import</label>
+                      <mat-select formControlName="DomesticImport" class="form-control" placeholder="--Select--"
+                        tabindex="1" (ngModelChange)="domesticImportChange($event)" [ngClass]="!(orderDetailsForm.get('DomesticImport').valid) &&
+                                                orderDetailsForm.get('DomesticImport').touched?'error-border':''">
+                        <mat-option value="Domestic Purchase">Domestic Purchase</mat-option>
+                        <mat-option value="Import Purchase">Import Purchase</mat-option>
+
+                      </mat-select>
+                      <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('DomesticImport').valid) &&
+                                                orderDetailsForm.get('DomesticImport').touched">Please
+                        select Domestic/Import!</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="label-control">Name of Supplier</label>
+                      <!-- <input type="text" class="form-control"
+                                                formControlName="SupplierOrganisationName"> -->
+                      <mat-select class="form-control" (selectionChange)="changeSupplier($event)"
+                        formControlName="SupplierOrganisationName" placeholder="Please Select Supplier Name">
+                        <mat-option [value]="supp.supplierOrgID" *ngFor="let supp of supplierOrgs">
+                          {{supp.organisationName}}
+                        </mat-option>
+                      </mat-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="label-control">Place</label>
+                      <input type="text" class="form-control" formControlName="PlaceName"
+                        placeholder="Please Enter Place Name">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="label-control">State</label>
+                      <input type="text" class="form-control" formControlName="StateName"
+                        placeholder="Please Enter State Name">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Country</label>
+                    <input type="text" class="form-control" formControlName="CountryName"
+                      placeholder="Please Enter Country Name">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="label-control-dpw label-control">Invoice / DC Inward</label>
+                      <mat-select formControlName="InvoiceDCType" class="form-control" placeholder="--Select--"
+                        tabindex="2" [ngClass]="!(orderDetailsForm.get('InvoiceDCType').valid) &&
+                                            orderDetailsForm.get('InvoiceDCType').touched?'error-border':''">
+                        <mat-option value="Invoice">Invoice</mat-option>
+                        <mat-option value="DC">DC</mat-option>
+                      </mat-select>
+                      <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('InvoiceDCType').valid) &&
+                                                orderDetailsForm.get('InvoiceDCType').touched">Please
+                        select Invoice / DC Inward!</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <span class="label-control">Invoice / DC Date</span>
+                    <input [matDatepicker]="ejd" #dateOfEntry class="form-control" readonly
+                      placeholder="Please Select Date" formControlName="BillDCDate" #BillDCDate tabindex="3"
+                      [ngClass]="!(orderDetailsForm.get('BillDCDate').valid) && (orderDetailsForm.get('BillDCDate').touched)?'error-border':''">
+                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #ejd>
+                    </mat-datepicker>
+                    <small Class="form-text text-danger"
+                      *ngIf="!(orderDetailsForm.get('BillDCDate').valid) && (orderDetailsForm.get('BillDCDate').touched)">
+                      Invoice / DC Date is Required!</small>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Invoice / DC No</label>
+                    <input type="text" class="form-control" formControlName="BillDCNo" tabindex="4"
+                      placeholder="Please Enter Invoice / DC No" [ngClass]="!(orderDetailsForm.get('BillDCNo').valid) && (orderDetailsForm.get('BillDCNo').touched)
+                                        && (orderDetailsForm.get('BillDCNo').errors?.maxlength ||
+                                        orderDetailsForm.get('BillDCNo').errors?.required)?'error-border':''" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('BillDCNo').valid) && (orderDetailsForm.get('BillDCNo').touched)
+                                        && (orderDetailsForm.get('BillDCNo').errors?.maxlength)">Invoice / DC No can be
+                      max 30 numeric characters long.!</small>
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('BillDCNo').valid) && (orderDetailsForm.get('BillDCNo').touched)
+                                            && orderDetailsForm.get('BillDCNo').errors?.required">Invoice / DC No is
+                      required.!</small>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Currency</label>
+                    <input type="text" class="form-control" formControlName="Currency" tabindex="5"
+                      placeholder="Please Enter Currency" [ngClass]="!(orderDetailsForm.get('Currency').valid) &&
+                                        orderDetailsForm.get('Currency').touched
+                                        && (orderDetailsForm.get('Currency').errors?.maxlength  )" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('Currency').valid) &&
+                                        orderDetailsForm.get('Currency').touched
+                                        && orderDetailsForm.get('Currency').errors?.maxlength">Currency can
+                      be max 20 characters long.!</small>
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('Currency').valid) &&
+                                            orderDetailsForm.get('Currency').touched
+                                            && orderDetailsForm.get('Currency').errors?.required">Currency is
+                      required!</small>
+                  </div>
+                </div>
+                <div class=" col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Total Material Cost</label>
+                    <input type="text" class="form-control  entry-box-orderdetails"
+                      placeholder="Please Enter Total Material Cost" formControlName="TotalMaterialCost" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">IGST/SGST</label>
+                    <input type="text" class="form-control" formControlName="GSTType"
+                      placeholder="Please Enter IGST/SGST" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Total Tax Amount</label>
+                    <input type="text" class="form-control  entry-box-orderdetails"
+                      placeholder="Please Enter Total Tax Amount" formControlName="TotalTaxAmount" />
+                    <span
+                      *ngIf="orderDetailsForm.get('TotalTaxAmount').errors?.pattern && orderDetailsForm.controls.TotalTaxAmount.touched"
+                      class="error-span">Total Tax
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Material Cost with Tax Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails"
+                      placeholder="Please Enter Material Cost with Tax Amount"
+                      formControlName="TotalMaterialCostAndTaxAmount" />
+                    <span
+                      *ngIf="orderDetailsForm.get('TotalMaterialCostAndTaxAmount').errors?.pattern && orderDetailsForm.controls.TotalMaterialCostAndTaxAmount.touched"
+                      class="error-span">Material Cost with Tax
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Customs Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="6"
+                      placeholder="Please Enter Customs Amount" formControlName="CustomsAmount"
+                      (blur)="calcTotalBillAmount()" [ngClass]="!(orderDetailsForm.get('CustomsAmount').valid) &&
+                                        orderDetailsForm.get('CustomsAmount').touched
+                                        && orderDetailsForm.get('CustomsAmount').errors?.pattern?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('CustomsAmount').errors?.pattern && orderDetailsForm.controls.CustomsAmount.touched"
+                      class="error-span">Customs
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Packing Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="7"
+                      placeholder="Please Enter Packing Amount" formControlName="PackingAmount"
+                      (blur)="calcTotalBillAmount();setParkingFamilyZero();" [ngClass]="!(orderDetailsForm.get('PackingAmount').valid) &&
+                                    orderDetailsForm.get('PackingAmount').touched
+                                    && orderDetailsForm.get('PackingAmount').errors?.pattern?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('PackingAmount').errors?.pattern && orderDetailsForm.controls.PackingAmount.touched"
+                      class="error-span">Packing
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">HSN Code</label>
+                    <input type="text" class="form-control" formControlName="PackingHSNCode"
+                      placeholder="Please Enter HSN Code" tabindex="8" [ngClass]="!(orderDetailsForm.get('PackingHSNCode').valid) &&
+                                orderDetailsForm.get('PackingHSNCode').touched
+                                && (orderDetailsForm.get('PackingHSNCode').errors?.maxlength)?'error-border':''" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('PackingHSNCode').valid) &&
+                                orderDetailsForm.get('PackingHSNCode').touched
+                                && orderDetailsForm.get('PackingHSNCode').errors?.maxlength">HSN Code can
+                      be max 20 numeric characters long.!</small>
+                    <!-- <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('PackingHSNCode').valid) &&
+                                orderDetailsForm.get('PackingHSNCode').touched
+                                && orderDetailsForm.get('PackingHSNCode').errors?.required">HSN Code is
+                                            required!</small> -->
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Packing Tax Rate</label>
+                    <input type="text" class="form-control entry-box-orderdetails"
+                      placeholder="Please Enter Packing Tax Rate" formControlName="PackingTaxRatePercentage"
+                      tabindex="9"
+                      [ngClass]="!(orderDetailsForm.get('PackingTaxRatePercentage').valid) &&
+                                orderDetailsForm.get('PackingTaxRatePercentage').touched
+                                && (orderDetailsForm.get('PackingTaxRatePercentage').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('PackingTaxRatePercentage').errors?.pattern && orderDetailsForm.controls.PackingTaxRatePercentage.touched"
+                      class="error-span">Packing Tax
+                      Rate
+                      can be decimal in format of
+                      XX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Packing Tax Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="10"
+                      placeholder="Please Enter Packing Tax Amount" formControlName="PackingTaxAmount"
+                      (blur)="calcTotalBillAmount()" [ngClass]="!(orderDetailsForm.get('PackingTaxAmount').valid) &&
+                                orderDetailsForm.get('PackingTaxAmount').touched
+                                && (orderDetailsForm.get('PackingTaxAmount').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('PackingTaxAmount').errors?.pattern && orderDetailsForm.controls.PackingTaxAmount.touched"
+                      class="error-span">Packing Tax
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Freight Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="11"
+                      placeholder="Please Enter Freight Amount" #FreightAmount formControlName="FreightAmount"
+                      (blur)="calcTotalBillAmount();setFreightFamilyZero();" [ngClass]="!(orderDetailsForm.get('FreightAmount').valid) &&
+                            orderDetailsForm.get('FreightAmount').touched
+                            && (orderDetailsForm.get('FreightAmount').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('FreightAmount').errors?.pattern && orderDetailsForm.controls.FreightAmount.touched"
+                      class="error-span">Freight
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">HSN Code</label>
+                    <input type="text" class="form-control" formControlName="FreightHSNCode"
+                      placeholder="Please Enter HSN Code" tabindex="12" [ngClass]="!(orderDetailsForm.get('FreightHSNCode').valid) &&
+                                orderDetailsForm.get('FreightHSNCode').touched
+                                && (orderDetailsForm.get('FreightHSNCode').errors?.maxlength)?'error-border':''" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('FreightHSNCode').valid) &&
+                                orderDetailsForm.get('FreightHSNCode').touched
+                                && orderDetailsForm.get('FreightHSNCode').errors?.maxlength">HSN Code can
+                      be max 20 numeric characters long.!</small>
+                    <!-- <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('FreightHSNCode').valid) &&
+                                orderDetailsForm.get('FreightHSNCode').touched
+                                && orderDetailsForm.get('FreightHSNCode').errors?.required">HSN Code is
+                                            required!</small> -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Freight Tax Rate</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="13"
+                      placeholder="Please Enter Freight Tax Rate" formControlName="FreightTaxRatePercentage"
+                      [ngClass]="!(orderDetailsForm.get('FreightTaxRatePercentage').valid) &&
+                                orderDetailsForm.get('FreightTaxRatePercentage').touched
+                                && (orderDetailsForm.get('FreightTaxRatePercentage').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('FreightTaxRatePercentage').errors?.pattern && orderDetailsForm.controls.FreightTaxRatePercentage.touched"
+                      class="error-span">Freight Tax
+                      Rate
+                      can be decimal in format of
+                      XX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Freight Tax Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="14"
+                      placeholder="Please Enter Freight Tax Amount" formControlName="FreightTaxAmount"
+                      (blur)="calcTotalBillAmount()" [ngClass]="!(orderDetailsForm.get('FreightTaxAmount').valid) &&
+                            orderDetailsForm.get('FreightTaxAmount').touched
+                            && (orderDetailsForm.get('FreightTaxAmount').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('FreightTaxAmount').errors?.pattern && orderDetailsForm.controls.FreightTaxAmount.touched"
+                      class="error-span">Freight Tax
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Insurance Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="15"
+                      placeholder="Please Enter Insurance Amount" formControlName="InsuranceAmount" #InsuranceAmount
+                      (blur)="calcTotalBillAmount();setInsuranceFamilyZero();" [ngClass]="!(orderDetailsForm.get('InsuranceAmount').valid) &&
+                                orderDetailsForm.get('InsuranceAmount').touched
+                                && (orderDetailsForm.get('InsuranceAmount').errors?.maxlength ||
+                                orderDetailsForm.get('InsuranceAmount').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('InsuranceAmount').errors?.pattern && orderDetailsForm.controls.InsuranceAmount.touched"
+                      class="error-span">Insurance
+                      Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">HSN Code</label>
+                    <input type="text" class="form-control" formControlName="InsuranceHSNCode"
+                      placeholder="Please Enter HSN Code" tabindex="16" [ngClass]="!(orderDetailsForm.get('InsuranceHSNCode').valid) &&
+                                orderDetailsForm.get('InsuranceHSNCode').touched
+                                && (orderDetailsForm.get('InsuranceHSNCode').errors?.maxlength)?'error-border':''" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('InsuranceHSNCode').valid) &&
+                                orderDetailsForm.get('InsuranceHSNCode').touched
+                                && orderDetailsForm.get('InsuranceHSNCode').errors?.maxlength">HSN Code can
+                      be max 20 numeric characters long.!</small>
+                    <!-- <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('InsuranceHSNCode').valid) &&
+                                orderDetailsForm.get('InsuranceHSNCode').touched
+                                && orderDetailsForm.get('InsuranceHSNCode').errors?.required">HSN Code is
+                                            required!</small> -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Insurance Tax Rate</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="17"
+                      placeholder="Please Enter Insurance Tax Rate" formControlName="InsuranceTaxRatePercentage"
+                      [ngClass]="!(orderDetailsForm.get('InsuranceTaxRatePercentage').valid) &&
+                                orderDetailsForm.get('InsuranceTaxRatePercentage').touched
+                                && (orderDetailsForm.get('InsuranceTaxRatePercentage').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('InsuranceTaxRatePercentage').errors?.pattern && orderDetailsForm.controls.InsuranceTaxRatePercentage.touched"
+                      class="error-span">Insurance Tax
+                      Rate
+                      can be decimal in format of
+                      XX.XX</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Insurance Tax Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="18"
+                      formControlName="InsuranceTaxAmount" (blur)="calcTotalBillAmount()"
+                      placeholder="Please Enter Insurance Tax Amount" [ngClass]="!(orderDetailsForm.get('InsuranceTaxAmount').valid) &&
+                            orderDetailsForm.get('InsuranceTaxAmount').touched
+                            && (orderDetailsForm.get('InsuranceTaxAmount').errors?.pattern)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('InsuranceTaxAmount').errors?.pattern && orderDetailsForm.controls.InsuranceTaxAmount.touched"
+                      class="error-span">Insurance Tax Amount can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Total Bill Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails" formControlName="TotalBillAmount" />
+                    <span
+                      *ngIf="orderDetailsForm.get('TotalBillAmount').errors?.pattern && orderDetailsForm.controls.TotalBillAmount.touched"
+                      class="error-span">Total Bill Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Advance</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="19"
+                      placeholder="Please Enter Advance" formControlName="AdvancePayment" #AdvancePayment
+                      (blur)="calcBalanceAmount();" [ngClass]="!(orderDetailsForm.get('AdvancePayment').valid) &&
+                        orderDetailsForm.get('AdvancePayment').touched
+                        && (orderDetailsForm.get('AdvancePayment').errors?.pattern ||
+                        orderDetailsForm.get('AdvancePayment').errors?.required)?'error-border':''" />
+                    <span
+                      *ngIf="orderDetailsForm.get('AdvancePayment').errors?.pattern && orderDetailsForm.controls.AdvancePayment.touched"
+                      class="error-span">Advance Amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                    <span
+                      *ngIf="orderDetailsForm.get('AdvancePayment').errors?.required && orderDetailsForm.controls.AdvancePayment.touched"
+                      class="error-span">Advance Amount is required!</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <!-- <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Discount Percentage</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="20"
+                      (blur)="calculateDiscountAmount()" placeholder="Please Enter Discount Percentage"
+                      formControlName="DiscountPercentage" />
+                    <span
+                      *ngIf="orderDetailsForm.get('DiscountPercentage').errors?.pattern && orderDetailsForm.controls.DiscountPercentage.touched"
+                      class="error-span">Discount
+                      can be decimal in format of
+                      XX.XX</span>
+                  </div>
+                </div> -->
+                <!-- <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Discount Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails"
+                      placeholder="Please Enter Discount Amount" formControlName="DiscountAmount" tabindex="21"
+                      (blur)="calcBalanceAmount()" />
+                    <span
+                      *ngIf="orderDetailsForm.get('DiscountPercentage').errors?.pattern && orderDetailsForm.controls.DiscountPercentage.touched"
+                      class="error-span">Discount amount
+                      can be decimal in format of
+                      XXXXXXXXXXXXXXX.XX</span>
+                  </div>
+                </div> -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Balance Amount</label>
+                    <input type="text" class="form-control entry-box-orderdetails"
+                      placeholder="Please Enter Balance Amount" formControlName="BalanceAmount" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="label-control">Credit Days</label>
+                    <input type="text" class="form-control entry-box-orderdetails" tabindex="24"
+                      placeholder="Please Enter Credit Days" formControlName="CreditDays"
+                      [ngClass]="!(orderDetailsForm.get('CreditDays').valid) &&
+                    orderDetailsForm.get('CreditDays').touched
+                    && (orderDetailsForm.get('CreditDays').errors?.pattern || orderDetailsForm.get('CreditDays').errors?.required)?'error-border':''" />
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('CreditDays').valid) &&
+                    orderDetailsForm.get('CreditDays').touched
+                    && orderDetailsForm.get('CreditDays').errors?.required">Credit Days is required!</small>
+                    <small Class="form-text text-danger" *ngIf="!(orderDetailsForm.get('CreditDays').valid) &&
+                    orderDetailsForm.get('CreditDays').touched
+                    && orderDetailsForm.get('CreditDays').errors?.pattern">Credit Days must be
+                      3 numeric characters !</small>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </p-tabPanel>
+        </p-tabView>
+
+
+      </div>
+    </p-tabPanel>
+
+
+  </p-tabView>
+
+</div>

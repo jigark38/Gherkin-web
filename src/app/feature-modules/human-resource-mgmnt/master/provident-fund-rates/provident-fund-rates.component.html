@@ -1,0 +1,288 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Provident Fund Rates Details</span></li>
+    </ol>
+</div>
+
+
+
+<p-accordion>
+    <p-accordionTab header="Provident Fund Rates Details" class="card" [selected]="true">
+        <!-- the farmers report code -->
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv" [formGroup]="pfRateDetailsForm">
+            <div class=" col-md-12 cleartop">
+                <div class="row pl-1 pr-1">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Date of Entry</span>
+                            <input matInput tabindex="1" class="form-control border-bottom-1" placeholder="Select Date of Entry" #entrydate [matDatepicker]="dp" formControlName="entrydate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp>
+                            </mat-datepicker>
+                            <span *ngIf="(pfRateDetailsForm.controls.entrydate.errors?.required && submitted) || pfRateDetailsForm.controls.entrydate.errors?.required && pfRateDetailsForm.controls.entrydate.touched" class="error-span">Date of Entry is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Login User Name</span>
+                            <input type="text" tabindex="2" matInput formControlName="enteredEmpId" placeholder="Enter Login User Name" readonly="readonly" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.enteredEmpId.errors?.required && submitted) || pfRateDetailsForm.controls.enteredEmpId.errors?.required && pfRateDetailsForm.controls.enteredEmpId.touched" class="error-span">Login User Name is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Effective Date</span>
+                            <input matInput tabindex="3" class="form-control border-bottom-1" #pfEffectiveDate [matDatepicker]="dp1" formControlName="pfEffectiveDate" placeholder="Select Effective Date">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp1>
+                            </mat-datepicker>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEffectiveDate.errors?.required && submitted) || pfRateDetailsForm.controls.pfEffectiveDate.errors?.required && pfRateDetailsForm.controls.pfEffectiveDate.touched" class="error-span">Effective Date is required field.</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row pl-1 pr-1 mb-4">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">From Date</span>
+                            <input matInput tabindex="4" class="form-control border-bottom-1" #pfEffectiveFromDate [matDatepicker]="dp2" formControlName="pfEffectiveFromDate" placeholder="Select From Date">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp2>
+                            </mat-datepicker>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEffectiveFromDate.errors?.required && submitted) || pfRateDetailsForm.controls.pfEffectiveFromDate.errors?.required && pfRateDetailsForm.controls.pfEffectiveFromDate.touched" class="error-span">From Date is required field.</span>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">To Date</span>
+                            <input matInput tabindex="5" class="form-control border-bottom-1" #pfEffectiveToDate [matDatepicker]="dp3" formControlName="pfEffectiveToDate" placeholder="Select To Date">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp3">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp3>
+                            </mat-datepicker>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEffectiveToDate.errors?.required && submitted) || pfRateDetailsForm.controls.pfEffectiveToDate.errors?.required && pfRateDetailsForm.controls.pfEffectiveToDate.touched" class="error-span">From Date is required field.</span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Starting Amount</span>
+                            <input matInput tabindex="6" maxlength="6" formControlName="pfStartingAmount" type="text" placeholder="Enter Starting Amount" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfStartingAmount.errors?.required && submitted) || pfRateDetailsForm.controls.pfStartingAmount.errors?.required && pfRateDetailsForm.controls.pfStartingAmount.touched" class="error-span">Starting Amount is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfStartingAmount.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfStartingAmount.errors?.pattern && pfRateDetailsForm.controls.pfStartingAmount.touched" class="error-span">
+                                should be
+                                numerics
+                                only</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row pl-1 pr-1 mb-4">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Employee Contribution (%)</span>
+                            <input matInput tabindex="7" formControlName="pfEmployeeContribution" type="text" placeholder="Enter Employee Contribution (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployeeContribution.errors?.required && submitted) || pfRateDetailsForm.controls.pfEmployeeContribution.errors?.required && pfRateDetailsForm.controls.pfEmployeeContribution.touched" class="error-span">Employee Contribution (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployeeContribution.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEmployeeContribution.errors?.pattern && pfRateDetailsForm.controls.pfEmployeeContribution.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                XX.XX</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Employeer Contribution (EPF) (%)</span>
+                            <input matInput tabindex="8" formControlName="pfEmployerEPFContribution" type="text" placeholder="Enter Employeer Contribution (EPF) (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployerEPFContribution.errors?.required && submitted) || pfRateDetailsForm.controls.pfEmployerEPFContribution.errors?.required && pfRateDetailsForm.controls.pfEmployerEPFContribution.touched" class="error-span">Employee Contribution (EPF) (%) is required field.</span>
+
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployerEPFContribution.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEmployerEPFContribution.errors?.pattern && pfRateDetailsForm.controls.pfEmployerEPFContribution.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                XX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Employeer Contribution (EPS) (%)</span>
+                            <input matInput tabindex="9" formControlName="pfEmployerEPSContribution" type="text" placeholder="Enter Employeer Contribution (EPS) (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployerEPSContribution.errors?.required && submitted) || pfRateDetailsForm.controls.pfEmployerEPSContribution.errors?.required && pfRateDetailsForm.controls.pfEmployerEPSContribution.touched" class="error-span">Employee Contribution (EPS) (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEmployerEPSContribution.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEmployerEPSContribution.errors?.pattern && pfRateDetailsForm.controls.pfEmployerEPSContribution.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                XX.XX</span>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row pl-1 pr-1 mb-4">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">EPF Maximum Limit</span>
+                            <input matInput tabindex="10" maxlength="10" formControlName="pfEPFMaxLimit" type="text" placeholder="Enter EPF Maximum Limit" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEPFMaxLimit.errors?.required && submitted) || pfRateDetailsForm.controls.pfEPFMaxLimit.errors?.required && pfRateDetailsForm.controls.pfEPFMaxLimit.touched" class="error-span">EPF Maximum Limit is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEPFMaxLimit.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEPFMaxLimit.errors?.pattern && pfRateDetailsForm.controls.pfEPFMaxLimit.touched" class="error-span">
+                                should be
+                                numerics
+                                only</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">EPF Administrative Charges (%)</span>
+                            <input matInput tabindex="11" formControlName="pfEPFAdminCharges" type="text" placeholder="Enter EPF Administrative Charges (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEPFAdminCharges.errors?.required && submitted) || pfRateDetailsForm.controls.pfEPFAdminCharges.errors?.required && pfRateDetailsForm.controls.pfEPFAdminCharges.touched" class="error-span">EPF Administrative Charges (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEPFAdminCharges.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEPFAdminCharges.errors?.pattern && pfRateDetailsForm.controls.pfEPFAdminCharges.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                X.XXX</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">EDLIS Contribution (%)</span>
+                            <input matInput tabindex="12" formControlName="pfEDLISCharges" type="text" placeholder="Enter EDLIS Contribution (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEDLISCharges.errors?.required && submitted) || pfRateDetailsForm.controls.pfEDLISCharges.errors?.required && pfRateDetailsForm.controls.pfEDLISCharges.touched" class="error-span">EDLIS Contribution (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEDLISCharges.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEDLISCharges.errors?.pattern && pfRateDetailsForm.controls.pfEDLISCharges.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                X.XXX</span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row pl-1 pr-1 mb-4">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">EDLIs Administrative Charges (%)</span>
+                            <input matInput tabindex="13" formControlName="pfEDLISAdminCharges" type="text" placeholder="Enter EDLIs Administrative Charges (%)" class="form-control">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEDLISAdminCharges.errors?.required && submitted) || pfRateDetailsForm.controls.pfEDLISAdminCharges.errors?.required && pfRateDetailsForm.controls.pfEDLISAdminCharges.touched" class="error-span">EDLIs Administrative Charges (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfEDLISAdminCharges.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfEDLISAdminCharges.errors?.pattern && pfRateDetailsForm.controls.pfEDLISAdminCharges.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                X.XXX</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Total Employer’s Contribution (%)</span>
+                            <input matInput tabindex="14" formControlName="pfTotalEmployerContribution" type="text" placeholder="Enter Total Employer’s Contribution (%)" class="form-control" readonly="readonly">
+                            <span *ngIf="(pfRateDetailsForm.controls.pfTotalEmployerContribution.errors?.required && submitted) || pfRateDetailsForm.controls.pfTotalEmployerContribution.errors?.required && pfRateDetailsForm.controls.pfTotalEmployerContribution.touched" class="error-span">Total Employer’s Contribution (%) is required field.</span>
+                            <span *ngIf="(pfRateDetailsForm.controls.pfTotalEmployerContribution.errors?.pattern && submitted) || pfRateDetailsForm.controls.pfTotalEmployerContribution.errors?.pattern && pfRateDetailsForm.controls.pfTotalEmployerContribution.touched" class="error-span">
+                                should be
+                                numerics
+                                only in format of
+                                XX.XXX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Provident Fund Rates" class="card" [selected]="true">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maxrowheight">
+            <div class="col-md-12 cleartop tablehorizontal">
+                <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Effective Date</th>
+                            <th>From Date to To Date</th>
+                            <th>Starting Amount</th>
+                            <th>Employee Contribution (%)</th>
+                            <th>Employer Contribution (%)</th>
+                            <th>Maximum Limit</th>
+                            <th>Employer Cont (EPS) (%) Acct No 10</th>
+                            <th>EPF Admin Charges (%)</th>
+                            <th>EDLIS Cont A/c No 21</th>
+                            <th>EDLIS Admin Charges A/c No 22</th>
+                            <th>Total Employer Contribution</th>
+
+                        </tr>
+                        <ng-container *ngFor="let item of pfRateDetails;let i = index">
+                            <tr *ngIf="min <= i && max > i" (click)="pfRateSelectedRowEvent(item)" [class.active]="item.pfPassingNo === selectedRow?.pfPassingNo">
+                                <td class="text-align-center">
+                                    <span>{{i+1}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEffectiveDate | date: 'dd-MMM-yyyy'}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEffectiveFromDate | date: 'dd-MMM-yyyy'}}
+                                        / {{item.pfEffectiveToDate | date: 'dd-MMM-yyyy'}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfStartingAmount}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEmployeeContribution}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEmployerEPFContribution}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEPFMaxLimit}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>
+                                        {{item.pfEmployerEPSContribution}}
+                                    </span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEPFAdminCharges}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEDLISCharges}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfEDLISAdminCharges}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span> {{item.pfTotalEmployerContribution}}</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="10" [totalRecords]="pfRateDetails?.length" (onPageChange)="paginate($event)">
+                </p-paginator>
+            </div>
+        </div>
+        <!-- the farmers report code -->
+    </p-accordionTab>
+</p-accordion>
+
+<div class="row pull-right m-b-30 m-r-10">
+    <div class="col-md-12">
+        <button pButton type="submit" [disabled]="mode != 'Add'" label="New" (click)="addpfRateDetails()" class="ui-button-rounded"></button>
+        <button tabindex="15" pButton [disabled]="!enableSave || pfRateDetailsForm.invalid" type="submit" #saveFocus label="Save" (click)="savepfRateDetails()" class="ui-button-rounded"></button>
+        <button [disabled]="selectedRow && mode === 'Update' ? false : true " pButton type="submit" label="Modify" (click)="modifypfRateDetails()" class="ui-button-rounded"></button>
+        <button tabindex="16" pButton type="submit" label="Clear" (click)="clearForm()" class="ui-button-rounded"></button>
+    </div>
+</div>

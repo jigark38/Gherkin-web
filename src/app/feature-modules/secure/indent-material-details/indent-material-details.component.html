@@ -1,0 +1,286 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Purchase Management</a></li>
+        <li class="active"><span>Indent Material Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-accordionTab header="Indent Material Details" [selected]="true">
+        <div class="container-fluid" [formGroup]="indentMaterialForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Indent Date</span>
+                        <!-- <input type="date" class="form-control" data-format="DD/MMM/YYYY HH:MM:SS" /> -->
+                        <input [matDatepicker]="indDatePicker" #indentDate class="form-control"
+                            formControlName="indentDate" [disabled]="disableIntentDate">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="indDatePicker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #indDatePicker>
+                        </mat-datepicker>
+                        <span
+                            *ngIf="indentMaterialForm.controls.indentDate.invalid && indentMaterialForm.controls.indentDate.touched"
+                            class="error-span">Indent Date is required field.</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Indent By</span>
+                        <input type="text" class="form-control" formControlName="indentByName" readonly="readonly">
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group" *ngIf="!isEditMode && !isFindMode">
+                        <span class="label-control">Indent No</span>
+                        <input type="text" class="form-control" formControlName="indentNo">
+
+                    </div>
+
+                    <div class="form-group" *ngIf="isEditMode || isFindMode">
+                        <span>Indent No</span>
+                        <mat-select #materialIndentInput
+                            [class.error-crops]="indentMaterialForm.controls.indentId.invalid && indentMaterialForm.controls.indentId.touched && isEditMode"
+                            formControlName="indentId" [disabled]="disableIntentNo" class="form-control"
+                            #materialindentMatSelect (selectionChange)="intentNoChange($event)">
+                            <mat-option *ngFor="let intent of allIndentList" [value]="intent.BranchIndentDetails.ID">
+                                {{intent.BranchIndentDetails.RM_Indent_No}}</mat-option>
+                        </mat-select>
+                        <input type="hidden" formControlName="materialGroupName">
+                        <span
+                            *ngIf="indentMaterialForm.controls.indentId.invalid && indentMaterialForm.controls.indentId.touched"
+                            class="error-span">Indent No is required field.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- <div class="form-group">
+                    <span class="label-control">Area</span>
+                    <mat-select
+                        [class.error-crops]="indentMaterialForm.controls.areaId.invalid && indentMaterialForm.controls.areaId.touched"
+                        formControlName="areaId" class="form-control" #areaMatSelect (focus)="areaMatSelect.open()"
+                        (selectionChange)="areaMatSelect.close(); areaChange($event)">
+                        <mat-option *ngFor="let area of allAreas" [value]="area.areaId">{{area.areaName}}</mat-option>
+                    </mat-select>
+                    <span
+                        *ngIf="indentMaterialForm.controls.areaId.invalid && indentMaterialForm.controls.areaId.touched"
+                        class="error-span">Area is required field.</span>
+                </div> -->
+                    <div class="form-group">
+                        <span class="label-control">Area</span>
+                        <mat-select
+                            [class.error-crops]="indentMaterialForm.controls.areaId.invalid && indentMaterialForm.controls.areaId.touched"
+                            formControlName="areaId" class="form-control" [disabled]="disableArea" #areaMatSelect
+                            (selectionChange)="areaChange($event)">
+                            <!-- <mat-option *ngFor="let area of allAreas" [value]="area.areaId">{{area.areaName}}
+                            </mat-option> -->
+
+                            <mat-optgroup label="Areas">
+                                <mat-option *ngFor="let area of allAreas" [value]="area">
+                                    {{area.areaName}}
+                                </mat-option>
+                            </mat-optgroup>
+                            <mat-optgroup *ngIf="allOrganisationAreas.length>0" label="Organisation Office Locations">
+                                <mat-option *ngFor="let area of allOrganisationAreas" [value]="area">
+                                    {{area.orgOfficeName}}
+                                </mat-option>
+                            </mat-optgroup>
+                        </mat-select>
+                        <span
+                            *ngIf="indentMaterialForm.controls.areaId.invalid && indentMaterialForm.controls.areaId.touched"
+                            class="error-span">Area is required field.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span>Request To</span>
+                        <mat-select class="form-control" formControlName="requestTo"
+                            placeholder="Please Select Request Type" [disabled]="disableRequestTo">
+                            <mat-option value='Purchase Department'>Purchase Department</mat-option>
+                            <mat-option value='Stores'>Stores</mat-option>
+                        </mat-select>
+                        <span
+                            *ngIf="indentMaterialForm.controls.requestTo.invalid && indentMaterialForm.controls.requestTo.touched"
+                            class="error-span">Request is required field.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <!-- <div class="form-group">
+                    <span>Material Group</span>
+                    <mat-select #materialGroupInput
+                        [class.error-crops]="indentMaterialForm.controls.materialGroupId.invalid && indentMaterialForm.controls.materialGroupId.touched"
+                        formControlName="materialGroupId" class="form-control" #materialGroupMatSelect
+                        (focus)="materialGroupMatSelect.open()"
+                        (selectionChange)="materialGroupMatSelect.close(); materialGroupChange($event)">
+                        <mat-option *ngFor="let group of allMaterialGroups" [value]="group.Raw_Material_Group_Code">
+                            {{group.Raw_Material_Group}}</mat-option>
+                    </mat-select>
+                    <input type="hidden" formControlName="materialGroupName">
+                    <span
+                        *ngIf="indentMaterialForm.controls.materialGroupId.invalid && indentMaterialForm.controls.materialGroupId.touched"
+                        class="error-span">Material Group is required field.</span>
+                </div> -->
+                    <div class="form-group">
+                        <span>Material Group</span>
+                        <mat-select #materialGroupInput
+                            [class.error-crops]="indentMaterialForm.controls.materialGroupId.invalid && indentMaterialForm.controls.materialGroupId.touched"
+                            formControlName="materialGroupId" class="form-control" #materialGroupMatSelect
+                            (selectionChange)="materialGroupChange($event)">
+                            <mat-option *ngFor="let group of allMaterialGroups" [value]="group.Raw_Material_Group_Code">
+                                {{group.Raw_Material_Group}}</mat-option>
+                        </mat-select>
+                        <input type="hidden" formControlName="materialGroupName">
+                        <span
+                            *ngIf="indentMaterialForm.controls.materialGroupId.invalid && indentMaterialForm.controls.materialGroupId.touched"
+                            class="error-span">Material Group is required field.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span>Material Name</span>
+                        <mat-select
+                            [class.error-crops]="indentMaterialForm.controls.materialNameId.invalid && indentMaterialForm.controls.materialNameId.touched"
+                            formControlName="materialNameId" class="form-control" #materialNameMatSelect
+                            (selectionChange)="materialNameChange($event)">
+                            <mat-option *ngFor="let material of allMaterials"
+                                [value]="material.Raw_Material_Details_Code">
+                                {{material.Raw_Material_Details_Name}}</mat-option>
+                        </mat-select>
+                        <input type="hidden" formControlName="materialName">
+                        <span
+                            *ngIf="indentMaterialForm.controls.materialNameId.invalid && indentMaterialForm.controls.materialNameId.touched"
+                            class="error-span">Material Name is required field.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span>UOM</span>
+                        <input matInput #biometric class="form-control" UpperCase maxlength="10"
+                            placeholder="Please Select UOM" [formControl]="indentMaterialForm.controls.UOM"
+                            [matAutocomplete]="auto1">
+                        <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+                            <mat-option *ngFor="let option of UOMList" [value]="option.RM_UOM">
+                                {{option.RM_UOM}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Current Quantity</span>
+                        <input type="number" class="form-control" formControlName="currentQuantity"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                        <span
+                            *ngIf="indentMaterialForm.controls.currentQuantity.invalid && indentMaterialForm.controls.currentQuantity.touched"
+                            class="error-span">Quantity is invalid.</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Indent Quantity</span>
+                        <input type="number" class="form-control" formControlName="indentQuantity"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) " />
+                        <span
+                            *ngIf="indentMaterialForm.controls.indentQuantity.invalid && indentMaterialForm.controls.indentQuantity.touched"
+                            class="error-span">Quantity is invalid.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Required Date</span>
+
+                        <div>
+
+                            <input matInput class="form-control border-bottom-1"
+                                placeholder="Please Select Date Of Creation" #dateOfCreation [matDatepicker]="dp"
+                                formControlName="requiredDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp>
+                            </mat-datepicker>
+                            <span
+                                *ngIf="indentMaterialForm.controls.requiredDate.errors?.required && indentMaterialForm.controls.requiredDate.touched"
+                                class="error-span">Date of Creation is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Remarks</span>
+                        <input type="textbox" formControlName="remarks" class="form-control" (blur)="onBlur()">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+    <p-accordionTab header="Indent Material List" [selected]="true">
+        <div class="container-fluid">
+            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+                id="grdOrganizations">
+                <tbody>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Material Group</th>
+                        <th>Material Name</th>
+                        <th>Required Qty.</th>
+                        <th>Required Date</th>
+                        <th>Remarks</th>
+                    </tr>
+                    <tr *ngFor="let material of materialList; let i = index" (click)="gridRowSelected(material)">
+
+                        <td>
+                            <span>{{i+1}}</span>
+                        </td>
+
+                        <td>
+                            {{material.GroupName}}
+                        </td>
+                        <td>
+                            {{material.DetailsName}}
+                        </td>
+                        <td>
+                            {{material.RM_Indent_Req_Qty}}
+                        </td>
+                        <td>
+                            {{material.RM_Require_Date | date: 'dd-MMM-yyyy'}}
+                        </td>
+                        <td>
+                            {{material.RM_Remarks}}
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+    <div class="col-md12">
+        <button pButton type="submit" [disabled]="disableNewButton" label="New Indent" (click)="newIndent()"
+            class="ui-button-rounded"></button>
+        <!-- <input type="submit" value="New Indent" (click)="addIndent()" class="ui-button-rounded"> -->
+        <button pButton type="submit" [disabled]="disableSaveButton" #saveBtn label="Save" (click)="onSaveClick()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableFindButton" label="Find" (click)="onFindClick()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableModifyButton" label="Modify" (click)="ModifyIndent()"
+            class="ui-button-rounded"></button>
+        <button pButton type="submit" label="Clear" (click)="onClearClick()" class="ui-button-rounded"></button>
+    </div>
+</div>

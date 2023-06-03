@@ -1,0 +1,124 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Daily Greens Inward Report</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height"></div>
+
+<div class="card border-radius-0">
+    <div class="bg-gray">
+        Daily Greens Inward Report
+    </div>
+    <div class="card-body">
+
+        <div class="container-fluid">
+            <form [formGroup]="formSummaryReport">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input class="form-check-input mt-0" [checked]="true" type="radio" name="blankRadio" id="blankRadio1" value="option1" aria-label="...">
+                            <span class="label-control">Daily Greens Received Report</span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control"> Date</span>
+                            <input matInput class="form-control border-bottom-1 mb-1" formControlName="summaryDate" placeholder="Date" [matDatepicker]="Date5">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="Date5">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #Date5>
+                            </mat-datepicker>
+                            <!-- <small Class="form-text text-danger">Received Date is
+                            required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control">Area Name</span>
+                            <mat-select formControlName="areaName" class="form-control" placeholder="Select Area Name">
+                                <mat-option *ngFor="let areas of harvestAreas" [value]="areas">
+                                    {{areas.areaName}}</mat-option>
+                            </mat-select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control">Own / Agent </span>
+                            <mat-select formControlName="ownAgent" class="form-control" placeholder="Select" (selectionChange)="onSubmit()">
+                                <mat-option value="1">Own Crop</mat-option>
+                                <mat-option value="2">Agent Purchase</mat-option>
+                                <!-- <mat-option value="3">ALL</mat-option> -->
+                            </mat-select>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row mt-4">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input class="form-check-input mt-0" type="radio" name="blankRadio" id="blankRadio1" value="option1" aria-label="...">
+                            <span class="label-control">Daily Summary Report</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control">Date</span>
+                            <input matInput class="form-control border-bottom-1 mb-1" placeholder="Date" [matDatepicker]="Date3">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="Date3">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #Date3>
+                            </mat-datepicker>
+                            <!-- <small Class="form-text text-danger">Received Date is
+                            required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control">Area Name</span>
+                            <mat-select class="form-control">
+                                <mat-option value="">1</mat-option>
+                                <mat-option value=""> 2</mat-option>
+                            </mat-select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span class="label-control">Own / Agent </span>
+                            <mat-select class="form-control">
+                                <mat-option value="">1</mat-option>
+                                <mat-option value=""> 2</mat-option>
+                            </mat-select>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-end">
+                    <div class="col-md-12 my-3 text-right">
+                        <button pButton type="button" label="View" class="ui-button-rounded"></button>
+                        <button pButton type="submit" label="Print" (click)="printClick()" class="ui-button-rounded"></button>
+                        <button pButton type="submit" label="Export" (click)="exportClick()" class="ui-button-rounded"></button>
+                        <button pButton type="button" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

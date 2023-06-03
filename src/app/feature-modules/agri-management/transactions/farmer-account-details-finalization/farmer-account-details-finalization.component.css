@@ -1,0 +1,53 @@
+.table tr.active td {
+    background-color: #007ad9 !important;
+    color: white;
+  }
+  .bg-blue{
+    background-color: #007ad9;
+    border: 1px solid#007ad9;
+    color: #ffffff;
+  }
+  .card .card-header {
+    padding: 9px 14px 9px !important;
+    z-index: 3;
+    font-weight: bold !important;
+  }
+  .bg-skyblue{
+    background-color: aliceblue;
+  }
+ 
+  .button-display {
+    margin: 5px;
+
+  }
+
+  .modal-backdrop
+{
+    opacity:0.5 !important;
+}
+
+.modal-backdrop.in {
+  opacity: 0.9 !important;
+}
+
+
+  .modal.show .modal-dialog {
+    transform: translate(0, 203px);
+}  
+.right-aligned-input
+{
+  text-align:right;
+}
+.modal-dialog-centered::before
+{
+  height: min-content !important;
+}
+.modal-footer
+{
+  padding:5px !important;
+  display: block !important;
+}
+.modal-dialog
+{
+  max-width: 550px !important;
+}

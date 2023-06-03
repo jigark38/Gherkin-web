@@ -1,0 +1,21 @@
+<div class="row">
+
+    <h4 class="col-md-10">Capture the image</h4>
+    <mat-icon class="col-md-2 close-icon" (click)="onNoClick()">close</mat-icon>
+</div>
+<div class="container vh-300">
+	<div class="d-flex flex-column align-items-center">
+		<div class="p-1" [class.height-0]="showCaptureAgain">
+			<video #video class="vid" width="320" height="440"  autoplay></video>
+		</div>
+		<div class="p-1" [class.height-0]="!showCaptureAgain">
+			<canvas #canvas class="vid"></canvas>
+        </div>
+        <div class="pb-2">
+            <button class="btn btn-primary" *ngIf="!showCaptureAgain && !hasError" (click)="capture()">Capture Image</button>
+            <button class="btn btn-primary" *ngIf="showCaptureAgain && !hasError" (click)="startVidoeAgain()">Capture Again</button>
+            <button class="btn btn-primary mar-lf-15" *ngIf="showCaptureAgain && !hasError" (click)="done()">Upload</button>
+            <button class="btn btn-primary mar-lf-15"  (click)="onNoClick()">Close</button>
+		</div>
+	</div>
+</div>

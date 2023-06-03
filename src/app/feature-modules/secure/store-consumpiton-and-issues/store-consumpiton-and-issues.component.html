@@ -1,0 +1,237 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Secure</a></li>
+        <li class="active"><span>Store Materials Issues</span></li>
+    </ol>
+</div>
+
+
+<div style="height: 28px;"></div>
+<p-accordion>
+    <p-accordionTab header="Store Materials Issues" [selected]="true">
+        <div class="row  ml-2 mr-2 mt-2 maindiv">
+            <div class="col-md-12 cleartop">
+                <div class="row pl-1 pr-1 align-items-center">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">
+                                Issue Date
+                            </span>
+                            <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                [matDatepicker]="eDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #eDate>
+                            </mat-datepicker>
+                            <!-- <small Class="form-text text-danger">Received Date is
+                                required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">
+                                Issue No
+                            </span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">
+                                Store Incharge
+                            </span>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Department</span>
+                            <mat-select class="form-control">
+                                <mat-option value="">Yes</mat-option>
+                                <mat-option value=""> no</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Issue To</span>
+                            <mat-select class="form-control">
+                                <mat-option value="">Yes</mat-option>
+                                <mat-option value=""> no</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 15px;"></div>
+<p-accordion>
+    <p-accordionTab header="Store Internal Indent Details" [selected]="true">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                            cellpadding="4">
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        Indent Date
+                                    </th>
+                                    <th>
+                                        Indent No
+                                    </th>
+                                    <th>
+                                        Material Group
+                                    </th>
+                                    <th>
+                                        Material Sub Group
+                                    </th>
+                                    <th>
+                                        Material Details
+                                    </th>
+                                    <th>
+                                        UOM
+                                    </th>
+                                    <th>
+                                        Indent Quantity
+                                    </th>
+                                    <th>
+                                        Taken till now
+                                    </th>
+                                    <th>
+                                        Available Quantity
+                                    </th>
+
+                                    <th>
+                                        Issued Quantity
+                                    </th>
+
+                                    <th>
+                                        Consumption Value
+                                    </th>
+
+                                    <th>
+                                        Account Head
+                                    </th>
+                                    <th>
+                                        Cost Centre
+                                    </th>
+
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                    <td class="text-center">
+                                        -
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+            <button pButton type="button" label="Add" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Save" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Find" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Modify" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Clear" class="ui-button-rounded"></button>
+        </div>
+    </div>
+</div>

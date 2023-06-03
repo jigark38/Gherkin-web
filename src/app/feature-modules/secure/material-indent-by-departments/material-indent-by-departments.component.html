@@ -1,0 +1,263 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Secure</a></li>
+    <li class="active"><span>Material Indent to Stores</span></li>
+  </ol>
+</div>
+
+
+<div style="height: 28px;"></div>
+<p-accordion>
+  <p-accordionTab header="Material Indent to Stores" [selected]="true">
+    <div class="row  ml-2 mr-2 mt-2 maindiv">
+      <div class="col-md-12 cleartop">
+        <div class="row pl-1 pr-1 align-items-center" [formGroup]="storeInternalIndentMasterForm">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Indent Date</span>
+              <div>
+                <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Indent Date"
+                      [matDatepicker]="indentDatePicker" formControlName="IndentDate" #indentDate
+                      (dateChange)="indentDateBlurred()">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="indentDatePicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #indentDatePicker>
+                </mat-datepicker>
+                <span *ngIf="storeInternalIndentMasterForm.controls.IndentDate.errors?.required &&
+                              storeInternalIndentMasterForm.controls.IndentDate.touched" class="error-span">
+                  Indent Date is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="this.isFindOn || this.isModifyOn">
+            <div class="form-group">
+              <span class="label-control">Indent No</span>
+              <div>
+                <mat-select class="form-control" formControlName="IndentNo" placeholder="Please Select Indent No"
+                      (selectionChange)="onIndentNoSelectionChanged($event)">
+                  <mat-option [value]="indentMaster.storeInternalIndentNo" *ngFor="let indentMaster of this.storeInternalIndentMasterList">{{indentMaster.storeInternalIndentNo}}</mat-option>
+                </mat-select>
+                <span *ngIf="storeInternalIndentMasterForm.controls.IndentNo.errors?.required &&
+                                              storeInternalIndentMasterForm.controls.IndentNo.touched" class="error-span">
+                  Indent No is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Indent Person</span>
+              <div>
+                <input matInput type="text" class="form-control" formControlName="EnteredBy" placeholder="Enter Indent Person">
+                <span *ngIf="storeInternalIndentMasterForm.controls.EnteredBy.errors?.required && storeInternalIndentMasterForm.controls.EnteredBy.touched" class="error-span">
+                  Indent Person is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pl-1 pr-1 align-items-center" [formGroup]="storeInternalIndentDetailForm">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Group Name</span>
+              <div>
+                <mat-select class="form-control" formControlName="GroupName" #groupName
+                        placeholder="Please Select Group Name" (selectionChange)="onGroupNameSelectionChanged()">
+                  <mat-option [value]="groupName.gsGroupCode" *ngFor="let groupName of this.groupNameList">{{groupName.gsGroupName}}</mat-option>
+                </mat-select>
+                <span *ngIf="storeInternalIndentDetailForm.controls.GroupName.errors?.required && storeInternalIndentDetailForm.controls.GroupName.touched" class="error-span">
+                  Group Name is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Sub Group Name</span>
+              <div>
+                <mat-select class="form-control" formControlName="SubGroupName"
+                        placeholder="Please Select Sub Group Name" (selectionChange)="onSubGroupNameSelectionChanged()">
+                  <mat-option [value]="subGroupName.gsSubGroupCode" *ngFor="let subGroupName of this.filteredSubGroupNameList">{{subGroupName.gsSubGroupName}}</mat-option>
+                </mat-select>
+                <span *ngIf="storeInternalIndentDetailForm.controls.SubGroupName.errors?.required && storeInternalIndentDetailForm.controls.SubGroupName.touched" class="error-span">
+                  Sub Group Name is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Material Name</span>
+              <div>
+                <mat-select class="form-control" formControlName="GSMaterialName"
+                        placeholder="Please Select Material Name" (selectionChange)="onMaterialDetailSelectionChanged()">
+                  <mat-option [value]="material.gsMaterialCode" *ngFor="let material of this.materialDetailList">{{material.gsMaterialName}}</mat-option>
+                </mat-select>
+                <span *ngIf="storeInternalIndentDetailForm.controls.GSMaterialName.errors?.required && storeInternalIndentDetailForm.controls.GSMaterialName.touched" class="error-span">
+                  Material Name is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Material Description</span>
+              <div>
+                <textarea matInput type="text" formControlName="GSMaterialDesc" maxlength="300" class="form-control" placeholder="Please Enter Description"></textarea>
+                <span *ngIf="storeInternalIndentDetailForm.controls.GSMaterialDesc.errors?.required && storeInternalIndentDetailForm.controls.GSMaterialDesc.touched" class="error-span">
+                  Material Description is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">UOM</span>
+              <div>
+                <input matInput type="text" class="form-control" formControlName="UOMDetail" placeholder="Enter UOM Detail">
+                <span *ngIf="storeInternalIndentDetailForm.controls.UOMDetail.errors?.required && storeInternalIndentDetailForm.controls.UOMDetail.touched" class="error-span">
+                  UOM Detail is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Available Stock</span>
+              <div>
+                <input matInput type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Indent Quantity</span>
+              <div>
+                <input matInput type="text" class="form-control" formControlName="IndentQuantity" maxlength="11" placeholder="Enter Indent Quantity">
+                <span *ngIf="storeInternalIndentDetailForm.controls.IndentQuantity.errors?.required && storeInternalIndentDetailForm.controls.IndentQuantity.touched" class="error-span">
+                  Indent Quantity is required field.
+                </span>
+                <span *ngIf="storeInternalIndentDetailForm.controls.IndentQuantity.errors?.pattern && storeInternalIndentDetailForm.controls.IndentQuantity.touched" class="error-span">
+                  Indent Quantity should be in format of 00.00
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Required Date</span>
+              <div>
+                <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Required Date"
+                       [matDatepicker]="requiredDatePicker" formControlName="RequiredDate" #requiredDate
+                       (dateChange)="requiredDateBlurred()">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="requiredDatePicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #requiredDatePicker>
+                </mat-datepicker>
+                <span *ngIf="storeInternalIndentDetailForm.controls.RequiredDate.errors?.required && storeInternalIndentDetailForm.controls.RequiredDate.touched" class="error-span">
+                  Required Date is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+<div style="height: 15px;"></div>
+<p-accordion>
+  <p-accordionTab header="Material Indent Details" [selected]="true">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                   cellpadding="4">
+              <tbody>
+                <tr>
+                  <th>
+                    Edit
+                  </th>
+                  <th>
+                    Material Group Name
+                  </th>
+                  <th>
+                    Material Sub Group
+                  </th>
+                  <th>
+                    Name of the Material
+                  </th>
+                  <th>
+                    Indent Quantity
+                  </th>
+                  <th>
+                    Required Date
+                  </th>
+                </tr>
+                <tr *ngFor="let detail of storeInternalIndentDetailList; let detailIndex = index">
+                  <td class="text-center">
+                    <span class="fa fa-pencil" [ngStyle]="{'cursor': (this.isModifyOn) ? 'pointer' : 'default'}"
+                          (click)="editIndentDetailClicked(detail)"></span>
+                  </td>
+                  <td class="text-center">
+                    {{detail.gsGroupName}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.gsSubGroupName}}
+                  </td>
+                  <td class="text-center">
+                    {{detail.gsMaterialName}}
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="!detail.isEditing">
+                      {{detail.storeDeptIndentQty}}
+                    </span>
+                    <input matInput type="text" class="form-control" *ngIf="detail.isEditing" (keyup)="validateIndentQuantity(detail)"
+                          [(ngModel)]="detail.indentQtyString" maxlength="11" placeholder="Enter Indent Quantity">
+                    <span *ngIf="detail.indentQtyEmpty"
+                          class="error-span" style="float: left;">
+                      Indent Quantity is required field.
+                    </span>
+                    <span *ngIf="detail.indentQtyNotInFormat"
+                          class="error-span" style="float: left;">
+                      Indent Quantity should be in format of 00.000
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    {{detail.storeDeptIndentReqDate | date:'dd-MMM-yyyy'}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+  <div class="row pull-right btSection">
+    <div class="col-md-12">
+      <button pButton type="button" label="Add" class="ui-button-rounded"
+              (click)="createMaterialIndent()" [disabled]="disableButton || !enableNew"></button>
+      <button pButton type="button" label="Save" class="ui-button-rounded" #saveButton
+              (click)="saveForm()" [disabled]="disableButton || !enableSave ||
+              !this.storeInternalIndentMasterForm.valid || (this.storeInternalIndentDetailForm.enabled && !this.storeInternalIndentDetailForm.valid)"></button>
+      <button pButton type="button" label="Find" class="ui-button-rounded"
+              (click)="findMaterialIndent()" [disabled]="disableButton || !enableFind"></button>
+      <button pButton type="button" label="Modify" class="ui-button-rounded"
+              (click)="modifyMaterialIndent()" [disabled]="disableButton || !enableModify"></button>
+      <button pButton type="button" label="Clear" class="ui-button-rounded"
+              (click)="clearForm()" [disabled]="disableButton"></button>
+    </div>
+  </div>
+</div>

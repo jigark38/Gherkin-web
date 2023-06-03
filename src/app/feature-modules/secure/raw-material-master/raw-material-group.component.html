@@ -1,0 +1,88 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Organisation Management</a></li>
+    <li class="active"><span>Raw Material Master</span></li>
+  </ol>
+</div>
+<div style="height:28px;"></div>
+<p-accordion>
+  <p-accordionTab header="Raw Material Group" [selected]="true">
+
+    <div class="card">
+      <!-- <div class="card-header card-header-text" data-background-color="rose">
+    <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Raw Material Group</h4>
+  </div> -->
+      <div class="card-body" [formGroup]="rawMaterialGroupForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Material Purchase</span>
+              <mat-select class="form-control" [(ngModel)]="SelectedMaterialPurchase"
+                placeholder="Select Material Purchase" formControlName="SelectPurchaseMaterial"
+                (selectionChange)="onChangePurchase()">
+                <mat-option disabled value="--Select Status--">--Select Material Purchase--</mat-option>
+                <mat-option *ngFor="let item of MaterialPurchase" [value]="item.text">
+                  {{item.text}}
+                </mat-option>
+              </mat-select>
+              <div
+                *ngIf="(rawMaterialGroupForm.controls.SelectPurchaseMaterial.errors?.required && rawMaterialGroupForm.controls.SelectPurchaseMaterial.touched) "
+                class="error-span">
+                Material Purchase is required
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="!modifyGroup || enableEdit">
+            <div class="form-group">
+              <span class="label-control">Material Group</span>
+              <input type="text" class="form-control" [(ngModel)]="MaterialGroup" formControlName="MaterialGroup"
+                placeholder="Enter Material Group">
+              <div
+                *ngIf="(rawMaterialGroupForm.controls.MaterialGroup.errors?.required && rawMaterialGroupForm.controls.MaterialGroup.touched) "
+                class="error-span">
+                Material Group is required
+              </div>
+            </div>
+            <div *ngIf="IsLoading" class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="modifyGroup && !enableEdit">
+            <div class="form-group">
+              <span class="label-control">Material Group</span>
+              <mat-select class="form-control" placeholder="Select Material Group" [(ngModel)]="SelectedGroup"
+                placeholder="Select Material Group" formControlName="SelectMaterialGroup"
+                (selectionChange)="onChangeGroup()">
+                <mat-option [value]="item" *ngFor="let item of FilteredMaterialGroup">
+                  {{item.Raw_Material_Group}}
+                </mat-option>
+
+              </mat-select>
+              <div
+                *ngIf="(rawMaterialGroupForm.controls.SelectMaterialGroup.errors?.required && rawMaterialGroupForm.controls.SelectMaterialGroup.touched) "
+                class="error-span">
+                Material Group is required
+              </div>
+            </div>
+            <div *ngIf="IsLoading" class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20">
+  <div class="row mgt-10">
+    <div class="col-md-12">
+      <button pButton type="button" label="Save" class="pull-right ui-button-rounded"
+        [disabled]="rawMaterialGroupForm.invalid" (click)="CreateGroup()"></button>
+      <button pButton type="button" label="Modify" class="pull-right ui-button-rounded" [disabled]="disableModify"
+        (click)="ModifyGroup()"></button>
+      <button pButton type="button" label="Back" class="pull-right ui-button-rounded"
+        (click)=" NavigateToMaster()"></button>
+    </div>
+  </div>
+</div>

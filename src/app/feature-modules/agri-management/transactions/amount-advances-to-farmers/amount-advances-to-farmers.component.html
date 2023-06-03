@@ -1,0 +1,351 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span> Amount Advances to Farmers</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Amount Advances to Farmers" [selected]="true">
+        <div class="row  ml-2 mr-2 mt-2 maindiv">
+            <div class="col-md-12 cleartop">
+                <div class="row pl-1 pr-1 align-items-center" [formGroup]="amountAdvToFarmerForm">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control"> Entry Date </span>
+                            <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                [matDatepicker]="eDate" formControlName="acEntryDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #eDate>
+                            </mat-datepicker>
+                            <!-- <small Class="form-text text-danger">Received Date is
+                                required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Entered By</span>
+                            <input disabled type="text" class="form-control" formControlName="acEnteredEmployeeName"
+                                placeholder="Entered By">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Advance Issue No</span>
+                            <input type="text" class="form-control" formControlName="acIssuedNo"
+                                placeholder="Advance Issue No">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control"> Advance Date </span>
+                            <input matInput class="form-control border-bottom-1 mb-1" placeholder="Advance Date"
+                                [matDatepicker]="eDate4" formControlName="acIssuedDate" #AdvanceDate>
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate4">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #eDate4>
+                            </mat-datepicker>
+                            <small Class="form-text text-danger"
+                                *ngIf="!(amountAdvToFarmerForm.get('acIssuedDate').valid) && (saveClicked)">Advance
+                                Date required!</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Area / Branch Name</span>
+                            <mat-select class="form-control" formControlName="areaID" #area
+                                placeholder="Select Area / Branch Name"
+                                (selectionChange)="GetFieldSupervisorList(); GetFieldStaffList(); getCountry()">
+                                <mat-option *ngFor="let area of harvestAreas" [value]="area.areaId">
+                                    {{area.areaName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+
+                            <small Class="form-text text-danger"
+                                *ngIf="!(amountAdvToFarmerForm.get('areaID').valid) && (saveClicked)">Area / Branch Name
+                                required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Material Group</span>
+                            <!-- <mat-select class="form-control" formControlName="materialGroup">
+                                <mat-option value="">Yes</mat-option>
+                                <mat-option value=""> No </mat-option>
+                            </mat-select> -->
+                            <mat-select class="form-control" formControlName="materialGroup"
+                                (selectionChange)="getCropNameList()" placeholder="Select Material Group">
+                                <mat-option [value]="cg.CropGroupCode" *ngFor="let
+                                                                        cg
+                                                                        of
+                                                                        cropGroup">{{cg.Name | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Material Name</span>
+                            <mat-select class="form-control" formControlName="materialName"
+                                (selectionChange)="getCropSeason()" placeholder="Select Material Name">
+                                <mat-option [value]="cropName.cropNameCode" *ngFor="let
+                                                                        cropName
+                                                                        of
+                                                                        cropNameList">
+                                    {{cropName.name |uppercase}}</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Season From / To</span>
+                            <mat-select class="form-control" formControlName="seasonFromTo" name="PSNumber"
+                                placeholder="Select Season From / To">
+                                <mat-option [value]="season.psNumber" *ngFor="let
+                                                                        season
+                                                                        of
+                                                                        seasonList">
+                                    {{season.seasonFrom
+                                                                                |
+                                                                                date:'dd-MMM-yyyy'}}
+                                    /
+                                    {{season.seasonTo
+                                                                                |
+                                                                                date:'dd-MMM-yyyy'}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Field Supervisor</span>
+                            <mat-select class="form-control" formControlName="fieldSupervisorEmployeeID"
+                                placeholder="Select Field Supervisor">
+                                <mat-option [value]="super.employeeID" *ngFor="let super of supervisor">
+                                    {{super.employeeName}}</mat-option>
+
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Field Incharge</span>
+                            <mat-select class="form-control" formControlName="fieldStaffEmployeeID"
+                                placeholder="Select Field Incharge" (selectionChange)="setFilterModel()">
+                                <mat-option [value]="satff.employeeID" *ngFor="let satff of fieldStaff">
+                                    {{satff.employeeName}}</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country</span>
+                            <mat-select class="form-control" formControlName="country" placeholder="Select Country"
+                                (ngModelChange)="getState($event)">
+                                <mat-option *ngFor="let country of areaDistinctCountry" [value]="country.countryCode">
+                                    {{country.countryName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Area Code </span>
+                            <input type="text" class="form-control" formControlName="areaCode">
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">State </span>
+                            <mat-select formControlName="state" class="form-control" placeholder="Select State"
+                                (ngModelChange)="getDisrtict($event)" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let state of stateList" [value]="state.stateCode">
+                                    {{state.stateName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">District </span>
+                            <mat-select formControlName="district" class="form-control" placeholder="Select District"
+                                (ngModelChange)="getAllMandal($event)">
+                                <mat-option *ngFor="let district of districtList" [value]="district.districtCode">
+                                    {{district.districtName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Taluk / Mandal </span>
+                            <mat-select formControlName="taluk" class="form-control" placeholder="Select Taluk / Mandal"
+                                (ngModelChange)="getVillage($event)">
+                                <mat-option *ngFor="let mandal of mandalList" [value]="mandal.mandalCode">
+                                    {{mandal.mandalName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Village </span>
+                            <input type="text" matInput class="form-control" formControlName="village"
+                                placeholder="Select Village" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let village of filteredVillageList | async" [value]="village"
+                                    (onSelectionChange)="filterAmountAdvToFarmer($event,village)">
+                                    {{village.villageName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Farmer Account No </span>
+                            <!-- <input type="text" class="form-control" formControlName="farmersAccountNo"> -->
+                            <input type="text" matInput class="form-control" formControlName="farmersAccountNo"
+                                placeholder="Enter Farmer Account No" [matAutocomplete]="autoAccount"
+                                [value]="amountAdvToFarmerForm.controls.farmersAccountNo.value">
+                            <mat-autocomplete #autoAccount="matAutocomplete" [displayWith]="displayAccountFn">
+                                <mat-option *ngFor="let account of filteredAccountList | async" [value]="account"
+                                    (onSelectionChange)="filterAmountAdvToFarmerbyAccount($event,account)">
+                                    {{account.FarmersAccountNo | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Farmer Name </span>
+                            <!-- <input type="text" class="form-control" formControlName="farmerCode"> -->
+                            <input type="text" matInput class="form-control" formControlName="farmerCode"
+                                placeholder="Enter Farmer Farmer Name" [matAutocomplete]="autoFarmer"
+                                [value]="amountAdvToFarmerForm.controls.farmerCode.value">
+                            <mat-autocomplete #autoFarmer="matAutocomplete" [displayWith]="displayFarmerNameFn">
+                                <mat-option *ngFor="let farmer of filteredFarmerNameList | async" [value]="farmer"
+                                    (onSelectionChange)="filterAmountAdvToFarmerbyFarmerName($event,farmer)">
+                                    {{farmer.FarmerName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 28px;"></div>
+
+<p-accordion>
+    <p-accordionTab header="Farmers Details" [selected]="true">
+        <form>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                cellpadding="4">
+                                <tbody>
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>Account No</th>
+                                        <th>Farmer Name</th>
+                                        <th>Father Name</th>
+                                        <th>Village</th>
+                                        <th>Advance Amount</th>
+                                        <th>Select</th>
+                                    </tr>
+                                    <tr *ngFor="let farmerList of filtredAmountAdvancesToFarmerModelList; index as i">
+                                        <td class="text-center">
+                                            {{i+1}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{farmerList.FarmersAccountNo}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{farmerList.FarmerName}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{farmerList.FarmerAddress}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{farmerList.VillageName}}
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" placeholder="Advance Amount" class="form-control"
+                                                [(ngModel)]="farmerList.AdvanceAmount" #AdvanceAmount="ngModel"
+                                                maxlength="10" name="advAmount{{i}}">
+                                            <small Class="form-text text-danger"
+                                                *ngIf="(farmerList.isSelected == true) && (farmerList.AdvanceAmount === null || farmerList.AdvanceAmount == undefined || farmerList.AdvanceAmount == 0)">Please
+                                                enter the Advance amount</small>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="" [(ngModel)]="farmerList.isSelected"
+                                                name="selected" (change)="eventCheck($event,farmerList)">
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="filtredAmountAdvancesToFarmerModelList.length==0" colspan="7"
+                                            style="text-align: center; font-weight: 800;">No Data Found</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+    <div class="mgt-20 pull-right">
+        <div class="row pull-right btSection">
+            <div class="col-md-12">
+                <button pButton [disabled]="disblAdvPaymetBtn" type="button" label="Advance Payment"
+                    class="ui-button-rounded" (click)="onAdvancePaymentClick()"></button>
+                <button pButton [disabled]="disblSaveBtn" type="button" label="Save" (click)="saveAdvanceCashDetails()"
+                    class="ui-button-rounded"></button>
+                <button pButton [disabled]="disblAddFarmerBtn" type="button" label="Clear" class="ui-button-rounded"
+                    (click)="reset()"></button>
+            </div>
+        </div>
+    </div>

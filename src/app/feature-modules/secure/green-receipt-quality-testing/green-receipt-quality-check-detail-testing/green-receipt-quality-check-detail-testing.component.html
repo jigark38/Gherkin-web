@@ -1,0 +1,486 @@
+<p-accordionTab header="Quality Check Details" [selected]="true">
+    <form [formGroup]="greenQualityCheckDetailsForm">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Receiving UNIT </span>
+                        <mat-select [disabled]="true" class="form-control border-bottom-1"
+                            formControlName="orgofficeNo">
+                            <mat-option *ngFor="let org of organisationUnitList" [value]="org.orgOfficeNo">
+                                {{org.orgOfficeName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Area Name</span>
+                        <mat-select [disabled]="true" class="form-control border-bottom-1" formControlName="areaId">
+                            <mat-option *ngFor="let area of areasList" [value]="area.areaId">
+                                {{area.areaName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">GRN Date</span>
+                        <input matInput class="form-control border-bottom-1" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="harvestGrnDate" [disabled]="true" />
+                        <!--<input matInput class="form-control border-bottom-1" formControlName="harvestGrnDate"
+                            [matDatepicker]="dp2" [disabled]="true" />
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #dp2>
+                        </mat-datepicker>-->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">GRN No</span>
+                        <input readonly matInput type="text" class="form-control" formControlName="harvestGRNNo">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Vehicle No</span>
+                        <input matInput type="text" class="form-control" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="vehicalNo" [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Sample Received Date</span>
+                        <input matInput class="form-control border-bottom-1" formControlName="greensRecvSampleDate"
+                            [matDatepicker]="dp1" />
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #dp1>
+                        </mat-datepicker>
+                        <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvSampleDate.errors?.required
+                        &&
+                        greenQualityCheckDetailsForm.controls.greensRecvSampleDate.touched" class="error-span">
+                            Sample Received Date
+                            is required field.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Sample Size</span>
+                        <input matInput type="text" class="form-control" formControlName="greensRecvSampleQty">
+                        <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvSampleQty.errors?.required
+                        &&
+                        greenQualityCheckDetailsForm.controls.greensRecvSampleQty.touched" class="error-span">Sample
+                            Size
+                            is required field.</span>
+                        <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvSampleQty.errors?.pattern &&
+                    greenQualityCheckDetailsForm.controls.greensRecvSampleQty.touched" class="error-span">
+                            Only 4 digit numbers are allowed from 0 to 9999.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Truck Condition</span>
+                        <textarea type="text" class="form-control" formControlName="greensRecvTrunkCondition"
+                            maxlength="100"></textarea>
+                        <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvTrunkCondition.errors?.required
+                        &&
+                        greenQualityCheckDetailsForm.controls.greensRecvTrunkCondition.touched"
+                            class="error-span">Truck Condition
+                            is required field.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Checked By</span>
+                        <mat-select class="form-control border-bottom-1" formControlName="greensCheckedEmployeeId">
+                            <mat-option *ngFor="let employee of employeesList" [value]="employee.employeeId">
+                                {{employee.employeeName}}
+                            </mat-option>
+                        </mat-select>
+                        <span *ngIf="greenQualityCheckDetailsForm.controls.greensCheckedEmployeeId.errors?.required
+                        &&
+                        greenQualityCheckDetailsForm.controls.greensCheckedEmployeeId.touched"
+                            class="error-span">Checked By
+                            is required field.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Verified By</span>
+                        <mat-select class="form-control border-bottom-1" formControlName="greensVerifiedEmployeeId">
+                            <mat-option *ngFor="let employee of employeesList" [value]="employee.employeeId">
+                                {{employee.employeeName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">AG NO</span>
+                        <input maxlength="25" matInput type="text" class="form-control"
+                            formControlName="greensRecvAGNo">
+                            <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvAGNo.errors?.required
+                            &&
+                            greenQualityCheckDetailsForm.controls.greensRecvAGNo.touched"
+                                class="error-span">Checked By
+                                is required field.</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Remarks</span>
+                        <textarea maxlength="300" type="text" formControlName="greensRecvRemarks"
+                            class="form-control"></textarea>
+                            <span *ngIf="greenQualityCheckDetailsForm.controls.greensRecvRemarks.errors?.required
+                            &&
+                            greenQualityCheckDetailsForm.controls.greensRecvRemarks.touched"
+                                class="error-span">Checked By
+                                is required field.</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+</p-accordionTab>
+
+<p-accordionTab header="Quality Inspection Details" [selected]="true">
+    <form [formGroup]="greenQualityInspectionDetailsForm">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">BORRER</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="borrerQCUOM"
+                                    placeholder="BORRER" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.borrerQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.borrerQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="borrerQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.borrerQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.borrerQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.borrerQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.borrerQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">FF</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="ffQCUOM"
+                                    placeholder="FF" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.ffQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.ffQCUOM.touched" class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="ffQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.ffQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.ffQCQty.touched" class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.ffQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.ffQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">SOFT</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="softQCUOM"
+                                    placeholder="SOFT" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.softQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.softQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="softQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.softQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.softQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.softQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.softQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">FUNGUS</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="fungusQCUOM"
+                                    placeholder="FUNGUS" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.fungusQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.fungusQCUOM.touched"
+                                    class="error-span">Required</span>
+
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="fungusQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.fungusQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.fungusQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.fungusQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.fungusQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">STEMS</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="stemsQCUOM"
+                                    placeholder="STEMS" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.stemsQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.stemsQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="stemsQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.stemsQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.stemsQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.stemsQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.stemsQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">VIRUS</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="virusQCUOM"
+                                    placeholder="VIRUS" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.virusQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.virusQCUOM.touched"
+                                    class="error-span">Required</span>
+
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="virusQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.virusQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.virusQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.virusQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.virusQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">FLOWERS</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="flowersQCUOM"
+                                    placeholder="FLOWERS" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.flowersQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.flowersQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="flowersQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.flowersQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.flowersQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.flowersQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.flowersQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">MUDDY</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="muddyQCUOM"
+                                    placeholder="MUDDY" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.muddyQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.muddyQCUOM.touched"
+                                    class="error-span">Required</span>
+
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="muddyQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.muddyQCQty.errors?.required
+                    &&
+                    greenQualityInspectionDetailsForm.controls.muddyQCQty.touched" class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.muddyQCQty.errors?.pattern &&
+                greenQualityInspectionDetailsForm.controls.muddyQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">PEANUT</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="peanutQCUOM"
+                                    placeholder="PEANUT" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.peanutQCUOM.errors?.required
+                    &&
+                    greenQualityInspectionDetailsForm.controls.peanutQCUOM.touched" class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="peanutQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.peanutQCQty.errors?.required
+                    &&
+                    greenQualityInspectionDetailsForm.controls.peanutQCQty.touched" class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.peanutQCQty.errors?.pattern &&
+                greenQualityInspectionDetailsForm.controls.peanutQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">CAL</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="calQCUOM"
+                                    placeholder="CAL" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.calQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.calQCUOM.touched" class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="calQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.calQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.calQCQty.touched" class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.calQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.calQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">END CROP</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="endcorpQCUOM"
+                                    placeholder="END CROP" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.endcorpQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.endcorpQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="endcorpQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.endcorpQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.endcorpQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.endcorpQCQty.errors?.pattern &&
+                    greenQualityInspectionDetailsForm.controls.endcorpQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">ROTTEN</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="rottenQCUOM"
+                                    placeholder="ROTTEN" maxlength="10">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.rottenQCUOM.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.rottenQCUOM.touched"
+                                    class="error-span">Required</span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" matInput formControlName="rottenQCQty"
+                                    placeholder="Quantity">
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.rottenQCQty.errors?.required
+                        &&
+                        greenQualityInspectionDetailsForm.controls.rottenQCQty.touched"
+                                    class="error-span">Required</span>
+                                <span *ngIf="greenQualityInspectionDetailsForm.controls.rottenQCQty.errors?.pattern &&
+                        greenQualityInspectionDetailsForm.controls.rottenQCQty.touched" class="error-span">
+                                    Allowed range 0 to 999.999.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</p-accordionTab>
+<div class="pull-right">
+    <button pButton type="submit" label="Save"
+        [disabled]="!greenQualityCheckDetailsForm.valid || !greenQualityInspectionDetailsForm.valid"
+        (click)="saveFormData();" class="ui-button-rounded"></button>
+    <!--<button pButton type="submit" label="Modify"
+        [disabled]="!greenQualityCheckDetailsForm.valid || !greenQualityInspectionDetailsForm.valid"
+        class="ui-button-rounded"></button>
+    <button pButton type="submit" label="Clear" (click)="clearForm();" class="ui-button-rounded"></button>-->
+</div>

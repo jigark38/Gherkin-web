@@ -1,0 +1,90 @@
+<p-accordion>
+    <p-accordionTab header="Department & Designation Report" class="card" [selected]="true">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <div class="row pl-1 pr-1">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Select</span>
+                            <mat-select class="form-control" placeholder="Select Department" [(ngModel)]="departmentCode" (selectionChange)="selectedCode()">
+                                <mat-option value="ALL">
+                                    ALL</mat-option>
+                                <mat-option *ngFor="let data of departmentDropDown" [value]="data.departmentCode">
+                                    {{data.departMentName}}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+
+<div class=" pull-right">
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="submit" label="View" (click)="viewData()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Print" (click)="printClick()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Export" (click)="downloadClick()" class="ui-button-rounded"></button>
+            <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<p-accordion>
+    <p-accordionTab header="Departments Report " class="card" [selected]="true">
+
+
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                              dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>Department Name</th>
+                            <th>Sub Department Name</th>
+                            <th>Designation</th>
+                            <th>Skills</th>
+                        </tr>
+                        <tr *ngFor="let data of gridData;  index as i;let j=index">
+                            <td class="text-align-center">
+                                <span>{{data.DepartmentName}}</span>
+                            </td>
+                            <td class="text-align-center">
+                                <span>{{data.SubDepartmentName}}</span>
+                            </td>
+                            <td class="text-align-center">
+                                <span>{{data.DesignationName}}</span>
+                            </td>
+                            <td class="text-align-center">
+                                <span>{{data.SkillsName}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- the Department & Designation Report code -->
+    </p-accordionTab>
+</p-accordion>
+
+<p-dialog header="Action" [(visible)]="displayPopup" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <p>In which format you need pdf?</p>
+    <p-footer>
+        <button type="button" pButton (click)="createPotraitPdf()" label="Potrait"></button>
+        <button type="button" pButton (click)="createLandScapePdf()" label="LandScape" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Action" [(visible)]="displayPopupForDownload" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <p>In which format you need pdf?</p>
+    <p-footer>
+        <button type="button" pButton (click)="createPotraitPdfDownload()" label="Potrait"></button>
+        <button type="button" pButton (click)="createLandScapePdfDownload()" label="LandScape" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>

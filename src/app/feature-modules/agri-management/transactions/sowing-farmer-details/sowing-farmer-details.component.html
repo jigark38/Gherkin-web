@@ -1,0 +1,533 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Sowing & Farming Details</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Farmer Details" [selected]="farmingDetailTabShow" [disabled]="!farmingDetailTabShow">
+        <div class="container-fluid" [formGroup]="FarmerDetailForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Area/Branch Name</span>
+                            <mat-select #AreaBranchDDL formControlName="AreaName" class="form-control"
+                                (ngModelChange)="getFormData($event)" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let harvestArea of harvestAreaList" [value]="harvestArea.areaId">
+                                    {{harvestArea.areaName | uppercase }}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('AreaName').value == null || FarmerDetailForm.get('AreaName').value == '') && addFarmerDetailBtnClicked ">Please
+                                select area</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Crop Group</span>
+                            <mat-select formControlName="CropGroup" class="form-control"
+                                (ngModelChange)="filterCropList($event)" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let cropGrp of farmerForm.cropGroups"
+                                    [value]="cropGrp.CropGroupCode">
+                                    {{cropGrp.Name | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('CropGroup').value == null || FarmerDetailForm.get('CropGroup').value == '') && addFarmerDetailBtnClicked ">Please
+                                select a crop group</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Crop Name</span>
+                            <mat-select formControlName="CropName" class="form-control" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let crops of filteredCropDetails" [value]="crops.CropCode"
+                                    (onSelectionChange)="getSeletedCrop(crops)">
+                                    {{crops.Name | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('CropName').value == null || FarmerDetailForm.get('CropName').value == '') && addFarmerDetailBtnClicked ">Please
+                                select a crop name</small>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Season From / To</span>
+                            <mat-select formControlName="Season" class="form-control" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let session of filteredSession" [value]="session.psNumber"
+                                    (onSelectionChange)="getSeletedSession(session)">
+                                    {{session.sessionFrom | date: 'dd-MM-yyyy'}} /
+                                    {{session.sessionTo | date: 'dd-MM-yyyy'}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('Season').value == null || FarmerDetailForm.get('Season').value == '') && addFarmerDetailBtnClicked ">Please
+                                select a session</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Country</span>
+                            <mat-select formControlName="Country" class="form-control"
+                                (ngModelChange)="getState($event)" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let country of areaDistinctCountry" [value]="country.countryCode">
+                                    {{country.countryName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('Country').value == null || FarmerDetailForm.get('Country').value == '') && addFarmerDetailBtnClicked ">Please
+                                select country</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">State</span>
+                            <mat-select formControlName="StateCode" class="form-control"
+                                (ngModelChange)="getDisrtict($event)" (keyup)="onBlurMethod()">
+                                <mat-option *ngFor="let state of stateList" [value]="state.stateCode">
+                                    {{state.stateName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmerDetailForm.get('StateCode').value == null || FarmerDetailForm.get('StateCode').value == '') && addFarmerDetailBtnClicked ">Please
+                                select state</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">District</span>
+                            <mat-select formControlName="DistrictCode" class="form-control"
+                                (ngModelChange)="getAllMandal($event)">
+                                <mat-option *ngFor="let district of districtList" [value]="district.districtCode">
+                                    {{district.districtName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Mandal</span>
+                            <mat-select formControlName="MandalCode" class="form-control"
+                                (ngModelChange)="getVillage($event)">
+                                <mat-option *ngFor="let mandal of mandalList" [value]="mandal.mandalCode">
+                                    {{mandal.mandalName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Village</span>
+                            <mat-select formControlName="VillageCode" class="form-control">
+                                <mat-option *ngFor="let village of villageList" [value]="village.villageCode"
+                                    (onSelectionChange)="getFarmerListByVillage($event, village.villageCode)">
+                                    {{village.villageName | uppercase}}
+                                </mat-option>
+
+                            </mat-select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Search </span>
+                            <input type="text" matInput class="form-control" [formControl]="FarmerCode"
+                                [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let farmerdetail of filteredFarmers | async" [value]="farmerdetail"
+                                    (onSelectionChange)="getSeletedFarmer($event,farmerdetail)">
+                                    {{farmerdetail.farmerName | uppercase}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <table class="table
+                table-striped
+                table-bordered
+                dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                <tbody>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Farmer Name</th>
+                        <th>Farmers Agreement</th>
+                        <th>Acres</th>
+                        <th>Drip / NonDrip</th>
+                        <th>Select</th>
+                    </tr>
+                    <tr *ngFor="let farmerdetail of farmrAgreementDetails;let i = index">
+                        <ng-container>
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td>
+                                {{farmerdetail.farmerName}}
+                            </td>
+                            <td>
+                                {{(farmerdetail.farmersAggrementCode).slice(3)}}
+                            </td>
+                            <td>
+                                {{farmerdetail.farmerNoOfAcresArea}}
+                            </td>
+                            <td>
+                                {{farmerdetail.AgricultureDripNonDrip}}
+                            </td>
+                            <td>
+                                <mat-radio-button [value]="i" (change)="farmerSelected(farmerdetail)">
+                                </mat-radio-button>
+                            </td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<!--   -->
+<p-accordion>
+    <p-accordionTab header="Farming Details" [selected]="farmerDetailTabshow" [disabled]="!farmerDetailTabshow">
+        <div class="container-fluid" [formGroup]="FarmingDetailForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Area Name</span>
+                            <mat-select formControlName="AreaCode" class="form-control">
+                                <mat-option *ngFor="let harvestArea of exportDataModel.harvestArea"
+                                    [value]="harvestArea.areaId">
+                                    {{harvestArea.areaName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('AreaCode').value == null || FarmingDetailForm.get('AreaCode').value == '') && nextButtonClicked ">Please
+                                select area</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Farmer Name</span>
+                            <mat-select formControlName="FarmerCode" class="form-control">
+                                <mat-option *ngFor="let farmer of exportDataModel.farmerDetails"
+                                    [value]="farmer.farmerCode">
+                                    {{farmer.farmerName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('FarmerCode').value == null || FarmingDetailForm.get('FarmerCode').value == '') && nextButtonClicked ">Please
+                                select farmer</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Village</span>
+                            <mat-select formControlName="VillageCode" class="form-control">
+                                <mat-option *ngFor="let farmer of exportDataModel.farmerDetails"
+                                    [value]="farmer.villageCode">
+                                    {{vilageName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('VillageCode').value == null || FarmingDetailForm.get('VillageCode').value == '') && nextButtonClicked ">Please
+                                select village</small>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" *ngFor="let farmer of exportDataModel.farmerDetails">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Account Number</span>
+                            <input type="text" class="form-control" formControlName="AccountNumber"
+                                [value]="farmer.bankAccountNo">
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('AccountNumber').value == null || FarmingDetailForm.get('AccountNumber').value == '') && nextButtonClicked ">Please
+                                enter account number</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Harvest Area</span>
+                            <input type="text" class="form-control" formControlName="HarvestArea"
+                                [value]="farmer.noOfAcres">
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('HarvestArea').value == null || FarmingDetailForm.get('HarvestArea').value == '') && nextButtonClicked ">Please
+                                enter number of acres</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Crop Name</span>
+                            <mat-select formControlName="CropNameCode" class="form-control">
+                                <mat-option *ngFor="let crop of exportDataModel.crop" [value]="crop.CropCode">
+                                    {{crop.Name | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('CropNameCode').value == null || FarmingDetailForm.get('CropNameCode').value == '') && nextButtonClicked ">Please
+                                select crop name</small>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Seasion From/ To</span>
+                            <mat-select formControlName="SesionFrom" class="form-control">
+                                <mat-option *ngFor="let session of exportDataModel.sowingSessions"
+                                    [value]="session.psNumber">
+                                    {{session.sessionFrom | date: 'dd-MM-yyyy'}} /
+                                    {{session.sessionTo | date: 'dd-MM-yyyy'}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('SesionFrom').value == null || FarmingDetailForm.get('SesionFrom').value == '') && nextButtonClicked ">Please
+                                select session</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Date of Sowing</span>
+                            <input #sowingDate [matDatepicker]="sowingDate" class="form-control"
+                                formControlName="DateOfSowing" placeholder="DD-MM-YYYY"
+                                (dateChange)="onSowingDateSelect()">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="sowingDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #sowingDate>
+                            </mat-datepicker>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('DateOfSowing').value == null || FarmingDetailForm.get('DateOfSowing').value == '') && nextButtonClicked ">Please
+                                select a sowing date </small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Login UserName</span>
+                            <input type="text" class="form-control" formControlName="LoginUserName">
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('LoginUserName').value == null || FarmingDetailForm.get('LoginUserName').value == '') && nextButtonClicked ">Please
+                                select user name</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Farming Report Date</span>
+                            <input [matDatepicker]="farmingRepotDate" class="form-control"
+                                formControlName="FarmngReportDate" placeholder="DD-MM-YYYY"
+                                (dateChange)="onBlurFarmingformField()">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="farmingRepotDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #farmingRepotDate>
+                            </mat-datepicker>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('FarmngReportDate').value == null || FarmingDetailForm.get('FarmngReportDate').value == '') && nextButtonClicked ">Please
+                                select farming report date</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Name of Field Staff</span>
+                            <!-- <input type="text" class="form-control" formControlName="FieldStaff"> -->
+                            <mat-select formControlName="FieldStaff" class="form-control">
+                                <mat-option *ngFor="let staff of fieldStaffList" [value]="staff.employeeID"
+                                    (onSelectionChange)="selectedFieldStaff($event, staff)">
+                                    {{staff.employeeName | uppercase}}
+                                </mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('FieldStaff').value == null || FarmingDetailForm.get('FieldStaff').value == '') && nextButtonClicked ">Please
+                                select employee</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Package of Practice for</span>
+                            <mat-select formControlName="PckageOfPractice" class="form-control">
+                                <mat-option *ngFor="let hbomDiv of distinctHbomDivision"
+                                    [value]="hbomDiv.hbomDivisionFor"
+                                    (onSelectionChange)="filterAcrege($event, hbomDiv)">
+                                    {{hbomDiv.hbomDivisionFor}}</mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('PckageOfPractice').value == null || FarmingDetailForm.get('PckageOfPractice').value == '') && nextButtonClicked ">Please
+                                select Package of Practice for</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Practice / Acrege</span>
+                            <mat-select formControlName="PracticeAcrege" class="form-control">
+                                <mat-option *ngFor="let acrege of distinctAcrege"
+                                    [value]="acrege.hbomPracticePerAcerage"
+                                    (onSelectionChange)="onSelectAcrege($event, acrege)">
+                                    {{acrege.hbomPracticePerAcerage}}</mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('PracticeAcrege').value == null || FarmingDetailForm.get('PracticeAcrege').value == '') && nextButtonClicked ">Please
+                                select Practice / Acrege</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Farming Details</span>
+                            <textarea class="form-control" formControlName="FarmingDetail"
+                                (keyup)="onBlurFarmingformField()">
+                        </textarea>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('FarmingDetail').value == null || FarmingDetailForm.get('FarmingDetail').value == '') && nextButtonClicked ">Please
+                                enter farming details</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <span class="label-control">Remark</span>
+                            <textarea class="form-control" formControlName="Remark" (keyup)="onBlurFarmingformField()">
+                        </textarea>
+                            <small Class="form-text text-danger"
+                                *ngIf="(FarmingDetailForm.get('Remark').value == null || FarmingDetailForm.get('Remark').value == '') && nextButtonClicked ">Please
+                                enter remarks</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <table class="table
+                table-striped
+                table-bordered
+                dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                <tbody>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Phase Name</th>
+                        <th>Days / Harvest Details</th>
+                        <th>Material Details/ Trade Name</th>
+                        <th>Farming Details</th>
+                        <th>Select</th>
+                    </tr>
+                    <tr *ngFor="let data of farmingGridData; let i = index">
+                        <ng-container>
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td>
+                                {{data.harvestData.hsCropPhaseName}}
+                            </td>
+                            <td>
+                                {{data.harvestData.hsDayAfterSowingFrom}} /
+                                {{data.harvestData.hsDayAfterSowingTo}}
+                            </td>
+                            <td>
+                                {{data.hbomPractice.rawMaterialDetailsName}} /
+                                {{data.hbomPractice.hbomTradeName}}
+                            </td>
+                            <td>
+                                <span *ngIf="this.selectedRowIndex == i">
+                                    {{FarmingDetailForm.get('FarmingDetail').value}}
+                                </span>
+                            </td>
+                            <td>
+                                <mat-radio-button name="tblRadio" [value]="i" (change)="harvestDetailsSelected(i,data)">
+                                </mat-radio-button>
+                            </td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="button" label="Farmer Details" class="ui-button-rounded" [disabled]="dsblFrmrDetailBtn"
+            (click)="addFarmerDetails()" tabindex="-1"></button>
+        <button pButton #NextBtn type="button" label="Next" class="ui-button-rounded" [disabled]="dsblNextBtn"
+            (click)="nextClicked()"></button>
+        <button pButton #SaveBtn type="button" label="Save" class="ui-button-rounded" [disabled]="dsblSaveBtn"
+            (click)="saveClicked()"></button>
+        <button pButton type="button" label="Modify" class="ui-button-rounded" [disabled]="dsblModifyBtn"></button>
+        <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="reset()"></button>
+
+    </div>
+</div>

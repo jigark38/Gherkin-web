@@ -1,0 +1,96 @@
+<!-- selectionMode="single" [(selection)]="selectedObj" -->
+<div>
+    <p-table #dt [columns]="cols" [value]="data" scrollHeight="auto" [scrollable]="true" selectionMode="multiple" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [paginator]="true" [rows]="10" [(selection)]="selectedObj">
+        <!-- <ng-template pTemplate="caption">
+
+        <div class="ui-table-globalfilter-container">
+            {{caption}}
+            <input type="text" pInputText size="50" placeholder="Global Filter"
+                (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:250px;">
+        </div>
+    </ng-template> -->
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+
+                <th *ngIf="actions?.enabled" style="width: 80px; text-align: center;">
+                    {{actionsColName}}
+                </th>
+                <th *ngIf="autoIndexingEnabled" style="width: 80px; text-align: center;">Sl.No</th>
+                <!-- <th *ngIf="actions?.showCheckbox" style="width: 80px; text-align: center;">
+                Checkbox </th> -->
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col['width']? col['width']: '150px'">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex" let-columns="columns">
+            <tr [pSelectableRow]="data">
+
+                <td *ngIf="actions?.enabled" style="width: 80px; text-align: center;">
+                    <button *ngIf="actions.showEdit" pButton type="button" (click)="editClick(data)" style="background-color: #245ad2;" class="ui-button-success grid-icon" icon="pi pi-pencil">
+          </button>
+                    <button *ngIf="actions.showDelete" pButton type="button" (click)="showConfirm(data)" style="background-color:#dc3545" class="ui-button-success grid-icon" icon="pi pi-trash">
+          </button>
+                    <p-tableRadioButton *ngIf="actions?.showRadiobutton" [value]="data"></p-tableRadioButton>
+                    <mat-checkbox *ngIf="actions?.showCheckbox" [(ngModel)]="checked" (change)="toggleCheckBox($event)" [disabled]="disabled">
+                    </mat-checkbox>
+                </td>
+                <td *ngIf="autoIndexingEnabled" style="width: 80px; text-align: center;">{{rowIndex+1}}</td>
+                <td *ngFor="let col of columns" [style.width]="col['width']? col['width']: '150px'">
+                    <div *ngIf="col.type; then ifBlock else elseBlock"></div>
+                    <ng-template #ifBlock>
+                        <div *ngIf="col.type=='link'">
+                            <a class="grid-link" (click)="columnClick(col,data)">{{data[col.field]}}</a>
+                        </div>
+                        <div *ngIf="col.type=='contentEditable'">
+                            <input matInput type="text" (blur)="updateList(col.field,rowIndex,$event)" value="{{data[col.field]}}" />
+                        </div>
+                        <div *ngIf="col.type=='date'">
+                            {{data[col.field] | date: 'dd-MMM-yyyy'}}
+                        </div>
+                        <div *ngIf="col.type=='decimal'">
+                            {{data[col.field] | number : '1.2-2'}}
+                        </div>
+                    </ng-template>
+
+                    <ng-template #elseBlock>
+                        {{data[col.field]}}
+                    </ng-template>
+                </td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" *ngIf="cols?.length>0">
+            <tr>
+                <td [attr.colspan]="cols.length" style="color:inherit">
+                    No records found
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<!-- <p-confirmDialog [style]="{width: '50vw'}" [position]="'top'" [baseZIndex]="10000">
+</p-confirmDialog> -->
+<p-toast position="center" key="c" (onClose)="onReject()" [modal]="true" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+        <div>
+            <div style="text-align: center">
+                <!-- <i class="pi pi-trash" style="font-size: 3em"></i> -->
+                <h4>{{message.summary}}</h4>
+                <p style="margin:30px !important">{{message.detail}}</p>
+            </div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-6">
+                    <!-- <p-button icon="pi pi-check" label="Yes" (click)="onConfirm()"></p-button> -->
+                    <button type="button" icon="pi pi-check" pButton (click)="onConfirm()" label="Yes"></button>
+                </div>
+                <div class="ui-g-6">
+                    <button type="button" icon="pi pi-times" pButton label="No" (click)="onReject()"></button>
+                    <!-- <p-button icon="pi pi-times" label="No" (click)="onConfirm()"></p-button> -->
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

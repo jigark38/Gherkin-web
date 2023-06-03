@@ -1,0 +1,114 @@
+<p-accordion>
+    <p-accordionTab header="Organisation Details" [selected]="true">
+        <form [formGroup]="orgnisationForm" (ngSubmit)="addorUpdateOrganisation()">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Name of the Company</span>
+                            <input type="text" UpperCase maxlength="300" formControlName="organisationName" class="form-control">
+                            <span *ngIf="orgnisationForm.controls.organisationName.invalid && orgnisationForm.controls.organisationName.touched" class="error-span">
+                                Name of the Company
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Legal Status</span>
+                            <input type="text" UpperCase maxlength="25" formControlName="orgStatus" class="form-control">
+                            <span *ngIf="orgnisationForm.controls.orgStatus.invalid && orgnisationForm.controls.orgStatus.touched" class="error-span">
+                                Legal Status
+                                is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">ROC/Registration
+                                Number</span>
+                            <input type="text" maxlength="100" UpperCase formControlName="regCertificateDetails" class="form-control">
+                            <span *ngIf="orgnisationForm.controls.regCertificateDetails.invalid && orgnisationForm.controls.regCertificateDetails.touched" class="error-span">
+                                ROC/Registration
+                                is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Certification No.</span>
+                            <input type="text" UpperCase maxlength="200" formControlName="certificatationNo" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Other Certification
+                                Details</span>
+                            <input type="text" maxlength="200" formControlName="otherCertificateNo" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Org. Mail Id</span>
+                            <input type="text" maxlength="50" formControlName="orgMngEmailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" class="form-control">
+                            <span *ngIf="!orgnisationForm.controls.orgMngEmailId.value?.length
+                                && orgnisationForm.controls.orgMngEmailId.invalid && orgnisationForm.controls.orgMngEmailId.touched" class="error-span">
+                                Org Mail 
+                                is required field.</span>
+                            <span *ngIf="orgnisationForm.controls.orgMngEmailId.value?.length>0
+                            && orgnisationForm.controls.orgMngEmailId.errors 
+                            && orgnisationForm.controls.orgMngEmailId.errors.pattern" class="error-span">
+                            Org Mail is invalid
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Website</span>
+                            <input type="text" maxlength="100" formControlName="websiteDetails" class="form-control">
+                            <span *ngIf="!orgnisationForm.controls.websiteDetails.errors?.required && orgnisationForm.get('websiteDetails').invalid
+                                                                 && orgnisationForm.controls.websiteDetails.touched" class="error-span">{{orgnisationForm.get('websiteDetails').errors?.error}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="hidden" formControlName="orgCode" />
+                    </div>
+                </div>
+                <div class="row mgt-10">
+                    <div class="col-md-12">
+                        <button pButton type="button" label="Clear" (click)="clearOrgDetails()" class="ui-button-rounded pull-right"></button>
+                        <button pButton type="submit" label="{{mode}} Organisation" class="pull-right ui-button-rounded"></button>
+                    </div>
+                </div>
+
+                <div class="row mgt-20">
+                    <div class="col-md-12">
+                        <app-ng-grid [cols]="orgCols" [data]="organisationDetails" [actions]="actionParams" (editHandler)="editClick($event)" (linkHandler)="linkHandler($event)" (deleteHandler)="deleteClick($event)" [caption]="'Organisation List'">
+                        </app-ng-grid>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+<div class="mgt-20" *ngIf="selectedOrgCode">
+    <h4 class="first"> Organisation: {{selectedRow.organisationName}} </h4>
+    <p-tabView>
+        <p-tabPanel header="Organisation Management">
+            <app-management-details [orgId]="selectedOrgCode"></app-management-details>
+        </p-tabPanel>
+        <p-tabPanel header="Organisation Location">
+            <app-org-ofc-loc-details [orgId]="selectedOrgCode"></app-org-ofc-loc-details>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<p-toast [style]="{marginTop: '20px'}"></p-toast>
+
+
+
+
+
+
+
+
+

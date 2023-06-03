@@ -1,0 +1,468 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Purchase Management</a></li>
+        <li class="active"><span>Suppliers Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-accordionTab header="Suppliers
+        Details" [selected]="true">
+        <form [formGroup]="suppliersDetailsForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Entry*</span>
+                            <input matInput class="form-control border-bottom-1" formControlName="dateOfCreation" placeholder="Please Select Date of Entry" #dateOfCreation [matDatepicker]="dp">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dp>
+                            </mat-datepicker>
+                            <span *ngIf="suppliersDetailsForm.controls.dateOfCreation.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.dateOfCreation.touched" class="error-span">Date of Entry
+                is required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Login User Name*</span>
+                            <input type="text" class="form-control" placeholder="Please enter user name" formControlName="userName" maxlength="10">
+                            <span *ngIf="suppliersDetailsForm.controls.userName.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.userName.touched" class="error-span">Login User Name is
+                required field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" *ngIf="!isFindOrModify">
+                            <span class="label-control">Name of the Organisation*</span>
+                            <input type="text" class="form-control" placeholder="Please enter Organisation name" maxlength="100" formControlName="organisationName" (input)="suppliersDetailsForm.patchValue({organisationName: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.organisationName.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.organisationName.touched" class="error-span">Organisation
+                Name is required
+                field.
+              </span>
+                        </div>
+                        <div class="form-group" *ngIf="isFindOrModify">
+                            <span class="label-control">Select Organisation*</span>
+                            <input matInput #orgSelect class="form-control" maxlength="100" placeholder="Please Select Organisation" [matAutocomplete]="autoOrg" [formControl]="suppliersDetailsForm.controls.selectedOrg">
+                            <mat-autocomplete autoActiveFirstOption #autoOrg="matAutocomplete" (optionSelected)="organisationOptionSelected($event)">
+                                <mat-option *ngFor="let option of organisationList" [value]="option.organisationName">
+                                    {{option.organisationName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Legal Status*</span>
+                            <input type="text" class="form-control" placeholder="Please enter Legal Status" formControlName="legalStatus" maxlength="30" (input)="suppliersDetailsForm.patchValue({legalStatus: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.legalStatus.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.legalStatus.touched" class="error-span">Legal Status is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Address*</span>
+                            <input type="text" class="form-control" placeholder="Please enter address" maxlength="200" formControlName="address">
+                            <span *ngIf="suppliersDetailsForm.controls.address.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.address.touched" class="error-span">Address is required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Country*</span>
+                            <app-auto-complete [options]="countryOptionsList" placeholder="Please Select Country" (selectedValueChangeBlur)="countryValueChange($event)" [selectedValueFormControl]="suppliersDetailsForm.controls.country" (input)="suppliersDetailsForm.patchValue({country: $event.target.value.toUpperCase()})"
+                                (saveitemToList)="savesCountryToList($event)" [maxLength]="20"></app-auto-complete>
+                            <span *ngIf="suppliersDetailsForm.controls.country.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.country.touched" class="error-span">Country is required
+                field.
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">State*</span>
+                            <app-auto-complete [options]="stateOptionsList" placeholder="Please Select State" (selectedValueChangeBlur)="stateValueChange($event)" (input)="suppliersDetailsForm.patchValue({state: $event.target.value.toUpperCase()})" (saveitemToList)="saveStateToList($event)"
+                                [selectedValueFormControl]="suppliersDetailsForm.controls.state" [maxLength]="20">
+                            </app-auto-complete>
+                            <span *ngIf="suppliersDetailsForm.controls.state.errors?.required
+                                && suppliersDetailsForm.controls.state.touched" class="error-span">State is required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">District*</span>
+                            <app-auto-complete [options]="districtOptionsList" placeholder="Please Select District" (selectedValueChangeBlur)="districtValueChange($event)" (saveitemToList)="saveDistrictToList($event)" (input)="suppliersDetailsForm.patchValue({district: $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="suppliersDetailsForm.controls.district" [maxLength]="20">
+                            </app-auto-complete>
+                            <span *ngIf="suppliersDetailsForm.controls.district.errors?.required
+                                && suppliersDetailsForm.controls.district.touched" class="error-span">District is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Place / City*</span>
+                            <app-auto-complete [options]="placeOptionsList" placeholder="Please Select Place / City" (selectedValueChangeBlur)="placeValueChange($event)" (saveitemToList)="savePlaceToList($event)" (input)="suppliersDetailsForm.patchValue({place: $event.target.value.toUpperCase()})"
+                                [selectedValueFormControl]="suppliersDetailsForm.controls.place" [maxLength]="20">
+                            </app-auto-complete>
+                            <span *ngIf="suppliersDetailsForm.controls.place.errors?.required
+                                && suppliersDetailsForm.controls.place.touched" class="error-span">Place / City is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">PIN Code</span>
+                            <input type="text" class="form-control" placeholder="Please enter PIN Code" [maxLength]="6" formControlName="pinCode" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 ) ">
+                            <span *ngIf="suppliersDetailsForm.controls.pinCode.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.pinCode.touched" class="error-span">PIN Code is required
+                field.
+              </span>
+                            <span *ngIf="suppliersDetailsForm.controls.pinCode.errors?.maxLength
+                                &&
+                                suppliersDetailsForm.controls.pinCode.touched" class="error-span">PIN Code must be 6
+                digits
+                field.
+              </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Management Name</span>
+                            <input type="text" class="form-control" placeholder="Please enter Management Name" formControlName="mgmName" maxlength="50" (input)="suppliersDetailsForm.patchValue({mgmName: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.mgmName.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.mgmName.touched" class="error-span">Management Name is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Designation</span>
+                            <input type="text" class="form-control" placeholder="Please enter Designation" formControlName="designation" maxlength="30" (input)="suppliersDetailsForm.patchValue({designation: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.designation.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.designation.touched" class="error-span">Designation is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Mang. Contact Number</span>
+                            <input matInput type="text" placeholder="Please enter Mang. Contact Number" class="form-control" formControlName="mgmContactNumber" [maxLength]="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                            <span *ngIf="suppliersDetailsForm.controls.mgmContactNumber.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.mgmContactNumber.touched" class="error-span">Mang.
+                Contact Number is
+                required
+                field.
+              </span>
+                            <span *ngIf="suppliersDetailsForm.controls.mgmContactNumber.errors?.pattern
+                            &&
+                            suppliersDetailsForm.controls.mgmContactNumber.touched" class="error-span">Mang.
+                Contact Number can in a
+                format of
+                0XXXXXXXXXX.
+              </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Correspondance Mail ID</span>
+                            <input matInput type="text" placeholder="Please enter Correspondance Mail ID" class="form-control" formControlName="correspondanceMailID">
+                            <span *ngIf="suppliersDetailsForm.controls.correspondanceMailID.errors?.pattern
+                            &&
+                            suppliersDetailsForm.controls.correspondanceMailID.touched" class="error-span">Mang.
+                Correspondance Mail ID must be a valid email
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Alt. Correspondance Mail ID</span>
+                            <input matInput type="text" placeholder="Please enter Alt. Correspondance Mail ID" class="form-control" formControlName="altCorrespondanceMailID">
+                            <span *ngIf="suppliersDetailsForm.controls.altCorrespondanceMailID.errors?.pattern
+                            &&
+                            suppliersDetailsForm.controls.altCorrespondanceMailID.touched" class="error-span">
+                Alt. Correspondance Mail ID must be a valid email
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Contact Person</span>
+                            <input matInput type="text" placeholder="Please enter Contact Person" class="form-control" formControlName="cP" (input)="suppliersDetailsForm.patchValue({cP: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.cP.errors?.required
+                                && suppliersDetailsForm.controls.cP.touched" class="error-span">Contact Person Name is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Designation</span>
+                            <input type="text" class="form-control" placeholder="Please enter Designation" formControlName="cPDesignation" (input)="suppliersDetailsForm.patchValue({cPDesignation: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.cPDesignation.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.cPDesignation.touched" class="error-span">Designation is
+                required
+                field.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Contact Person No</span>
+                            <input type="text" class="form-control" placeholder="Please enter Contact Person No" formControlName="cPNumber" [maxLength]="13" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                            <span *ngIf="suppliersDetailsForm.controls.cPNumber.errors?.pattern
+                            &&
+                            suppliersDetailsForm.controls.cPNumber.touched" class="error-span">Contact Person No can in
+                a
+                format of
+                0XXXXXXXXXX.
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Mail ID</span>
+                            <input type="text" class="form-control" placeholder="Please enter Mail ID" formControlName="cPMailID">
+                            <span *ngIf="suppliersDetailsForm.controls.cPMailID.errors?.pattern 
+                                &&
+                                suppliersDetailsForm.controls.cPMailID.touched" class="error-span">Mail ID is not
+                valid email.
+              </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Office Number</span>
+                            <input type="text" class="form-control" placeholder="Please enter Office Number" formControlName="officeNumber" [maxLength]="13" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                            <span *ngIf="suppliersDetailsForm.controls.officeNumber.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.officeNumber.touched" class="error-span">Office Number is
+                required
+                field.
+              </span>
+                            <span *ngIf="suppliersDetailsForm.controls.officeNumber.errors?.pattern
+                            &&
+                            suppliersDetailsForm.controls.officeNumber.touched" class="error-span">Office Numbe can in
+                a
+                format of
+                0XXXXXXXXXX.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Activity*</span>
+                            <mat-select class="form-control" #activityMatSelect formControlName="activity" placeholder="Please Select Activity Under">
+                                <mat-option value='Manufacturer'>Manufacturer</mat-option>
+                                <mat-option value='Trader'>Trader</mat-option>
+                            </mat-select>
+                            <span *ngIf="suppliersDetailsForm.controls.activity.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.activity.touched" class="error-span">Activity is required
+                field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">GST No*</span>
+                            <input type="text" class="form-control" placeholder="Please enter GST Number" formControlName="gSTNo" [maxLength]="15" (focusout)="onFocusOut()" (input)="suppliersDetailsForm.patchValue({gSTNo: $event.target.value.toUpperCase()})">
+                            <span *ngIf="suppliersDetailsForm.controls.gSTNo.errors?.required
+                                && suppliersDetailsForm.controls.gSTNo.touched" class="error-span">GST Number is
+                required field.
+              </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Website</span>
+
+                            <input type="text" class="form-control" placeholder="Please enter Website" formControlName="website">
+                            <span *ngIf="suppliersDetailsForm.controls.website.errors?.required
+                                &&
+                                suppliersDetailsForm.controls.website.touched" class="error-span">Website is not a
+                valid.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">License No</span>
+                            <input type="text" class="form-control" placeholder="Please enter License Number" formControlName="licenseNo">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <p-accordionTab header="Bank Account" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Name of the Bank</span>
+                                <input type="text" class="form-control" placeholder="Please enter Name of the Bank" formControlName="bankName" (input)="suppliersDetailsForm.patchValue({bankName: $event.target.value.toUpperCase()})">
+                                <span *ngIf="suppliersDetailsForm.controls.bankName.errors?.required
+                                    &&
+                                    suppliersDetailsForm.controls.bankName.touched" class="error-span">Bank Name is not
+                  a valid.
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Branch Name</span>
+                                <input type="text" class="form-control" placeholder="Please enter Branch Name" formControlName="bankBranch" (input)="suppliersDetailsForm.patchValue({bankBranch: $event.target.value.toUpperCase()})">
+                                <span *ngIf="suppliersDetailsForm.controls.bankBranch.errors?.required
+                                    &&
+                                    suppliersDetailsForm.controls.bankBranch.touched" class="error-span">Branch Name is
+                  not a
+                  valid.
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Account Number</span>
+                                <input type="text" class="form-control" placeholder="Please enter Account Number" formControlName="bankACNumber" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46 )">
+                                <span *ngIf="suppliersDetailsForm.controls.bankACNumber.errors?.required
+                                    &&
+                                    suppliersDetailsForm.controls.bankACNumber.touched" class="error-span">Account
+                  Number is not a
+                  valid.
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">IFS Code</span>
+                                <input type="text" class="form-control" placeholder="Please enter IFS Code" formControlName="bankIFSC" [maxLength]="15" (input)="suppliersDetailsForm.patchValue({bankIFSC: $event.target.value.toUpperCase()})">
+                                <span *ngIf="suppliersDetailsForm.controls.bankIFSC.errors?.required
+                                    &&
+                                    suppliersDetailsForm.controls.bankIFSC.touched" class="error-span">IFS Code is not
+                  a valid.
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Approved By</span>
+                                <input type="text" class="form-control" placeholder="Please enter Name of Approver" formControlName="approvedBy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Suppliers
+                Document" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Name of the Document</span>
+                                <input type="text" #document class="form-control" placeholder="Please enter Name of the Document" formControlName="document">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Document Upload</span>
+                                <input type="file" class="form-control" formControlName="documentPath" accept="application/pdf, image/jpeg,
+                                    image/png" (change)="onFileChange($event)">
+                                <span *ngIf="isFileError" class="error-span">Please
+                  upload file type of jpeg/png/pdf.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Supplier
+        Document List" [selected]="true">
+        <div class="container-fluid">
+            <table class="table table-striped table-bordered
+                dt-responsive nowrap" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                <tbody>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name of the Document</th>
+
+                    </tr>
+                    <tr *ngFor="let document of documentList; let i=
+                        index">
+                        <td>
+                            <span>{{i+1}}</span>
+                        </td>
+                        <td>
+
+                            <a class="text-deco-underline" (click)="downloadFile(document)">{{document.supplierDocumentName}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </p-accordionTab>
+    <div class="mgt-20 pull-right">
+        <button pButton type="submit" [disabled]="disableNewButton" (click)="onNewClick()" label="Add
+            Supplier" class="ui-button-rounded"></button>
+        <button pButton type="submit" #saveBtn [disabled]="disableSaveButton || !suppliersDetailsForm.valid" (click)="saveSupplier()" label="Save" class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableFindButton" label="Find" (click)="onFindClick()" class="ui-button-rounded"></button>
+        <button pButton type="submit" [disabled]="disableModifyButton" label="Modify" (click)="onModifyClick()" class="ui-button-rounded"></button>
+        <button pButton type="submit" label="Clear" (click)="onClearClick()" class="ui-button-rounded"></button>
+    </div>
+</p-accordion>

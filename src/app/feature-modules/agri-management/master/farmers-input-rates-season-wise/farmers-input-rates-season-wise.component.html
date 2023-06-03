@@ -1,0 +1,335 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management </a></li>
+        <li class="active"><span>Farmers Input Rates Season Wise</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height"></div>
+<p-accordion>
+    <p-accordionTab header="Farmers Input Rates Season Wise" class="card" [selected]="true">
+        <div class="">
+            <!-- <div class="card-header bg-blue">
+                Farmers Input Rates Season Wise
+            </div> -->
+            <div class="card-body">
+                <form [formGroup]="FarmerInputRatesSeasonWiseForm">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                <div class=" form-group">
+                                    <span class="label-control">Login User Name</span>
+                                    <input type="text" placeholder="Login User Name" class="form-control mb-1"
+                                        readonly="readonly" formControlName="LoginUserName">
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.LoginUserName.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.LoginUserName.errors?.required && FarmerInputRatesSeasonWiseForm.controls.LoginUserName.touched) "
+                                        class="error-span">Login user name is required.</span>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class=" form-group">
+                                    <span class="label-control"> Date of Entry </span>
+                                    <input matInput class="form-control border-bottom-1 mb-1" #dateOfEntry
+                                        formControlName="DateOfEntry" placeholder="Please Select Date Of Entry"
+                                        tabindex="1" [matDatepicker]="eDate">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #eDate>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.DateOfEntry.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.DateOfEntry.errors?.required && FarmerInputRatesSeasonWiseForm.controls.DateOfEntry.touched) "
+                                        class="error-span">Date of entry is required field.</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Approved By</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select" tabindex="2"
+                                        (selectionChange)="changeApprovedBy($event)" formControlName="ApprovedBy">
+                                        <mat-option *ngFor="let employee of ddlApprovedBy"
+                                            [value]="employee.employeeId">{{employee.employeeName}}</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.ApprovedBy.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.ApprovedBy.errors?.required && FarmerInputRatesSeasonWiseForm.controls.ApprovedBy.touched) "
+                                        class="error-span">Approved By is required field.</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Group</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select Crop Group"
+                                        tabindex="3" #cropGroup (selectionChange)="changeCroupGroup($event)"
+                                        formControlName="CroupGroup">
+                                        <mat-option *ngFor="let croupGroup of ddlCroupGroup"
+                                            [value]="croupGroup.cropGroupCode">
+                                            {{croupGroup.cropGroupName}}</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.CroupGroup.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.CroupGroup.errors?.required && FarmerInputRatesSeasonWiseForm.controls.CroupGroup.touched) "
+                                        class="error-span">Crop Group is required field.</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Name</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select Crop Name"
+                                        tabindex="5" (selectionChange)="changeCroupName($event)"
+                                        formControlName="CroupName">
+                                        <mat-option *ngFor="let croupName of ddlCroupName"
+                                            [value]="croupName.cropNameCode">
+                                            {{croupName.name}}</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.CroupName.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.CroupName.errors?.required && FarmerInputRatesSeasonWiseForm.controls.CroupName.touched) "
+                                        class="error-span">Croup Name is required field.</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Season From / To</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select Season From / To"
+                                        tabindex="6" (selectionChange)="changeSeasonFromTo($event)"
+                                        formControlName="SeasonFromTo">
+                                        <mat-option *ngFor="let season of ddlSeasonFromTo" [value]="season.psNumber">
+                                            {{season.seasonFrom | date: 'dd-MMM-yyyy'}} /
+                                            {{season.seasonTo | date: 'dd-MMM-yyyy'}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.SeasonFromTo.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.SeasonFromTo.errors?.required && FarmerInputRatesSeasonWiseForm.controls.SeasonFromTo.touched) "
+                                        class="error-span">Season From / To is required field.</span>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <div class=" form-group">
+                                    <span class="label-control"> Effective Date </span>
+                                    <input matInput class="form-control border-bottom-1 mat-select-placeholder mb-1"
+                                        tabindex="7" formControlName="EffectiveDate" #effectiveDate
+                                        placeholder="Please Select Loan Requested Date" [matDatepicker]="sDate">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="sDate">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #sDate>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.EffectiveDate.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.EffectiveDate.errors?.required && FarmerInputRatesSeasonWiseForm.controls.EffectiveDate.touched) "
+                                        class="error-span">Effective Date is required field.</span>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Country</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select Country"
+                                        tabindex="8" (selectionChange)="changeCountry($event)"
+                                        formControlName="Country">
+                                        <mat-option *ngFor="let country of ddlCountry" [value]="country">
+                                            {{country.countryName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.Country.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.Country.errors?.required && FarmerInputRatesSeasonWiseForm.controls.Country.touched) "
+                                        class="error-span">Country is required field.</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">State</span>
+                                    <mat-select class="form-control mb-1" placeholder="Please Select State" tabindex="9"
+                                        (selectionChange)="changeState($event)" formControlName="State">
+                                        <mat-option *ngFor="let state of ddlState" [value]="state">
+                                            {{state.stateName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="(FarmerInputRatesSeasonWiseForm.controls.State.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.State.errors?.required && FarmerInputRatesSeasonWiseForm.controls.State.touched) "
+                                        class="error-span">State is required field.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Area Details" class="card" [selected]="true">
+        <div class="">
+            <!-- <div class="card-header bg-blue">
+        Area Details
+    </div> -->
+            <div class="card-body" [ngClass]="findMode?'disableTab':''">
+                <div class=" col-md-12 cleartop">
+                    <table class="table table-striped table-bordered dt-responsive nowrap mt-2" cellspacing="0"
+                        [ngClass]="findMode?'disableTab':''" cellpadding="4" id="grdOrganizations">
+                        <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Country</th>
+                                <th>State</th>
+                                <th>Area Name</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="selectedState">
+                            <ng-container *ngFor="let area of Areas; let i = index">
+                                <tr *ngIf="AreaMin <= i && AreaMax > i">
+                                    <td class="text-align-center">
+                                        <span>{{i+1}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <!-- <span *ngIf="i==0">{{selectedCountry}}</span>
+                                        <span *ngIf="i>1"></span> -->
+                                        <span>{{area.countryName}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <!-- <span *ngIf="i==0">{{selectedState}}</span>
+                                        <span *ngIf="i>0"></span> -->
+                                        <span>{{area.stateName}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span>{{area.areaName}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <mat-checkbox [(ngModel)]="area.isSelected"></mat-checkbox>
+                                    </td>
+
+
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <p-paginator [rows]="10" [totalRecords]="Areas.length" (onPageChange)="AreaPaginate($event)">
+                    </p-paginator>
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+<!-- 
+<div class="col-md-4">
+    <div class="form-group" [formGroup]="FarmerInputRatesSeasonWiseForm">
+        <span class="label-control">Material Group</span>
+        <mat-select class="form-control mb-1" placeholder="Please Select Material Group" formControlName="MaterialGroup"
+            (selectionChange)="changeMaterialGroup($event)">
+            <mat-option value="YES">YES</mat-option>
+            <mat-option value="NO">NO</mat-option>
+        </mat-select>
+        <span
+            *ngIf="(FarmerInputRatesSeasonWiseForm.controls.State.errors?.required && submitted) || (FarmerInputRatesSeasonWiseForm.controls.State.errors?.required && FarmerInputRatesSeasonWiseForm.controls.State.touched) "
+            class="error-span">Material Group    is required field.</span>
+    </div>
+</div> -->
+
+
+
+<p-accordion>
+    <p-accordionTab header="Material Details" class="card" [selected]="true">
+        <div class=" ">
+            <!-- <div class="card-header bg-blue">
+        Material Details
+    </div> -->
+            <div class="card-body">
+                <div class=" col-md-12 cleartop">
+                    <table class="table table-striped table-bordered dt-responsive nowrap mt-2" cellspacing="0"
+                        [ngClass]="findMode?'disableTab':''" cellpadding="4" id="grdOrganizations">
+                        <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Material Group</th>
+                                <th>Material Name</th>
+                                <th>UOM</th>
+                                <th>Previous Season Rate</th>
+                                <th>Applicable Season Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="selectedState">
+                            <ng-container *ngFor="let material of Materials; let i = index">
+                                <tr *ngIf="MaterialMin <= i && MaterialMax > i">
+                                    <td class="text-align-center">
+                                        <span>{{i+1}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span>{{material.rawMaterialGroupName}}</span>
+                                        <!--<span *ngIf="i==0">{{material.rawMaterialGroupName}}</span>
+                                         <span *ngIf="i>0">
+                                            <span
+                                                *ngIf="Materials[i].rawMaterialGroupName != Materials[i-1].rawMaterialGroupName">{{material.rawMaterialGroupName}}</span>
+                                            <span
+                                                *ngIf="(Materials[i].rawMaterialGroupName == Materials[i-1].rawMaterialGroupName) && (i == MaterialMin)">{{material.rawMaterialGroupName}}</span></span> -->
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span>{{material.rawMaterialDetailsName}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span>{{material.rawMaterialUOM}}</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span>-</span>
+                                    </td>
+                                    <td class="text-align-center">
+                                        <span><input type="string" pattern="^\d+(\.\d{1,2})?$" maxlength="10"
+                                                class="form-control" [(ngModel)]="material.applicableRate"
+                                                placeholder="" /></span>
+                                        <span *ngIf="false" class="error-span">Season From / To is required
+                                            field.</span>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <p-paginator [rows]="10" [totalRecords]="Materials.length"
+                        (onPageChange)="MaterialPaginate($event)">
+                    </p-paginator>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="pull-right">
+
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+
+            <button pButton type="submit" label="Farmers Material Rates" class="ui-button-rounded" tabindex="14"
+                [disabled]="disableNew" (click)="newFarmerMaterialRates()"></button>
+            <button pButton type="submit" label="Save" class="ui-button-rounded"
+                [disabled]="disableSave || FarmerInputRatesSeasonWiseForm.invalid" (click)="save()"
+                tabindex="10"></button>
+            <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="disableFind" tabindex="11"
+                (click)="find()"></button>
+            <button pButton type="submit" label="Modify" class="ui-button-rounded" [disabled]="disableModify"
+                tabindex="12" (click)="modify()"></button>
+            <button pButton type="submit" label="Clear" class="ui-button-rounded" (click)="clear()"
+                tabindex="13"></button>
+
+        </div>
+    </div>
+</div>

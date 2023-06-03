@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-lg-10">
+        <h5>Search Criteria</h5>
+    </div>
+    <div class="col-lg-2 cursor-pointer" (click)="onNoClick()">
+        <mat-icon>close</mat-icon>
+    </div>
+</div>
+<div class="row" [formGroup]="searchForm">
+    <div class="col-md-4">
+        <div class="form-group">
+            <span class="label-control">From Date</span>
+            <input matInput class="form-control border-bottom-1" formControlName="fromDate"
+                placeholder="Please Select From Date" [matDatepicker]="fromDateField">
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="fromDateField">
+            </mat-datepicker-toggle>
+            <mat-datepicker #fromDateField>
+            </mat-datepicker>
+            <span *ngIf="searchForm.controls.fromDate.errors?.required && searchForm.controls.fromDate.touched"
+                class="error-span">From Date
+                is
+                required field.</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <span class="label-control">To Date</span>
+            <input matInput class="form-control border-bottom-1" formControlName="toDate"
+                placeholder="Please Select To Date" [matDatepicker]="toDateField">
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="toDateField">
+            </mat-datepicker-toggle>
+            <mat-datepicker #toDateField>
+            </mat-datepicker>
+            <span *ngIf="searchForm.controls.toDate.errors?.required && searchForm.controls.toDate.touched"
+                class="error-span">To Date
+                is
+                required field.</span>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="isNoRecordFound">
+    <div class="col-md-6">
+        <span class="error-span">No Data Exists as requested dates.</span>
+    </div>
+</div>
+<div class="row pad-lf-15 pad-tp-20">
+    <!-- <button mat-button (click)="onYesClick()">Yes</button>
+    <button mat-button  >No</button> -->
+
+    <input type="submit" value="Search" (click)="onSearch()" class="btn btn-info">
+    <!-- <input type="submit" value="No" (click)="onNoClick()" class="btn btn-info"> -->
+</div>

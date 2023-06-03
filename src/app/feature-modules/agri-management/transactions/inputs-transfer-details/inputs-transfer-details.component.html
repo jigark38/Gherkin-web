@@ -1,0 +1,382 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#"> Agri Management</a></li>
+        <li class="active"><span>Feed & Input Transfer</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-accordionTab header="Feed & Input Transfer" [selected]="true">
+        <div class="container-fluid">
+            <form #form="ngForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Transfer Date</span>
+                            <!-- <input type="datetime-local" class="form-control" data-format="DD/MMM/YYYY" /> -->
+                            <input [matDatepicker]="transferDate" class="form-control"
+                                placeholder="Select Transfer Date" [(ngModel)]="feedTransfer.TransferDate"
+                                [disabled]="disableFields" name="FeedTransferDate" #FeedTransferDate="ngModel" required>
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="transferDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #transferDate>
+                            </mat-datepicker>
+
+                            <span *ngIf="FeedTransferDate.touched && !FeedTransferDate.valid && !disableFields"
+                                class="text-danger">
+                                Date is required **
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Transfer No</span>
+                                <input matInput type="text" class="form-control" placeholder="Select Transfer No"
+                                    [(ngModel)]="feedTransfer.TransferNumber" name="TransferNo" #TransferNo="ngModel"
+                                    disabled required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">From UNIT</label>
+                                <mat-select placeholder="Please select From UNIT" class="form-control"
+                                    [(ngModel)]="feedTransfer.OrgOfficeNo" name="FromUnit" [disabled]="disableFields">
+                                    <mat-option *ngFor="let ld of locationDetails" [value]="ld.OrgCode">
+                                        {{ld.OrgOfficeName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Area Name</label>
+                                <mat-select placeholder="Please select Area Name" class="form-control"
+                                    [(ngModel)]="feedTransfer.AreaID" (selectionChange)="onChangeAreaName()"
+                                    name="AreaID" #AreaID="ngModel" [disabled]="disableFields" required>
+                                    <mat-option *ngFor="let area of allAreas" [value]="area.areaId">
+                                        {{area.areaName}}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="AreaID.touched && !AreaID.valid && !disableFields" class="text-danger">
+                                    Area Name is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Area Code</label>
+                                <input matInput type="number" class="form-control" placeholder="Area Code"
+                                    [(ngModel)]="feedTransfer.areaCode" name="AreaCode" #AreaCode="ngModel" disabled>
+                                <span *ngIf="AreaCode.touched && !AreaCode.valid" class="text-danger">
+                                    Area Code is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Area Incharge</label>
+                                <input matInput type="text" class="form-control" placeholder="Area Incharge"
+                                    [(ngModel)]="feedTransfer.areaIncharge" name="AreaIncharge" #AreaIncharge="ngModel"
+                                    disabled>
+                                <span *ngIf="AreaIncharge.touched && !AreaIncharge.valid" class="text-danger">
+                                    Area Incharge is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Crop Group</label>
+                                <mat-select placeholder="Please select Crop Group" class="form-control"
+                                    [(ngModel)]="feedTransfer.CropGroupCode" (selectionChange)="getCropNameCodeList()"
+                                    name="CropGroupCode" #CropGroupCode="ngModel" [disabled]="disableFields" required>
+                                    <mat-option *ngFor="let cg of cropGroup" [value]="cg.CropGroupCode">{{cg.Name}}
+                                    </mat-option>
+                                </mat-select>
+
+                                <span *ngIf="CropGroupCode.touched && !CropGroupCode.valid && !disableFields"
+                                    class="text-danger">
+                                    Crop Group is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Crop Name</label>
+                                <mat-select placeholder="Please select Crop Name" class="form-control"
+                                    [(ngModel)]="feedTransfer.CropNameCode" (selectionChange)="getSeasonDetails()"
+                                    name="CropNameCode" #CropNameCode="ngModel" [disabled]="disableFields" required>
+                                    <mat-option *ngFor="let cropName of cropNameList" [value]="cropName.cropNameCode">
+                                        {{cropName.name}}</mat-option>
+                                </mat-select>
+
+                                <span *ngIf="CropNameCode.touched && !CropNameCode.valid && !disableFields"
+                                    class="text-danger">
+                                    Crop Name is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Season From / To</label>
+                            <mat-select placeholder="Please select Season From / To" class="form-control"
+                                [(ngModel)]="feedTransfer.PsNumber" (selectionChange)="getCropCount()" name="PSNumber"
+                                #PSNumber="ngModel" [disabled]="disableFields" required>
+                                <mat-option *ngFor="let season of seasonList" [value]="season.psNumber">
+                                    {{season.seasonFrom | date:'dd-MMM-yyyy'}} /
+                                    {{season.seasonTo | date:'dd-MMM-yyyy'}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="PSNumber.touched && !PSNumber.valid && !disableFields" class="text-danger">
+                                Season From / To is required **
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Agreement Acres</label>
+                            <input matInput type="text" class="form-control" placeholder="Agreement Acres"
+                                [(ngModel)]="feedTransfer.agreementAcres" name="AgreementAcres"
+                                #AgreementAcres="ngModel" disabled required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Outward Gate Pass No</label>
+                            <input matInput type="text" class="form-control" placeholder="Outward Gate Pass No"
+                                [(ngModel)]="feedTransfer.gatePassDetails.ogpNo" name="OutwardGatePassNo"
+                                #OutwardGatePassNo="ngModel" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Gate Pass Date</label>
+                                <input [matDatepicker]="gatePassDate" class="form-control" placeholder="Gate Pass Date"
+                                    [(ngModel)]="feedTransfer.gatePassDetails.ogpDate" name="GatePassDate"
+                                    #GatePassDate="ngModel" [disabled]="disableFields" required>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="gatePassDate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #gatePassDate>
+                                </mat-datepicker>
+
+                                <span *ngIf="GatePassDate.touched && !GatePassDate.valid && !disableFields"
+                                    class="text-danger">
+                                    Gate Pass Date is required **
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Remarks</label>
+                            <textarea pInputTextarea class="form-control" [(ngModel)]='feedTransfer.InutTransferRemarks'
+                                name="Remarks" placeholder="Enter Remarks" [disabled]="disableFields"
+                                required></textarea>
+                            <!-- <span *ngIf="InputTransferRemarks.touched && !InputTransferRemarks.valid"
+                                class="text-danger">
+                                <span *ngIf="InputTransferRemarks.errors?.required"> Remarks is required ** </span>
+                            </span> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" [hidden]="!showMatDDL">
+                        <div class="form-group">
+                            <label class="label-control">Material Group</label>
+                            <mat-select class="form-control" #MaterialGroup placeholder="Please Select Material Group"
+                                (selectionChange)="onChangeMaterialGroup($event)" required>
+                                <ng-container>
+                                    <mat-option *ngFor="let item of materialGroups"
+                                        [value]="item.Raw_Material_Group_Code">
+                                        {{item.Raw_Material_Group}}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4" [hidden]="!showMatDDL">
+                        <div class="form-group">
+                            <label class="label-control">Material Name</label>
+                            <mat-select class="form-control" #MaterialName placeholder="Please Select Material Name"
+                                (selectionChange)="onChangeMaterialName($event)" required>
+                                <ng-container>
+                                    <mat-option *ngFor="let item of materialNames"
+                                        [value]="item.Raw_Material_Details_Code">
+                                        {{item.Raw_Material_Details_Name}}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div style="height: 28px;"></div>
+<p-accordion>
+    <p-accordionTab header="Transfer Details" [selected]="true">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <p-table #dtMaterial [columns]="materialCols" [value]="feedTransfer.transferDetailsList"
+                        selectionMode="single" [(selection)]="selectedMaterial" (onRowSelect)="onRowSelected($event)">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th style="width: 10em" [pSortableColumn]="col.field" *ngFor="let col of columns">
+                                    {{col.header}}
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-material let-columns="columns" let-rowIndex="rowIndex">
+                            <tr [pSelectableRow]="material">
+                                <!-- <td *ngFor="let col of columns" style="text-align:right;">
+                                    {{material[col.field]}}
+                                </td> -->
+                                <td>
+                                    {{material.hbOMDivisonFor}}
+                                </td>
+                                <td>
+                                    {{material.rawMaterialGroup}}
+                                </td>
+                                <td>
+                                    {{material.RawMaterialDetailsName}}
+                                </td>
+                                <td>
+                                    {{material.popStdperUOM}}
+                                </td>
+                                <td>
+                                    {{material.qtyRequired}}
+                                </td>
+                                <td>
+                                    {{material.transferredTillDate}}
+                                </td>
+                                <td>
+                                    {{material.tobeIssueQty}}
+                                </td>
+                                <td>
+                                    {{material.transferQty}}
+                                </td>
+                                <td>
+                                    {{material.transferAmount}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="2" style="text-align:left">No Material Information found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div style="height: 28px;"></div>
+<p-accordion>
+    <p-accordionTab header="Stock & Batch Details - {{selectedMaterialName}}" [selected]="true">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <p-table #dtStock [columns]="stockCols" [value]="feedTransfer.stockAndBatchData"
+                        [(selection)]="selectedStocks" dataKey="batchNoAndDate"
+                        (onEditComplete)="onEditComplete($event)">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th style="width: 45px;">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 17em" [pSortableColumn]="col.field" *ngFor="let col of columns">
+                                    {{col.header}}
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-stock let-rowIndex>
+                            <tr>
+                                <td style="width: 45px;">
+                                    <p-tableCheckbox [value]="stock" (click)="onSelectionChange($event)">
+                                    </p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{stock.batchNoAndDate}}
+                                </td>
+                                <td>
+                                    {{stock.avaialableStockQty}}
+                                </td>
+                                <td [pEditableColumn]="stock" [pEditableColumnField]="'issueQty'">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="stock.issueQty" required>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{stock.issueQty}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td style="text-align:right;">
+                                    {{stock.rate}}
+                                </td>
+                                <td style="text-align:right;">
+                                    {{stock.amount | number}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="2" style="text-align:left">No Stock Information found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="submit" label="Material Transfer" (click)="newMaterialClick()" class="ui-button-rounded"
+            [disabled]="newMatDisabled"></button>
+        <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="saveDetails()"
+            [disabled]="saveDisabled"></button>
+        <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="findDisabled"></button>
+        <button pButton type="submit" label="Modify" class="ui-button-rounded" [disabled]="modifyDisabled"></button>
+        <button pButton type="submit" label="Clear" (click)="resetForm()" class="ui-button-rounded"></button>
+    </div>
+</div>
+
+<jw-modal id="ChangeMaterial">
+    <h6>Do you want to change Material?</h6>
+    <div class="row pull-right bottom-right">
+        <input type="button" class="btn btn-info" #YesBtn (click)="openChangeMaterial();" value="Yes" />
+        <input type="button" class="btn btn-info" (click)="onNoClick();" value="No" />
+    </div>
+</jw-modal>

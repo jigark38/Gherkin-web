@@ -1,0 +1,32 @@
+<!-- <h1 mat-dialog-title class="text-center">Practice Material</h1>
+<mat-dialog-content class="text-center">
+    <p class="pdd-top-10 pdd-btm-20">"Do you want continue</p>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="10px">
+    <button mat-stroked-button color="primary" cdkFocusInitial [mat-dialog-close]="1"
+        class="mat-stroked-button mat-primary">Same Day</button>
+    <button mat-flat-button [mat-dialog-close]="2" class="mat-flat-button mat-primary">Change Day</button>
+    <button mat-stroked-button color="primary" cdkFocusInitial [mat-dialog-close]="3"
+    class="mat-stroked-button mat-primary">Change Phase</button>
+<button mat-flat-button [mat-dialog-close]="4" class="mat-flat-button mat-primary">"Complete</button>
+</mat-dialog-actions> -->
+
+<div class="row">
+    <div class="col-lg-10">
+        <h5>Practice Material</h5>
+    </div>
+    <div class="col-lg-2 cursor-pointer" [mat-dialog-close]="false">
+        <mat-icon>close</mat-icon>
+    </div>
+</div>
+<div class="row pad-lf-15">
+    <label>Do You Want to add more Records</label>
+    <br>
+    <br>
+</div>
+<div class="row pad-lf-15 pad-tp-20">
+    <input type="submit" value="Same Day" [mat-dialog-close]="1" class="btn btn-info">
+    <input type="submit" value="Change Day" [mat-dialog-close]="2" class="btn btn-info">
+    <input type="submit" value="Change Phase" [mat-dialog-close]="3" class="btn btn-info">
+    <input type="submit" value="Complete" [mat-dialog-close]="4" class="btn btn-info">
+</div>

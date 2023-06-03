@@ -1,0 +1,372 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Production Process Filling & Ware House Division</a></li>
+    <li class="active"><span>Batch Production Preparation Details</span></li>
+  </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+  <p-tabView [activeIndex]="tabIndex" (onChange)="onTabChange($event)">
+    <p-tabPanel header="Sales Order Details">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Unit</span>
+              <mat-select class="form-control" (selectionChange)="unitSelected($event)" placeholder="Please Select Unit"
+                          #unitNameDDL>
+                <mat-option [value]="option.OrgOfficeNo" *ngFor="let option of ddlUnit">
+                  {{option.OrgOfficeName}}
+                </mat-option>
+              </mat-select>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-accordionTab header="Greens Received Details" [selected]="true">
+        <div class="container-fluid">
+          <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                 cellpadding="4">
+            <tbody>
+              <tr>
+                <th>Sl.No</th>
+                <th>GRN Date</th>
+                <th>GRN No</th>
+                <th>Crop Name</th>
+                <th>Location</th>
+                <th>Grades</th>
+                <th>Quantity</th>
+                <th>Process Stage</th>
+                <th>Select</th>
+              </tr>
+              <tr *ngFor="let data of greensRecievedDetails; let i = index">
+                <ng-container>
+                  <td>{{i}}</td>
+                  <td>{{data.harvestGRNDate | date:'dd/MM/yyyy'}}</td>
+                  <td>{{data.harvestGRNNo}}</td>
+                  <td>{{data.cropName}}</td>
+                  <td>{{data.areaName}}</td>
+                  <td>{{data.grades}}</td>
+                  <td>{{data.QuantityAfterGradingTotal}}</td>
+                  <td>-</td>
+                  <td>
+                    <input type="checkbox" [(ngModel)]="data.isSelected" name="ta_list" (change)="greenDetailsSelected($event)"
+                           value="{{data}}">
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+            <tfoot class="text-align" *ngIf="greensRecievedDetails.length==0">
+              <tr>
+                <td [attr.colspan]='9'>No Records Found</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </p-accordionTab>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Batch Schedule </span>
+              <mat-select class="form-control" (selectionChange)="batchScheduleSelected($event)" placeholder="Please Select Batch Schedule"
+                          #batchScheduleDDL>
+                <mat-option [value]="'Scheduled Orders'">
+                  Scheduled Orders
+                </mat-option>
+                <mat-option [value]="'Dummy Batch'">
+                  Dummy Batch
+                </mat-option>
+              </mat-select>
+
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Media Filter</span>
+              <mat-select class="form-control" (selectionChange)="mediaSelected($event)" placeholder="Please Select Media Filter"
+                          #unitMediaDDL>
+                <mat-option *ngFor="let option of ddlMedia" [value]="option.mediaProcessCode">
+                  {{option.mediaProcessName}}
+                </mat-option>
+              </mat-select>
+              <!--<select type="text" class="form-control" [(ngModel)]="mediaFilter"
+                      (change)="mediaSelected($event)">
+                <option value="">-Select-</option>
+                <option *ngFor="let option of ddlMedia" [value]="option.mediaProcessCode">
+                  {{option.mediaProcessName}}
+                </option>
+              </select>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-accordionTab header="Pending Production Schedule Details" [selected]="true">
+        <div class="container-fluid">
+          <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                 cellpadding="4">
+            <tbody>
+              <tr>
+                <th>Sl.No</th>
+                <th>Sch. Date</th>
+                <th>Sch. No</th>
+                <th>Buyer</th>
+                <th>Product Name</th>
+                <th>Grades</th>
+                <th>Pack Size</th>
+                <th>Qty (Nos)</th>
+                <th>Req. Qty / UOM</th>
+                <th>Media</th>
+                <th>Media Desc</th>
+              </tr>
+              <tr>
+                <ng-container>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </p-accordionTab>
+    </p-tabPanel>
+
+    <p-tabPanel header="Batch Production Preparation Details">
+      <p-accordionTab header="Batch Production Preparation Details" [selected]="true">
+        <div class="container-fluid">
+          <div [formGroup]="batchProductionForm">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Scheduled By</span>
+                  <mat-select class="form-control" formControlName="scheduledBy"
+                              placeholder="Please Select Scheduled By">
+                    <mat-option [value]="employee.employeeId" *ngFor="let employee of ddlScheduledBy">
+                      {{employee.employeeName}}
+                    </mat-option>
+                  </mat-select>
+                  <span *ngIf="batchProductionForm.controls.scheduledBy.errors?.required && batchProductionForm.controls.scheduledBy.touched"
+                        class="error-span">Scheduled By required field.</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Preserved in</span>
+                  <mat-select class="form-control" formControlName="preservedIn"
+                              placeholder="Please Select Scheduled By">
+                    <mat-option [value]="preserved.mediaProcessCode" *ngFor="let preserved of ddlPreseveredIn">
+                      {{preserved.mediaProcessName}}
+                    </mat-option>
+                  </mat-select>
+                  <span *ngIf="batchProductionForm.controls.preservedIn.errors?.required && batchProductionForm.controls.preservedIn.touched"
+                        class="error-span">Preserved in is required field.</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch No of Media</span>
+                  <mat-select class="form-control" formControlName="batchNoOfMedia" (selectionChange)="batchNoChange($event.value)"
+                              placeholder="Please Select Batch No of Media">
+                    <mat-option [value]="'VA'"> VA </mat-option>
+                    <mat-option [value]="'AA'"> AA </mat-option>
+                    <mat-option [value]="'BR'"> BR </mat-option>
+                  </mat-select>
+                  <span *ngIf="batchProductionForm.controls.batchNoOfMedia.errors?.required && batchProductionForm.controls.batchNoOfMedia.touched"
+                        class="error-span">Scheduled By required field.</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <span class="label-control">Batch Date</span>
+                <input matInput class="form-control border-bottom-1"
+                       placeholder="Please Select Batch Date" [matDatepicker]="batchDateField" (dateChange)="updatemediaBatchProductionDate($event)"
+                       formControlName="batchDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                       [for]="batchDateField">
+                </mat-datepicker-toggle>
+                <mat-datepicker #batchDateField>
+                </mat-datepicker>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Batch No</span>
+                  <input type="text" class="form-control" formControlName="batchNo"
+                         placeholder="Please Enter Batch No" />
+                  <span *ngIf="batchProductionForm.controls.batchNo.errors?.required && batchProductionForm.controls.batchNo.touched"
+                        class="error-span">Batch No is required field.</span>
+                  <span *ngIf="batchProductionForm.get('batchNo').errors?.pattern && batchProductionForm.controls.batchNo.touched"
+                        class="error-span">Batch No can be numberics only.</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Approximate Batch Size</span>
+                  <input type="text" class="form-control" formControlName="approximateBatchSize">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Production Schedule for</span>
+                  <input type="text" class="form-control" formControlName="productionScheduleFor">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <span class="label-control">Product Group</span>
+                <mat-select class="form-control" formControlName="productGroup" (selectionChange)="ddlProductGroupChange()"
+                            placeholder="Please Select Product Group">
+                  <mat-option [value]="group.groupCode" *ngFor="let group of ddlProductGroup">
+                    {{group.grpName}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="batchProductionForm.controls.productGroup.errors?.required && batchProductionForm.controls.productGroup.touched"
+                      class="error-span">Product Group required field.</span>
+              </div>
+              <div class="col-md-4">
+                <span class="label-control">Product Name</span>
+                <mat-select class="form-control" formControlName="productName" (selectionChange)="ddlProductNameChange()"
+                            placeholder="Please Select Product Name">
+                  <mat-option [value]="variety.varietyCode" *ngFor="let variety of ddlProductName">
+                    {{variety.varietyName}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="batchProductionForm.controls.productName.errors?.required && batchProductionForm.controls.productName.touched"
+                      class="error-span">Product Name required field.</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <span class="label-control">Grade/Size</span>
+                <mat-select class="form-control" formControlName="grade"
+                            placeholder="Please Select Grade/Size">
+                  <mat-option [value]="gd.gradeCode" *ngFor="let gd of ddlGrade">
+                    {{gd.gradeFrom}} {{gd.gradeTo}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="batchProductionForm.controls.grade.errors?.required && batchProductionForm.controls.grade.touched"
+                      class="error-span">Grade/Size required field.</span>
+              </div>
+              <div class="col-md-4">
+                <span class="label-control">Pack UOM</span>
+                <mat-select class="form-control" formControlName="packUOM"
+                            placeholder="Please Select Pack UOM">
+                  <mat-option [value]="'KGS'"> KGS </mat-option>
+                  <mat-option [value]="'LBS'"> LBS </mat-option>
+                </mat-select>
+                <span *ngIf="batchProductionForm.controls.packUOM.errors?.required && batchProductionForm.controls.packUOM.touched"
+                      class="error-span">Pack UOM required field.</span>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Qty / Pack In</span>
+                  <input type="text" maxlength="10" class="form-control"
+                         formControlName="quantityPackIn">
+                  <span *ngIf="batchProductionForm.controls.quantityPackIn.errors?.required && batchProductionForm.controls.quantityPackIn.touched"
+                        class="error-span">Qty / Pack In required field.</span>
+                  <span *ngIf="batchProductionForm.get('quantityPackIn').errors?.pattern && batchProductionForm.controls.quantityPackIn.touched"
+                        class="error-span"> Qty / Pack In can be numberics only.</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Quanity (Pack In Nos)</span>
+                  <input type="text" maxlength="2" class="form-control"
+                         formControlName="quantityPackInNos" (change)="calculatUOM()">
+                  <span *ngIf="batchProductionForm.controls.quantityPackInNos.errors?.required && batchProductionForm.controls.quantityPackInNos.touched"
+                        class="error-span">Quanity (Pack In Nos) In required field.</span>
+                  <span *ngIf="batchProductionForm.get('quantityPackInNos').errors?.pattern && batchProductionForm.controls.quantityPackInNos.touched"
+                        class="error-span"> Quanity (Pack In Nos) In can be numberics only.</span>
+                </div>
+              </div>
+
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Product Quantity / UOM</span>
+                  <input type="text" maxlength="12" class="form-control" disabled
+                         formControlName="productQuantityUOM">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <span class="label-control">Media Description / Remarks</span>
+                  <textarea class="form-control" maxlength="500" formControlName="mediaDescription"
+                            (blur)="blurmediaDescription()"
+                            placeholder="Please Enter Media Description"></textarea>
+                  <span *ngIf="batchProductionForm.controls.mediaDescription.errors?.required && batchProductionForm.controls.mediaDescription.touched"
+                        class="error-span">Media Description / Remarks required field.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+      <p-accordionTab header="Batch Schedule Details" [selected]="true">
+        <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+          <tbody>
+            <tr>
+              <th>Sl.No</th>
+              <th>Product Name</th>
+              <th>Grade / Size</th>
+              <th>Order / Schc. Qty (Nos)</th>
+              <th>Order / Schc. Qty (KGS)</th>
+              <th>Approx. Greens Qty (KGS)</th>
+            </tr>
+            <tr *ngIf="showProductionDetailsRow==false">
+              <td colspan="6">No record to display</td>
+            </tr>
+            <tr *ngIf="showProductionDetailsRow==true">
+
+              <td>1</td>
+              <td>{{selectedProductName}}</td>
+              <td>{{selectedGradeSize}}</td>
+              <td>
+                {{selectedQuantityPackIn}}
+              </td>
+              <td>
+                {{selectedProductQuantityUOM}}
+              </td>
+              <td>{{selectedQuantitySum}}</td>
+
+
+            </tr>
+          </tbody>
+        </table>
+      </p-accordionTab>
+    </p-tabPanel>
+  </p-tabView>
+
+  <div class="mgt-20 pull-right">
+    <div class="col-md-12">
+      <button pButton type="submit" disabled label="Batch Schedule" class="ui-button-rounded"></button>
+      <button pButton type="submit" [disabled]="disableNext" (click)="next()" label="Next"
+              class="ui-button-rounded"></button>
+      <button pButton type="submit" [disabled]="disableSave && !batchProductionForm.valid" label="Save" class="ui-button-rounded" (click)="save()"></button>
+      <button pButton type="submit" [disabled]="disableModify" label="Modify" class="ui-button-rounded"></button>
+      <button pButton type="submit" (click)="clear()" label="Clear" class="ui-button-rounded"></button>
+    </div>
+  </div>
+  <div style="height: 28px;"></div>
+</p-accordion>

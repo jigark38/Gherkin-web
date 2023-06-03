@@ -1,0 +1,433 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Greens Transport Vehicle Schedule</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height"></div>
+
+<form [formGroup]="greenTransportVehicleScheduleForm">
+    <p-accordion>
+        <p-accordionTab header="Greens Transport Vehicle Schedule" class="card" [selected]="true">
+            <!-- the farmers report code -->
+            <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+                <div class=" col-md-12 cleartop">
+                    <div class="row pl-1 pr-1">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Date of Entry</span>
+                                <input [matDatepicker]="dpas" placeholder="Please enter Date of entry" matInput class="form-control
+                                        border-bottom-1" formControlName="dateOfEntry" #dateofEntry
+                                    [readonly]="disableField" (ngModelChange)="getfieldStaff()">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dpas">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dpas>
+                                </mat-datepicker>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.dateOfEntry.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.dateOfEntry.touched" class="error-span">Date
+                                    of Entry is
+                                    required field.
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Login User Name</span>
+                                <input type="text" class="form-control" formControlName="loginUserName" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">From UNIT</span>
+                                <mat-select class="form-control" placeholder="Please enter form unit"
+                                    formControlName="formUnit" [disabled]="disableField">
+                                    <mat-option *ngFor="let location of locationDetails" [value]="location.orgOfficeNo">
+                                        {{location.orgOfficeName}}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.formUnit.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.formUnit.touched" class="error-span">From
+                                    UNIT is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Greens Collecting Area Branch
+                                </span>
+                                <mat-select class="form-control"
+                                    placeholder="Please enter greens collecting area branch"
+                                    formControlName="greensBranch" [disabled]="disableField"
+                                    (ngModelChange)="getfieldStaff()">
+                                    <mat-option *ngFor="let area of areaList" [value]="area.areaId">
+                                        {{area.areaName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.greensBranch.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.greensBranch.touched"
+                                    class="error-span">Greens Collecting Area Branch is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Supervisor / Field Staff
+                                </span>
+                                <mat-select class="form-control" placeholder="Please enter Supervisor / Field Staff"
+                                    formControlName="supervisorStaff" [disabled]="disableField">
+                                    <mat-option *ngFor="let employee of employeeList" [value]="employee.employeeId">
+                                        {{employee.employeeName}}</mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.supervisorStaff.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.supervisorStaff.touched"
+                                    class="error-span">Supervisor / Field Staff is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Returnable Gate Pass Date
+                                </span>
+                                <input [matDatepicker]="dpbs" matInput class="form-control
+                                        border-bottom-1" placeholder="Please enter Returnable Gate Pass Date"
+                                    formControlName="returnableGatePassDate" [readonly]="disableGatePassField"
+                                    (dateChange)="getRGPInfo($event, greenTransportVehicleScheduleForm.value)"
+                                    #datePassDate>
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dpbs">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dpbs>
+                                </mat-datepicker>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Returnable Gate Pass No
+                                </span>
+                                <input type="text" placeholder="Please enter Returnable Gate Pass No"
+                                    class="form-control" formControlName="returnableGatePassNo" readonly
+                                    [hidden]="!gatePassNo">
+                                <mat-select class="form-control" placeholder="Please enter Returnable Gate Pass No"
+                                    formControlName="returnableGatePassNo" [hidden]="gatePassNo"
+                                    (ngModelChange)="getTransportInfoData($event)">
+                                    <mat-option *ngFor="let rgp of rgpList" [value]="rgp.RGPNo">
+                                        {{rgp.RGPNo}}</mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.returnableGatePassNo.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.returnableGatePassNo.touched"
+                                    class="error-span">Returnable Gate Pass No is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Transporter Name
+                                </span>
+                                <mat-select class="form-control" placeholder="Please enter Transporter Name"
+                                    formControlName="transporterName" [disabled]="disableField"
+                                    (ngModelChange)="getTransporterName($event)">
+                                    <mat-option *ngFor="let transporter of transporterList"
+                                        [value]="transporter.hiredTransID">
+                                        {{transporter.transporterName | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.transporterName.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.transporterName.touched"
+                                    class="error-span">Transporter Name is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Vehicle No
+                                </span>
+                                <mat-select class="form-control" placeholder="Please enter Vehicle No"
+                                    formControlName="vehicleNo" [disabled]="disableField">
+                                    <mat-option *ngFor="let vehicle of vehicleNoList" [value]="vehicle.id">
+                                        {{vehicle.vehicleRegNumber | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.vehicleNo.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.vehicleNo.touched"
+                                    class="error-span">Vehicle No is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Driver Name
+
+                                </span>
+                                <div class="ng-autocomplete">
+                                    <ng-autocomplete [data]="driverNames" [searchKeyword]="keyword"
+                                        (inputCleared)="clearCascade('driverName')" formControlName="driverName"
+                                        (selectedValueChangeBlur)="driverNameChange($event)"
+                                        (selected)='selectEvent($event)' placeholder="Please enter Driver Name"
+                                        [disabled]="disableField" [itemTemplate]="itemTemplate" maxlength="30">
+                                    </ng-autocomplete>
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.employeeName"></a>
+                                    </ng-template>
+                                </div>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.driverName.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.driverName.touched"
+                                    class="error-span">Driver Name is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-s-4 col-sm-4 col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Driver Contact No</span>
+                                <input type="text" class="form-control" formControlName="driverContactNo"
+                                    placeholder="Please enter Driver Contact No" [readonly]="disableDriverContact">
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.driverContactNo.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.driverContactNo.touched"
+                                    class="error-span">Driver Contact No is
+                                    required field.
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Start KMS Reading
+
+                                </span>
+                                <input type="text" placeholder="Please enter Start KMS Reading" class="form-control"
+                                    formControlName="startKMSREading" [readonly]="disableField" maxlength="10">
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.startKMSREading.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.startKMSREading.touched"
+                                    class="error-span">Start KMS Reading is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Time of Despatch</span>
+                                <input type="text" placeholder="Please enter Time of Despatch" class="form-control"
+                                    formControlName="timeOfDespatch" (focusout)="TimeOfDespatchChange()"
+                                    [readonly]="disableField" />
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.timeOfDespatch.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.timeOfDespatch.touched"
+                                    class="error-span">Time of Despatch is
+                                    required field.
+                                </span>
+                                <span
+                                    *ngIf="greenTransportVehicleScheduleForm.controls.timeOfDespatch.touched && greenTransportVehicleScheduleForm.controls.timeOfDespatch.errors?.pattern"
+                                    class="error-span">Time of Despatch should be numerics only in XX:XX time
+                                    format</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Remarks</span>
+                                <textarea rows="2" cols="50" class="form-control" placeholder="Please enter Remarks"
+                                    formControlName="remarks" maxlength="200" [readonly]="disableField">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </p-accordionTab>
+    </p-accordion>
+
+    <p-accordion>
+        <p-accordionTab header="Material Details" class="card" [selected]="true">
+            <!-- the farmers report code -->
+            <div class="row pl-3 pr-3 ml-2 mr-2 maindiv">
+                <div class=" col-md-12 cleartop">
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Material Group</span>
+                                <mat-select #materialGroup class="form-control"
+                                    placeholder="Please enter Material Group" formControlName="materialGroupCode"
+                                    [disabled]="disableMaterialInfo" (selectionChange)="materialGroupChange($event)">
+                                    <mat-option *ngFor="let group of allMaterialGroups"
+                                        [value]="group.Raw_Material_Group_Code">
+                                        {{group.Raw_Material_Group}}</mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.materialGroup.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.materialGroup.touched"
+                                    class="error-span">Material Group is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Material Name</span>
+                                <mat-select class="form-control" placeholder="Please enter Material Name"
+                                    formControlName="materialNameCode" [disabled]="disableMaterialInfo"
+                                    (selectionChange)="materialNameChange($event)">
+                                    <mat-option *ngFor="let material of allMaterials"
+                                        [value]="material.Raw_Material_Details_Code">
+                                        {{material.Raw_Material_Details_Name}}</mat-option>
+                                </mat-select>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.materialName.errors?.required
+                                &&
+                                greenTransportVehicleScheduleForm.controls.materialName.touched"
+                                    class="error-span">Material Name is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Desc. Details</span>
+                                <textarea rows="2" cols="50" class="form-control"
+                                    placeholder="Please enter Desc. Details" formControlName="descriptionDetail"
+                                    maxlength="300" [readonly]="disableMaterialInfo" maxlength="100">
+                            </textarea>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.descriptionDetail.errors?.required
+                            &&
+                            greenTransportVehicleScheduleForm.controls.descriptionDetail.touched"
+                                    class="error-span">Desc. Details is
+                                    required field.
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Total Nos</span>
+                                <input type="text" placeholder="Please enter Total Nos" class="form-control"
+                                    formControlName="totalNO" [readonly]="disableMaterialInfo" maxlength="5"
+                                    (blur)="updateTransportDetail($event, greenTransportVehicleScheduleForm.value)">
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.totalNO.errors?.required
+                                    &&
+                                    greenTransportVehicleScheduleForm.controls.totalNO.touched"
+                                    class="error-span">Total Nos is
+                                    required field.
+                                </span>
+                                <span *ngIf="greenTransportVehicleScheduleForm.controls.totalNO.errors?.pattern
+                                &&
+                                greenTransportVehicleScheduleForm.controls.totalNO.touched" class="error-span">Total
+                                    No
+                                    can be
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </p-accordionTab>
+    </p-accordion>
+
+</form>
+
+
+
+
+<p-accordion>
+    <p-accordionTab header="Material Details" class="card" [selected]="true">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Material Group
+                            </th>
+                            <th>Material Name
+                            </th>
+                            <th>Desc. Details
+                            </th>
+                            <th>Total Nos
+                            </th>
+                        </tr>
+                        <ng-container *ngFor="let item of materialDetails; let i = index">
+                            <tr *ngIf="min <= i && max > i" (click)="modifyMaterialDetail(item)"
+                                [class.active]="item.slNo === selectedRowId">
+                                <td class="text-align-center">
+                                    <span>{{item.slNo}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{item.materialGroup}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{item.materialName}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{item.descDetails}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{item.totalNo}}</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="10" [totalRecords]="materialDetails.length" (onPageChange)="paginate($event)">
+                </p-paginator>
+            </div>
+
+
+
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="submit" label="New" class="ui-button-rounded" [disabled]="newFormInput"
+                (click)="addNewVehicleInfo()"></button>
+            <button pButton type="submit" label="Save" class="ui-button-rounded" [disabled]="saveButton"
+                (click)="saveVehicleInfo()" #saveButtonField></button>
+            <button pButton type="submit" label="Find" class="ui-button-rounded" [disabled]="findbutton"
+                (click)="findVehicleInfo()"></button>
+            <button pButton type="submit" label="Modify" class="ui-button-rounded" [disabled]="modifyButton"
+                (click)="modifyVehicleInfo()"></button>
+            <button pButton type="submit" label="Clear" class="ui-button-rounded" (click)="clearVehicleInfo()"></button>
+
+        </div>
+    </div>
+</div>

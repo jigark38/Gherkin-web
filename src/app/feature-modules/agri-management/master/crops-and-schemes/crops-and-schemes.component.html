@@ -1,0 +1,246 @@
+<div class="row pull-right" id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+            <li><a href="#">Agri Management </a></li>
+            <li class="active"><span>Crops and Crop Schemes</span></li>
+        </ol>
+ </div>
+      
+ <div class="breadcrumb-height-max"></div>
+
+<p-tabView>
+        <p-tabPanel header="Crops and Crop Schemes">
+                <form [formGroup]="cropsNSchemesForm" (ngSubmit)="onSubmit()">
+
+                        <div class="card">
+                                <!-- <div class="card-header card-header-text" data-background-color="rose">
+                        <h4 class="card-title"><i class="fa fa-table m-r-10"></i>Crops and Crop Schemes</h4>
+                </div> -->
+                                <div class="card-body">
+
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Date of Entry</span>
+                                                                <input [matDatepicker]="ejd" class="form-control"
+                                                                        formControlName="EntryDate" #PsDate>
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="ejd">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #ejd>
+                                                                </mat-datepicker>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Login User Name</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="UserName" [value]="">
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="!hideGroupNameDLL">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Group Name</span>
+                                                                <input type="text" #cropGrpNameAC matInput
+                                                                        class="form-control" [formControl]="myControl"
+                                                                        [value]="(addCropGrpBtnClicked?myControl.value:'') | uppercase"
+                                                                        [matAutocomplete]="auto">
+                                                                <mat-autocomplete #auto="matAutocomplete"
+                                                                        [displayWith]="displayCrpGrpFn">
+                                                                        <mat-option disabled
+                                                                                *ngFor="let grpName of filteredOptions  | async"
+                                                                                [value]="grpName ">
+                                                                                {{grpName.Name | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-autocomplete>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="cropGroupAlreadyExist && isSubmittClicked">Already
+                                                                        have same crop group</small>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="(myControl.value == null || myControl.value == '') && addCropGrpBtnClicked || isSubmittClicked">Please
+                                                                        enter a crop group</small>
+
+                                                        </div>
+
+                                                </div>
+
+                                                <div class="col-md-4" [hidden]="hideGroupNameDLL">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Group Name</span>
+                                                                <mat-select #CropGroupNameDDL
+                                                                        formControlName="GroupCode" class="form-control"
+                                                                        (ngModelChange)="getCrops($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let grpName of groupList"
+                                                                                [value]="grpName.CropGroupCode">
+                                                                                {{grpName.Name | uppercase}}
+                                                                        </mat-option>
+
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(cropsNSchemesForm.get('GroupCode').disabled) && !(cropsNSchemesForm.get('GroupCode').valid) && (addCropBtnClicked || findButtonClicked || modifyBtnClicked || isSubmittClicked)">Please
+                                                                        select group name</small>
+
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+                                                <div class="col-md-4" [hidden]="hideCropNameDLL">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Name</span>
+                                                                <input type="text" #CropGrpNameAC matInput
+                                                                        class="form-control" [formControl]="CropName"
+                                                                        [matAutocomplete]="autoCrop"
+                                                                        (blur)="onBlurMethod()"
+                                                                        [value]="(addCropBtnClicked?CropName.value:'') | uppercase">
+                                                                <mat-autocomplete #autoCrop="matAutocomplete"
+                                                                        [displayWith]="displayGrpFn">
+                                                                        <mat-option disabled
+                                                                                *ngFor="let crpName of filteredCrop  | async"
+                                                                                [value]="crpName ">
+                                                                                {{crpName.Name | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-autocomplete>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="cropNameAlreadyExist && isSubmittClicked">Already
+                                                                        have same crop name</small>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="(CropName.value == null || myControl.value == '') && (addCropBtnClicked || isSubmittClicked)">Please
+                                                                        enter crop name</small>
+
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4" [hidden]="!hideCropNameDLL">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Name</span>
+                                                                <mat-select formControlName="CropCode"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="search($event)">
+                                                                        <mat-option *ngFor="let crp of cropList"
+                                                                                [value]="crp.CropCode">
+                                                                                {{crp.Name | uppercase}}</mat-option>
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="(cropsNSchemesForm.get('CropCode').value == '' || cropsNSchemesForm.get('CropCode').value == null ) && (findButtonClicked || modifyBtnClicked || isSubmittClicked) ">Please
+                                                                        select crop name</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Scheme(mm)</span>
+                                                                <input #CropScheme type="number" class="form-control"
+                                                                        formControlName="Count" (blur)="onBlurMethod()"
+                                                                        pattern="^[1-9]\d{0,2}(?:\.\d{1,2})*$">
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(cropsNSchemesForm.get('Count').valid) && ((selectRowClicked && modifyBtnClicked) || addCropBtnClicked || isSubmittClicked)">Please
+                                                                        enter scheme value</small>
+
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Crop Scheme Count</span>
+                                                                <input type="number" class="form-control"
+                                                                        formControlName="From" (blur)="onBlurMethod()"
+                                                                        pattern="\d{1,3}">
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(cropsNSchemesForm.get('From').valid) && ((selectRowClicked && modifyBtnClicked) || addCropBtnClicked || isSubmittClicked)">Please
+                                                                        enter valid number</small>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                        <div class='form-group'>
+                                                                <span class="label-control">Sign</span>
+                                                                <mat-select #signDDL formControlName="Sign"
+                                                                        class="form-control" (keyup)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let sign of cropSchemeSigns"
+                                                                                [value]="sign" (click)="onBlurMethod()">
+                                                                                {{sign}}</mat-option>
+                                                                </mat-select>
+                                                                <small Class="form-text text-danger"
+                                                                        *ngIf="!(cropsNSchemesForm.get('Sign').valid) && ((selectRowClicked && modifyBtnClicked) || addCropBtnClicked || isSubmittClicked)">Please
+                                                                        select sign</small>
+
+                                                        </div>
+                                                </div>
+
+                                        </div>
+
+                                </div>
+                        </div>
+                        <div class="card">
+                                <div class="card-body" style="overflow-y:auto">
+                                        <div class="row m-b-25">
+                                                <div class="col-md-12">
+                                                        <div>
+                                                                <table class="table table-striped table-bordered dt-responsive nowrap"
+                                                                        cellspacing="0" cellpadding="4"
+                                                                        id="grdOrganizations">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>S.No</th>
+                                                                                        <th>Crop Group name</th>
+                                                                                        <th>Crop Name</th>
+                                                                                        <th>Crop Scheme</th>
+                                                                                        <th>Crop Scheme Count</th>
+                                                                                        <th *ngIf="addCropBtnClicked">
+                                                                                        </th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody *ngIf="cropDetails">
+
+                                                                                <tr *ngFor="let scheme of cropDetails.Schemes;let i = index"
+                                                                                        (click)="selectRow(scheme,cropDetails)">
+                                                                                        <td>
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td>{{changeGrpCodeToName(cropDetails.GroupCode) | uppercase }}
+                                                                                        </td>
+                                                                                        <td>{{cropDetails.CropName | uppercase}}
+                                                                                        </td>
+                                                                                        <td>{{scheme.Count}}</td>
+                                                                                        <td>{{scheme.From}}
+                                                                                                {{scheme.Sign}}</td>
+                                                                                        <td *ngIf="addCropBtnClicked"><a
+                                                                                                        (click)="deleteCrop(i)"
+                                                                                                        class="text-danger">
+                                                                                                        Delete </a></td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        <div class="card">
+                                <div class="row pull-right btSection">
+                                        <div class="col-md12">
+                                                <button pButton type="button" label="Add Crop Group"
+                                                        class="ui-button-rounded" [disabled]="disableGrpBtn"
+                                                        (click)="addCropGroup()" tabindex="-1"></button>
+                                                <button pButton type="button" label="Add Crop Name"
+                                                        class="ui-button-rounded" [disabled]="disableCropBtn"
+                                                        (click)="addCrop()" tabindex="-1"></button>
+                                                <button pButton type="submit" label="Save" #SaveCommand
+                                                        [disabled]="disableSave()" class="ui-button-rounded"></button>
+                                                <button pButton type="button" label="Find" class="ui-button-rounded"
+                                                        [disabled]="disableFindBtn" (click)="FindData()"></button>
+                                                <button pButton type="button" label="Modify" class="ui-button-rounded"
+                                                        [disabled]="disableModifyBtn" (click)="ModifyData()"></button>
+                                                <button pButton type="button" label="Clear" class="ui-button-rounded"
+                                                        (click)="resetForm()"></button>
+                                        </div>
+                                </div>
+                        </div>
+                </form>
+        </p-tabPanel>
+</p-tabView>
+<jw-modal id="save-scheme-Modal">
+        <h6>Do you want to add more schemes?</h6>
+        <div class="row pull-right bottom-right">
+                <input type="button" class="btn btn-info" #yesBtn (click)="addNewScheme();" value="yes" />
+                <input type="button" class="btn btn-info" (click)="onSave();" value="No" />
+        </div>
+
+</jw-modal>

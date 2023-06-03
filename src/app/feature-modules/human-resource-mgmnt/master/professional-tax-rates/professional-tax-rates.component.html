@@ -1,0 +1,278 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Professional Tax Rates Details</span></li>
+    </ol>
+</div>
+
+<form [formGroup]="professionalTaxRatesForm">
+    <p-accordion>
+        <p-accordionTab header="Professional Tax Rates Details" class="card" [selected]="true">
+
+            <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+                <div class=" col-md-12 cleartop">
+                    <div class="row pl-1 pr-1">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Date of Entry</span>
+                                <input [matDatepicker]="dp1" placeholder="Please enter Date of entry" matInput class="form-control
+                                        border-bottom-1" formControlName="dateOfEntry" #dateofEntry
+                                    [readonly]="modifyData">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp1>
+                                </mat-datepicker>
+                                <span *ngIf="professionalTaxRatesForm.controls.dateOfEntry.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.dateOfEntry.touched" class="error-span">Date Of Entry is
+                                    required</span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Login User Name</span>
+                                <input type="text" class="form-control" formControlName="loginUserName" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Effective Date</span>
+                                <input [matDatepicker]="dp2" matInput class="form-control
+                                        border-bottom-1" placeholder="Please enter effective date"
+                                    formControlName="effectiveDate" [readonly]="modifyData">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp2>
+                                </mat-datepicker>
+                                <span *ngIf="professionalTaxRatesForm.controls.effectiveDate.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.effectiveDate.touched" class="error-span">Effective Date is
+                                    required</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row pl-1 pr-1 mb-4">
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Monthly Challan Date</span>
+                                <input [matDatepicker]="dp3" matInput class="form-control
+                                        border-bottom-1" placeholder="Please enter monthly challan date"
+                                    formControlName="monthlyChalanDate" [readonly]="disablemodifyData">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp3">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp3>
+                                </mat-datepicker>
+                                <span *ngIf="professionalTaxRatesForm.controls.monthlyChalanDate.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.monthlyChalanDate.touched" class="error-span">Monthly Chalan Date
+                                    is required</span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Directors Payable Amount / Year</span>
+                                <input [readonly]="disablemodifyData" type="text" pattern="\d*" maxlength="6"
+                                    class="form-control" placeholder="Please enter directors payable amount"
+                                    formControlName="directorPayableAmount">
+                                <span *ngIf="professionalTaxRatesForm.controls.directorPayableAmount.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.directorPayableAmount.touched" class="error-span">Director
+                                    Payable Amount is required</span>
+                                <span *ngIf="professionalTaxRatesForm.controls.directorPayableAmount.errors?.pattern
+                                    &&
+                                    professionalTaxRatesForm.controls.directorPayableAmount.touched"
+                                    class="error-span">Director Payable Amount
+                                    can be
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Tax Amount Exempted upto Salary</span>
+                                <input type="text" pattern="\d*" maxlength="6" class="form-control"
+                                    formControlName="taxAmountExempted"
+                                    (keydown.Tab)="navigateToEmployeeContribution($event, professionalTaxRatesForm.value)"
+                                    placeholder="Please enter tax amount exemplted upto salary"
+                                    [readonly]="disablemodifyData">
+                                <span *ngIf="professionalTaxRatesForm.controls.taxAmountExempted.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.taxAmountExempted.touched" class="error-span">Tax Amount Exempted
+                                    is required</span>
+                                <span *ngIf="professionalTaxRatesForm.controls.taxAmountExempted.errors?.pattern
+                                    &&
+                                    professionalTaxRatesForm.controls.taxAmountExempted.touched" class="error-span">Tax
+                                    Amount Exempted
+                                    can be
+                                    numbers only.</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </p-accordionTab>
+    </p-accordion>
+
+
+
+
+    <p-accordion>
+        <p-accordionTab header="Employees Contribution" class="card" [selected]="true">
+            <!-- the farmers report code -->
+            <div class="row pl-3 pr-3 ml-2 mr-2 maindiv">
+                <div class=" col-md-12 cleartop">
+                    <div class="row pl-1 pr-1 mb-4">
+
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Salary From </span>
+                                <input type="text" pattern="[0-9]+" maxlength="10" class="form-control"
+                                    formControlName="salaryForm" #salaryFrom placeholder="Please enter Salary from"
+                                    [readonly]="disablemodifyData"
+                                    (blur)="checkSalaryFromValidation(professionalTaxRatesForm.value)">
+                                <span *ngIf="professionalTaxRatesForm.controls.salaryForm.errors?.required
+                    &&
+                    professionalTaxRatesForm.controls.salaryForm.touched" class="error-span">Salary Form is
+                                    required</span>
+                                <span *ngIf="professionalTaxRatesForm.controls.salaryForm.errors?.pattern
+                                    &&
+                                    professionalTaxRatesForm.controls.salaryForm.touched" class="error-span">Salary
+                                    From
+                                    can be
+                                    numbers only.</span>
+                                <span *ngIf="showSalaryFromError" class="error-span">Salary From should be more than Tax
+                                    Amount Exempted</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Salary To</span>
+                                <input type="text" pattern="\d*" maxlength="10" class="form-control"
+                                    formControlName="salaryTo" placeholder="Please enter Salary To"
+                                    [readonly]="disablemodifyData" #salaryTo
+                                    (blur)="checkSalaryToValidation(professionalTaxRatesForm.value)">
+                                <span *ngIf="showSalaryToError" class="error-span">Salary To should be more than Salary
+                                    From</span>
+                                <span *ngIf="professionalTaxRatesForm.controls.salaryTo.errors?.pattern
+                                    &&
+                                    professionalTaxRatesForm.controls.salaryTo.touched" class="error-span">Salary
+                                    T0
+                                    can be
+                                    numbers only.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class=" form-group">
+                                <span class="label-control">Professional Tax Amount</span>
+                                <input class="form-control" type="text" pattern="\d*" maxlength="6"
+                                    formControlName="professionalTaxAmount"
+                                    (blur)="updateTaxRateDetail($event, professionalTaxRatesForm.value)"
+                                    placeholder="Please enter Professional tax amount" [readonly]="modifyData" required>
+                                <span *ngIf="professionalTaxRatesForm.controls.professionalTaxAmount.errors?.required
+                                    &&
+                                    professionalTaxRatesForm.controls.professionalTaxAmount.touched"
+                                    class="error-span">Professional Tax Amount To is
+                                    required</span>
+                                <span *ngIf="professionalTaxRatesForm.controls.professionalTaxAmount.errors?.pattern
+                                    &&
+                                    professionalTaxRatesForm.controls.professionalTaxAmount.touched"
+                                    class="error-span">Professional Tax Amount
+                                    can be
+                                    numbers only.</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </p-accordionTab>
+
+    </p-accordion>
+</form>
+
+
+
+
+
+<p-accordion>
+    <p-accordionTab header="Professional Tax Applicable Details" class="card" [selected]="true">
+        <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+            <div class=" col-md-12 cleartop">
+                <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+                    <tbody>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Effective Date</th>
+                            <th>Directors PT Amount Yearly</th>
+                            <th>Tax Exempted upto Salary</th>
+                            <th>Salary From / To</th>
+                            <th>Professional Tax Amount</th>
+                        </tr>
+                        <ng-container *ngFor="let taxRates of professionTaxRateList; let i = index">
+                            <tr *ngIf="min <= i && max > i" (click)="modifyProfessionTaxRate(taxRates)"
+                                [class.active]="taxRates.slNO === selectedRowId">
+                                <td class="text-align-center">
+                                    <span>{{taxRates.slNO}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{taxRates.effectiveDate | customDate}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{taxRates.directorPayableAmount}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{taxRates.taxAmountExempted}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{taxRates.salaryForm}} / {{taxRates.salaryTo}}</span>
+                                </td>
+                                <td class="text-align-center">
+                                    <span>{{taxRates.professionalTaxAmount}}</span>
+                                </td>
+
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p-paginator [rows]="10" [totalRecords]="professionTaxRateList.length"
+                    (onPageChange)="paginate($event)">
+                </p-paginator>
+            </div>
+
+
+
+        </div>
+
+
+        <!-- the farmers report code -->
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right" #scrollMe>
+
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="submit" label="New" class="ui-button-rounded" (click)="addNewProfessionalTaxRate()"
+                [disabled]="addNewData"></button>
+            <button pButton type="submit" label="Save" class="ui-button-rounded" #saveButton
+                (click)="saveProfessionalTaxRate()" [disabled]="saveData"></button>
+            <button pButton type="submit" label="Modify" class="ui-button-rounded" (click)="modifyProfessionDetail()"
+                [disabled]="modifyDataInfo"></button>
+            <button pButton type="submit" label="Clear" class="ui-button-rounded"
+                (click)="clearProfessionalTaxRate()"></button>
+
+        </div>
+    </div>
+</div>

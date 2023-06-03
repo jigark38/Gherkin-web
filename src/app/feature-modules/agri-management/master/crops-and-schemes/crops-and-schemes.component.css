@@ -1,0 +1,36 @@
+.example-radio-group {    
+    flex-direction: row;
+    margin: 15px 0;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+  :focus {
+    background-color: #d3dbff;
+  }
+
+  .mat-radio-button{
+    display: contents !important;
+  }
+
+  .mat-radio-label-content{
+    font-size: medium !important;
+  }
+
+  .table th{
+    background-color: #007ad9 !important;
+  }
+  .table-bordered, .table-bordered td, .table-bordered th {
+      border: 1px solid #c3c3c3;
+  }
+  table td {
+      background-color: #FFFFFF;
+    }
+  table tr:hover {
+    background-color: #E3EAEB;
+  }
+
+  .active{
+    background: #007a31;
+  }

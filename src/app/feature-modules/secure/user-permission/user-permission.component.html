@@ -1,0 +1,259 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Administration & Users</a></li>
+        <li class="active"><span>User Permissions</span></li>
+    </ol>
+</div>
+<p-tabView>
+    <p-tabPanel header="User Permissions">
+        <form [formGroup]="userPermissionForm" (ngSubmit)="createUser()">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Permission</span>
+                            <input [matDatepicker]="ejd" #dateOfEntry class="form-control" formControlName="dateofPermission" />
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #ejd> </mat-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Authorised By</span>
+                                <!-- (selectionChange)="changeModule($event)" -->
+                                <mat-select class="form-control" formControlName="authorisedBy">
+                                    <mat-option *ngFor="let auth of authUsers" [value]="auth.employeeId">
+                                        {{ auth.employeeName }}
+                                    </mat-option>
+                                </mat-select>
+                                <span *ngIf="
+                    userPermissionForm.controls.authorisedBy.invalid &&
+                    userPermissionForm.controls.authorisedBy.touched
+                  " class="error-span">
+                  Authorised By is required field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Organisation Name</label>
+
+                                <mat-select class="form-control" formControlName="organisationId" (selectionChange)="changeOrg($event)">
+                                    <mat-option *ngFor="let org of organisations" [value]="org.orgCode">
+                                        {{ org.organisationName }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Location/Unit</label>
+                                <mat-select formControlName="locationId" class="form-control">
+                                    <mat-option *ngFor="let org of locations" [value]="org.orgOfficeNo">
+                                        {{ org.orgOfficeName }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Department</label>
+                                <mat-select formControlName="departmentId" class="form-control" (selectionChange)="changeDept($event)">
+                                    <mat-option *ngFor="let dep of departments" [value]="dep.departmentCode">
+                                        {{ dep.departMentName }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="label-control">Sub Department</label>
+                                <mat-select formControlName="subDepartmentId" class="form-control" (selectionChange)="changeSubDept($event)">
+                                    <mat-option *ngFor="let sub of subDepartments" [value]="sub.subDepartmentCode">
+                                        {{ sub.subDepartmentName }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Designation</label>
+                            <mat-select formControlName="designation" class="form-control" (selectionChange)="changeDesignation($event)">
+                                <mat-option *ngFor="let desg of designations" [value]="desg.designationCode">
+                                    {{ desg.designattionName }}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Name of Employee</label>
+                            <mat-select formControlName="employeeId" class="form-control" (selectionChange)="changeEmployee($event)">
+                                <mat-option *ngFor="let emp of employees" [value]="emp.employeeId">
+                                    {{ emp.employeeName }}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="
+                  userPermissionForm.controls.employeeId.invalid &&
+                  userPermissionForm.controls.employeeId.touched
+                " class="error-span">
+                Employee is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Username</label>
+                            <input type="text" formControlName="userName" class="form-control" />
+                            <span *ngIf="
+                  userPermissionForm.controls.userName.invalid &&
+                  userPermissionForm.controls.userName.touched
+                " class="error-span">
+                Username is required field.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">User Password</label>
+                            <input type="password" formControlName="password" pPassword class="form-control" />
+                            <span *ngIf="
+                  userPermissionForm.controls.password.invalid &&
+                  userPermissionForm.controls.password.touched
+                " class="error-span">
+                Password is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Re Confirm Password</label>
+                            <input type="password" formControlName="confirmPassword" pPassword class="form-control" />
+                            <span *ngIf="
+                  userPermissionForm.controls.confirmPassword.invalid &&
+                  userPermissionForm.controls.confirmPassword.touched
+                " class="error-span">{{
+                  userPermissionForm.get("confirmPassword").errors?.error
+                }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Module Name</label>
+                            <mat-select class="form-control" formControlName="moduleId" (selectionChange)="changeModule($event)">
+                                <mat-option *ngFor="let mod of modules" [value]="mod.id">
+                                    {{ mod.moduleName }}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Sub Menu</label>
+                            <mat-select formControlName="subMenuId" class="form-control" (selectionChange)="changeSubMenu($event)">
+                                <mat-option *ngFor="let submenu of subMenus" [value]="submenu.id">
+                                    {{ submenu.moduleName }}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label-control">Sub Module</label>
+                            <mat-select formControlName="subModuleId" class="form-control">
+                                <mat-option *ngFor="let sub of subModules" [value]="sub.id">
+                                    {{ sub.moduleName }}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <input type="hidden" formControlName="userId" />
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button pButton type="button" label="Clear" (click)="clearControls()" class="ui-button-rounded pull-right"></button>
+                        <button pButton type="button" [disabled]="disableSave" (click)="resetPassword()" label="Save" class="ui-button-rounded pull-right"></button>
+                        <button pButton type="submit" [disabled]="!isNewUserEnabled" label="New User" class="ui-button-rounded pull-right"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+</p-tabView>
+<p-tabView *ngIf="userPermissionForm?.controls.userId?.value">
+    <p-tabPanel header="Module List">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p-table #dt [value]="modulelist" [(selection)]="selectedModules" dataKey="id" [rowHover]="true" scrollHeight="300px" [scrollable]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 45px;">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th pSortableColumn="name">
+                                    Module Name
+                                    <p-sortIcon field="name"> </p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-module>
+                            <tr class="ui-selectable-row">
+                                <td style="width: 45px;">
+                                    <p-tableCheckbox [value]="module"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    {{ module.moduleName }}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="2" style="text-align: left;">No Modules found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+            <div class="row mgt-20">
+                <div class="col-md-12">
+                    <button pButton type="submit" label="Submit" (click)="addPermissions()" [disabled]="modulelist?.length == 0" class="ui-button-rounded pull-right"></button>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+
+<p-tabView>
+    <p-tabPanel header="User Permissions">
+        <div class="container">
+            <div class="row" *ngIf="userPermissions.length>0" style="margin-bottom: 30px;">
+                <div class="col-md-6">
+                    <app-ng-grid [cols]="modCols" [data]="userPermissions"> </app-ng-grid>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <app-ng-grid [cols]="userCols" [data]="userDetails" [actions]="actionParams" (editHandler)="editClick($event)"></app-ng-grid>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+<p-toast [style]="{ marginTop: '20px' }"></p-toast>

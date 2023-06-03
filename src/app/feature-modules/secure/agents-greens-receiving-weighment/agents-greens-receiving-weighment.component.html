@@ -1,0 +1,622 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span> Agent Greens Receiving Weighment </span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height"></div>
+
+<div class="mgt-20">
+    <p-tabView [activeIndex]="tabIndex" (onChange)="onTabChange($event)">
+        <p-tabPanel header="Pending Agent Material Details" [selected]="selectedTab === 'materialDetails'">
+
+            <div class="card-body" style="overflow-y:auto">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Unit Name</span>
+                        <mat-select class="form-control" #UnitName placeholder="Select Unit Name"
+                            (selectionChange)="getInwardDetails($event)" [(ngModel)]="unitName">
+                            <mat-option [value]="org.orgCode" *ngFor="let org of ddlOrganizations">
+                                {{org.organisationName}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <p-tabView>
+                    <p-tabPanel header="Inward Details">
+                        <div class="row mb-3">
+                            <div class="col-md-12 ui-table-scrollable-view">
+                                <div class="ui-table-scrollable-header ui-widget-header">
+                                    <div class="ui-table-scrollable-header-box">
+                                        <table cellspacing="0" cellpadding="4" class="ui-table table"
+                                            id="inwardGatePass">
+                                            <thead class="ui-table-thead">
+                                                <tr>
+                                                    <th>Sl. No.</th>
+
+                                                    <th>IGP Date
+                                                    </th>
+
+                                                    <th>IGP No
+                                                    </th>
+
+                                                    <th>Area / Branch Name
+                                                    </th>
+
+                                                    <th>Vehicle No
+                                                    </th>
+
+                                                    <th>Select
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ui-table-tbody" id="">
+                                                <ng-container *ngFor="let item of inwardGatePassList;let i= index">
+                                                    <tr *ngIf="min <= i && max > i">
+                                                        <td class="text-center"> {{i+1}} </td>
+                                                        <td class="text-center"> {{item.inwardDateTime | date :
+                                                            'dd-MMM-yyyy'}} </td>
+                                                        <td class="text-center"> {{item.inwardGatePassNo}} </td>
+                                                        <td class="text-center"> {{item.supplierTransporterName}} </td>
+                                                        <td class="text-center"> {{item.invVehicleNo}} </td>
+                                                        <td>
+                                                            <div class="text-center">
+                                                                <input type="radio" name="selectInword"
+                                                                    (click)="selectedInWard(item)">
+                                                                <span *ngIf="item.isOngoing== true">On
+                                                                    Going</span>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="inwardGatePassList == undefined">
+                                                        <td colspan="6">No data to
+                                                            dispaly</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        <p-paginator [rows]="10" [totalRecords]="inwardGatePassList.length"
+                                            (onPageChange)="paginate($event)">
+                                        </p-paginator>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </p-tabPanel>
+                </p-tabView>
+
+                <p-tabView>
+                    <p-tabPanel header="Details">
+                        <div class="row" [formGroup]="agentsGreensReceivingWeighmentForm">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Receiving UNIT </span>
+                                    <!-- <input type="text" class="form-control" formControlName="orgOfficeNo"
+                                        placeholder="Enter Receiving Unit"> -->
+                                    <mat-select class="form-control" formControlName="orgOfficeNo"
+                                        placeholder="Select Receiving Unit">
+                                        <mat-option *ngFor="let location of locactionList"
+                                            [value]="location.OrgOfficeNo">
+                                            {{location.OrgOfficeName | uppercase}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('orgOfficeNo').valid) && (agentsGreensReceivingWeighmentForm.get('orgOfficeNo').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('orgOfficeNo').errors?.required">Receiving
+                                        Unit is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control"> Received Date & Time </span>
+                                    <input matInput class="form-control border-bottom-1 mb-1" placeholder="Enter Date"
+                                        formControlName="greensAgentGRNDateTime" [matDatepicker]="eDate5">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate5">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #eDate5>
+                                    </mat-datepicker>
+                                    <small Class="form-text text-danger"
+                                        *ngIf="!(agentsGreensReceivingWeighmentForm.get('greensAgentGRNDateTime').valid) && (agentsGreensReceivingWeighmentForm.get('greensAgentGRNDateTime').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('greensAgentGRNDateTime').errors?.required">Received Date & Time is
+                                        required!</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">GRN No</span>
+                                    <input type="text" class="form-control" formControlName="greensAgentGRNNo"
+                                        placeholder="Enter GRN No">
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('greensAgentGRNNo').valid) && (agentsGreensReceivingWeighmentForm.get('greensAgentGRNNo').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('greensAgentGRNNo').errors?.required">GRN No
+                                        is
+                                        required!</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Greens Agent Supplier</span>
+                                    <mat-select class="form-control" formControlName="agentOrgID"
+                                        placeholder="Select Greens Agent Supplier" (ngModelChange)="setPlace($event)">
+                                        <mat-option *ngFor="let supplier of supplierInformationDetails"
+                                            [value]="supplier.agentOrgID">
+                                            {{supplier.agentOrganisationName | uppercase}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('agentOrgID').valid) && (agentsGreensReceivingWeighmentForm.get('agentOrgID').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('agentOrgID').errors?.required">Greens Agent
+                                        Supplier is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Place</span>
+                                    <input type="text" class="form-control" formControlName="place"
+                                        placeholder="Enter Place">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Invoice / DC No</span>
+                                    <input type="text" class="form-control" formControlName="invoiceDCNo"
+                                        placeholder="Enter Invoice / DC No">
+                                </div>
+                                <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('invoiceDCNo').valid) && (agentsGreensReceivingWeighmentForm.get('invoiceDCNo').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('invoiceDCNo').errors?.required">Invoice / DC
+                                    No is
+                                    required!</small>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Invoice / DC Date</span>
+                                    <input matInput class="form-control border-bottom-1 mb-1"
+                                        placeholder="Enter Invoice / DC Date" formControlName="invoiceDCDate"
+                                        [matDatepicker]="eDate6">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate6">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #eDate6>
+                                    </mat-datepicker>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('invoiceDCDate').valid) && (agentsGreensReceivingWeighmentForm.get('invoiceDCDate').touched) 
+                                && agentsGreensReceivingWeighmentForm.get('invoiceDCDate').errors?.required">Invoice /
+                                        DC Date is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Group Name</span>
+                                    <mat-select #CropGroupNameDDL formControlName="cropGroupCode" class="form-control"
+                                        (ngModelChange)="getCropName($event)" placeholder="select Crop Group Name">
+                                        <mat-option *ngFor="let grpName of groupList" [value]="grpName.CropGroupCode">
+                                            {{grpName.Name | uppercase}}
+                                        </mat-option>
+
+                                    </mat-select>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('cropGroupCode').valid) && (agentsGreensReceivingWeighmentForm.get('cropGroupCode').touched) 
+                                    && agentsGreensReceivingWeighmentForm.get('cropGroupCode').errors?.required">Crop
+                                        Group Name is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Crop Name</span>
+                                    <mat-select class="form-control" formControlName="cropNameCode"
+                                        placeholder="select Crop Name"
+                                        (ngModelChange)="getAllPSNoByCropNameCode($event)">
+                                        <mat-option *ngFor="let crpName of cropNameList" [value]="crpName.cropnameCode">
+                                            {{crpName.cropName | uppercase}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('cropNameCode').valid) && (agentsGreensReceivingWeighmentForm.get('cropNameCode').touched) 
+                                    && agentsGreensReceivingWeighmentForm.get('cropNameCode').errors?.required">Crop
+                                        Name is
+                                        required!</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Season From / To</span>
+                                    <mat-select class="form-control" formControlName="pSNumber"
+                                        placeholder="select Season From / To">
+                                        <mat-option *ngFor="let seasonList of SeasonFromToList"
+                                            [value]="seasonList.psNo">
+                                            {{seasonList.date }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <small Class="form-text text-danger" *ngIf="!(agentsGreensReceivingWeighmentForm.get('pSNumber').valid) && (agentsGreensReceivingWeighmentForm.get('pSNumber').touched) 
+                                    && agentsGreensReceivingWeighmentForm.get('pSNumber').errors?.required">Season From
+                                        / To is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">Total Quantity</span>
+                                    <input type="text" class="form-control" formControlName="greensAgentDespQty"
+                                        (keydown)="ThreeDigitDecimalNumber($event)" placeholder="Enter Total Quantity">
+                                    <small Class="form-text text-danger"
+                                        *ngIf="!(agentsGreensReceivingWeighmentForm.get('greensAgentDespQty').valid) && (agentsGreensReceivingWeighmentForm.get('greensAgentDespQty').touched) 
+                                        && agentsGreensReceivingWeighmentForm.get('greensAgentDespQty').errors?.required">Total Quantity is
+                                        required!</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <span class="label-control">No. of Crates</span>
+                                    <input type="text" class="form-control" formControlName="greensAgentDespCrates"
+                                        (keydown)="OnlyNumber($event)" placeholder="Enter No. of Crates"
+                                        (blur)="NumberOfCretesblur()">
+                                    <small Class="form-text text-danger"
+                                        *ngIf="!(agentsGreensReceivingWeighmentForm.get('greensAgentDespCrates').valid) && (agentsGreensReceivingWeighmentForm.get('greensAgentDespCrates').touched) 
+                                        && agentsGreensReceivingWeighmentForm.get('greensAgentDespCrates').errors?.required">No. of Crates is
+                                        required!</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </p-tabPanel>
+                </p-tabView>
+
+                <p-tabView>
+                    <p-tabPanel header="Agent Despatched Details">
+                        <div class="row">
+                            <div class="col-md-12 ui-table-scrollable-view">
+                                <div class="ui-table-scrollable-header ui-widget-header">
+                                    <div class="ui-table-scrollable-header-box">
+                                        <table cellspacing="0" cellpadding="4" class="ui-table table">
+                                            <thead class="ui-table-thead">
+                                                <tr>
+                                                    <th>Sl. No.</th>
+
+                                                    <th>Grades / Count
+                                                    </th>
+
+                                                    <th>Desp. Crates
+                                                    </th>
+
+                                                    <th>Quantity
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ui-table-tbody"
+                                                *ngFor="let despDetail of greensAgentDespCountWeightDetailsList; let i= index">
+                                                <tr>
+                                                    <td class="text-center"> {{i+1}}</td>
+                                                    <td class="text-center">
+                                                        <div class="form-group mb-0">
+                                                            <mat-select class="form-control" #autoHighlight
+                                                                [(ngModel)]="despDetail.cropSchemeCode" name="cropCount"
+                                                                [disabled]="despDetail.isDisabled || despDetail.cropSchemeDisabled">
+                                                                <mat-option [value]="crop.Code"
+                                                                    [disabled]="crop.isDisabled"
+                                                                    *ngFor="let crop of cropSchemeList">
+                                                                    {{crop.From}}
+                                                                    {{' '}}
+                                                                    {{crop.Sign}}
+                                                                    {{' / '}}
+                                                                    {{crop.Count}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <!-- <small Class=" form-text text-danger"
+                                                                    *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                                                        && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                                                    required!</small> -->
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center"> <input type="text"
+                                                            class="form-control right-aligned-input"
+                                                            [(ngModel)]="despDetail.agentCropReceivedCrates"
+                                                            name="eachTare"> </td>
+                                                    <td class="text-center"> <input type="text"
+                                                            class="form-control right-aligned-input"
+                                                            [(ngModel)]="despDetail.agentCropReceivedQty"
+                                                            (blur)="GridItemBlur(despDetail)"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+
+        </p-tabPanel>
+
+
+        <p-tabPanel header="Harvest GRN & Weighment Details" [disabled]="disableNextPanel"
+            [selected]="selectedTab === 'weighmentDetails'">
+            <div class="card-body" style="overflow-y:auto">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Quantity (Recd.) KGS</span>
+                            <input type="text" class="form-control" name=totQty [(ngModel)]="totlQty" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Weightment Mode</span>
+                            <mat-select class="form-control" value="ManualWeighment" disabled>
+                                <mat-option value="ManualWeighment">Manual Weighment</mat-option>
+                                <mat-option value="AutomationWeighment">Automation Weighment</mat-option>
+                            </mat-select>
+                            <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Entered By</span>
+                            <input type="text" class="form-control" [(ngModel)]="employeeName" disabled>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <p-tabView>
+                    <p-tabPanel header="Summary Receiving Details">
+                        <div [formGroup]="">
+                            <div class="row">
+                                <div class="col-md-12 ui-table-scrollable-view">
+                                    <div class="ui-table-scrollable-header ui-widget-header">
+                                        <div class="ui-table-scrollable-header-box">
+                                            <table cellspacing="0" cellpadding="4" class="ui-table table">
+                                                <thead class="ui-table-thead">
+                                                    <tr>
+                                                        <th>Sl. No.</th>
+
+                                                        <th>Crop Count
+                                                        </th>
+
+                                                        <th>No. of Crates
+                                                        </th>
+
+                                                        <th>Total Quantity (Net Wt)
+                                                        </th>
+
+                                                        <th>Select
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="ui-table-tbody"
+                                                    *ngFor="let actualDetail of greensAgentGradesActualDetailsList;  let i= index">
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            {{i+1}}
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-group mb-0">
+                                                                <mat-select class="form-control" #autoHighlight1
+                                                                    disabled [(ngModel)]="actualDetail.cropSchemeCode"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    [name]="actualDetail.agentReceivedNo">
+                                                                    <mat-option [value]="crop.Code"
+                                                                        *ngFor="let crop of cropSchemeList">
+                                                                        {{crop.From}}
+                                                                        {{' '}}
+                                                                        {{crop.Sign}}
+                                                                        {{' / '}}
+                                                                        {{crop.Count}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                                <!-- <small Class=" form-text text-danger"
+                                                                        *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                                                            && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                                                        required!</small> -->
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center" disable>
+                                                            {{actualDetail.countTotalCrates}}
+                                                        </td>
+                                                        <td class="text-center" disable>
+                                                            {{actualDetail.countTotalWeight}}
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-center">
+                                                                <input type="radio" name="summaryReceiving"
+                                                                    [(value)]="isRadioSelected"
+                                                                    (click)="selectSummaryReceiving(actualDetail)">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </p-tabPanel>
+                </p-tabView>
+                <p-tabView>
+                    <p-tabPanel header="Summary Weighment Details">
+                        <div class="row">
+                            <div class="col-md-12 ui-table-scrollable-view">
+                                <div class="ui-table-scrollable-header ui-widget-header">
+                                    <div class="ui-table-scrollable-header-box">
+                                        <table cellspacing="0" cellpadding="4" class="ui-table table">
+                                            <thead class="ui-table-thead">
+                                                <tr>
+                                                    <th>Sl. No.</th>
+
+                                                    <th style="width: 250px;">Count
+                                                    </th>
+
+                                                    <th>No. of Crates
+                                                    </th>
+
+                                                    <th>Crates Tare Weight
+                                                    </th>
+
+                                                    <th>Sl. No From
+                                                    </th>
+
+                                                    <th>Sl. No To
+                                                    </th>
+
+                                                    <th>Gross Wt
+                                                    </th>
+
+                                                    <th>Tare Wt
+                                                    </th>
+                                                    <th>Net Wt
+                                                    </th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ui-table-tbody">
+                                                <tr
+                                                    *ngFor="let actWeitDetail of gridActualWeightDetailList; let i= index">
+                                                    <td class="text-center">
+                                                        {{i+1}}
+                                                    </td>
+
+                                                    <td class="text-center" style="width: 250px;">
+                                                        <div class="form-group mb-0">
+                                                            <mat-select class="form-control" #autoHighlight2 disabled
+                                                                [(ngModel)]="actWeitDetail.cropSchemeCode"
+                                                                [ngModelOptions]="{standalone: true}" [name]="i">
+                                                                <mat-option [value]="crop.Code"
+                                                                    *ngFor="let crop of cropSchemeList">
+                                                                    {{crop.From}}
+                                                                    {{' '}}
+                                                                    {{crop.Sign}}
+                                                                    {{' / '}}
+                                                                    {{crop.Count}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            (keydown)="OnlyNumber($event)"
+                                                            [(ngModel)]="actWeitDetail.actualWeightNoofCrates">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            (keydown)="ThreeDigitDecimalNumber($event)"
+                                                            [(ngModel)]="actWeitDetail.actualCratesTareWeight"
+                                                            (blur)="calculateTareWeight(actWeitDetail)">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="actWeitDetail.slNoFrom">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            [(ngModel)]="actWeitDetail.slNoTo">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control right-aligned-input"
+                                                            (keydown)="ThreeDigitDecimalNumber($event)"
+                                                            [(ngModel)]="actWeitDetail.actualGrossWeight"
+                                                            (blur)="calculateNetWeight(actWeitDetail)">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{actWeitDetail.actualTareWeight}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{actWeitDetail.actualNetWeight}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">
+
+                                                    </td>
+                                                    <td colspan="5" class="text-left font-weight-bold">
+                                                        Total
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{calculateGrossWt()}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{calculateTareWt()}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{calculateNetWt()}}
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </p-tabPanel>
+                </p-tabView>
+
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+    <div class="mgt-20 pull-right mb-5">
+        <div class="row pull-right btSection">
+            <div class="col-md-12">
+                <button pButton type="button" label="Agent Receipts" class="ui-button-rounded"
+                    [disabled]="disableAgntReceiBtn" (click)="onAgentReceiptsClick()"></button>
+                <button pButton type="button" label="Next" class="ui-button-rounded" [disabled]="disableNextBtn"
+                    (click)="saveAndNext()" #nxtBtn></button>
+                <button pButton type="button" label="Save" class="ui-button-rounded" (click)="ChangeStatus()"
+                    [disabled]="disableSaveBtn"></button>
+                <button pButton type="button" label="Find" class="ui-button-rounded"
+                    [disabled]="disableFindBtn"></button>
+                <button pButton type="button" label="Modify" class="ui-button-rounded"
+                    [disabled]="disableModifyBtn"></button>
+                <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="reset()"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddMoreData" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="addMoreDataModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMoreDataModalCenterTitle">Continue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-dismiss="modal"
+                    (click)="closePopup()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you want to continue?
+            </div>
+            <div class="modal-footer">
+                <button pButton type="button" (click)="continueToAddCount();" label="Continue Count"
+                    class="ui-button-rounded" data-dismiss="modal" #continueBtn></button>
+                <button pButton type="button" (click)="changeCountdata();" label="Change Count"
+                    class="ui-button-rounded" data-dismiss="modal"></button>
+                <button pButton type="button" (click)="completeWeighment();" label="Complete Weighment"
+                    class="ui-button-rounded" data-dismiss="modal"></button>
+            </div>
+        </div>
+    </div>
+</div>

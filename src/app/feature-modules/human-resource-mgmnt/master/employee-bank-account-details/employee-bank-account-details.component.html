@@ -1,0 +1,386 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Human Resource Management</a></li>
+    <li class="active"><span>Employee Bank Account Details</span></li>
+  </ol>
+</div>
+
+
+<p-accordion>
+  <p-accordionTab header="Employee Bank Account Details" class="card" [selected]="true">
+    <!-- the farmers report code -->
+    <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+      <div [formGroup]="bankDetailsForm" class=" col-md-12 cleartop">
+        <div class="row pl-1 pr-1">
+
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="entryDateForm" class=" form-group"> -->
+            <span class="label-control">Date of Entry</span>
+            <input matInput class="form-control
+                                            border-bottom-1" placeholder="Please Select Entry Date"
+              [matDatepicker]="dp" formControlName="entryDateControl" #entryDate>
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dp>
+            </mat-datepicker>
+            <span *ngIf="bankDetailsForm.controls.entryDateControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.entryDateControl.touched" class="error-span">
+              Entry date is
+              required
+              field.</span>
+            <!-- </div> -->
+
+          </div>
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="usernameForm" class=" form-group"> -->
+            <span class="label-control">Login User Name</span>
+            <input type="text" placeholder="" formControlName="usernameControl" class="form-control">
+            <span *ngIf="bankDetailsForm.controls.usernameControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.usernameControl.touched" class="error-span">
+              Username is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+
+          <div class="col-md-4">
+            <!-- <div [formGroup]="orgDetailsForm" class="form-group"> -->
+            <span class="label-control">Unit</span>
+            <mat-select class="form-control" formControlName="orgNameControl" placeholder="Please Select Unit">
+              <mat-option *ngFor="let organisation of organisationDetails" [value]="organisation.OrgOfficeNo">
+                {{organisation.OrgOfficeName}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.orgNameControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.orgNameControl.touched" class="error-span">
+              Unit is
+              required
+              field.</span>
+
+            <!-- </div> -->
+          </div>
+
+        </div>
+
+
+
+        <div class="row pl-1 pr-1 mb-4" style="margin-top: 25px;">
+
+          <div class="col-md-4">
+            <!-- <div [formGroup]="accountModeForm" class="form-group"> -->
+            <span class="label-control">Mode of Account</span>
+            <mat-select class="form-control" placeholder="Please Select Mode of Account"
+              formControlName="accountModeControl">
+              <mat-option *ngFor="let mode of modeOfAccount" [value]="mode">
+                {{mode}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.accountModeControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.accountModeControl.touched" class="error-span">
+              Mode of account is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+          <div class="col-md-4">
+            <!-- <div [formGroup]="departmentForm" class="form-group"> -->
+            <span class="label-control">Department</span>
+            <mat-select class="form-control" placeholder="Please Select Department" formControlName="departmentControl">
+              <mat-option *ngFor="let department of departments" [value]="department.departmentCode">
+                {{department.departMentName}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.departmentControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.departmentControl.touched" class="error-span">
+              Department is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+          <div class="col-md-4">
+            <!-- <div [formGroup]="subDepartmentForm" class="form-group"> -->
+            <span class="label-control">Sub Department</span>
+            <mat-select class="form-control" formControlName="subDepartmentControl"
+              placeholder="Please Select Sub Department">
+              <mat-option *ngFor="let subDepartment of subDepartments" [value]="subDepartment.subDepartmentCode">
+                {{subDepartment.subDepartmentName}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.subDepartmentControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.subDepartmentControl.touched" class="error-span">
+              Sub department is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+        </div>
+
+
+        <div class="row pl-1 pr-1 mb-4">
+
+          <div class="col-md-4">
+            <!-- <div [formGroup]="designationForm" class="form-group"> -->
+            <span class="label-control">Designation</span>
+            <mat-select class="form-control" formControlName="designationControl"
+              placeholder="Please Select Designation">
+              <mat-option *ngFor="let designation of designations" [value]="designation.designationCode">
+                {{designation.designattionName}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.designationControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.designationControl.touched" class="error-span">
+              Designation is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+          <div class="col-md-4">
+            <!-- <div [formGroup]="employeeForm" class="form-group"> -->
+            <span class="label-control">Employee Name</span>
+            <mat-select class="form-control" formControlName="employeeControl"
+              placeholder="Please Select Employee Name">
+              <mat-option *ngFor="let employee of employees" [value]="employee.employeeId">
+                {{employee.employeeName}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.employeeControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.employeeControl.touched" class="error-span">
+              Employee Name is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="bankDetailForm" class=" form-group"> -->
+            <span class="label-control">Name of the Bank</span>
+            <input *ngIf="!selectedOrgAccount" type="text" placeholder="Please Enter Bank Name"
+              formControlName="bankDetailControl" class="form-control">
+            <mat-select *ngIf="selectedOrgAccount" class="form-control" placeholder="Please Select Bank Name"
+              formControlName="bankDetailControl" placeholder="">
+              <mat-option *ngFor="let bankDetail of bankDetails" [value]="bankDetail.bankCode">
+                {{bankDetail.bankNameAccountNumber}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.bankDetailControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.bankDetailControl.touched" class="error-span">
+              Bank name is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.bankDetailControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.bankDetailControl.touched" class="error-span">
+              Should be max 75 characters</span>
+            <!-- </div> -->
+          </div>
+        </div>
+
+
+        <div class="row pl-1 pr-1 mb-4">
+
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="branchForm" class=" form-group"> -->
+            <span class="label-control">Branch</span>
+            <input type="text" placeholder="Please Enter Branch Name" formControlName="branchControl"
+              class="form-control">
+            <span *ngIf="bankDetailsForm.controls.branchControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.branchControl.touched" class="error-span">
+              Branch is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.branchControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.branchControl.touched" class="error-span">
+              Should be max 50 characters</span>
+            <!-- </div> -->
+          </div>
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="branchIfscForm" class="form-group"> -->
+            <span class="label-control">IFS Code</span>
+            <input type="text" placeholder="Please Enter IFSC Code" formControlName="branchIfscControl"
+              class="form-control">
+            <span *ngIf="bankDetailsForm.controls.branchIfscControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.branchIfscControl.touched" class="error-span">
+              Ifsc code is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.branchIfscControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.branchIfscControl.touched" class="error-span">
+              Should be max 15 characters</span>
+            <!-- </div> -->
+          </div>
+
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="accountNumberForm" class=" form-group"> -->
+            <span class="label-control">Account Number</span>
+            <input type="text" placeholder="Please Enter Account Number" formControlName="accountNumberControl"
+              class="form-control">
+            <span *ngIf="bankDetailsForm.controls.accountNumberControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.accountNumberControl.touched" class="error-span">
+              Account number is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.accountNumberControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.accountNumberControl.touched" class="error-span">
+              Should be max 30 characters</span>
+            <!-- </div> -->
+          </div>
+
+
+        </div>
+
+        <div class="row pl-1 pr-1 mb-4">
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="effectiveDateForm" class=" form-group"> -->
+            <span class="label-control">Account Effective Date</span>
+            <input matInput class="form-control
+                                            border-bottom-1" placeholder="Please Enter Account Effective Date"
+              [matDatepicker]="dp1" formControlName="effectiveDateControl">
+            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp1">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dp1>
+            </mat-datepicker>
+            <span *ngIf="bankDetailsForm.controls.effectiveDateControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.effectiveDateControl.touched" class="error-span">
+              Effective date is
+              required
+              field.</span>
+            <!-- </div> -->
+
+          </div>
+
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="nomineeForm" class=" form-group"> -->
+            <span class="label-control">Nominee Name</span>
+            <input type="text" placeholder="Please Enter Nominee" formControlName="nomineeControl" class="form-control">
+            <span *ngIf="bankDetailsForm.controls.nomineeControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.nomineeControl.touched" class="error-span">
+              Nominee is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.nomineeControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.nomineeControl.touched" class="error-span">
+              Should be max 50 characters</span>
+            <!-- </div> -->
+          </div>
+
+          <div class="col-xs-4 col-sm-4 col-md-4">
+            <!-- <div [formGroup]="nomineeRelationshipForm" class=" form-group"> -->
+            <span class="label-control">Relationship with Nominee</span>
+            <input type="text" placeholder="Please Enter Nominee Relationship"
+              formControlName="nomineeRelationshipControl" class="form-control">
+            <span *ngIf="bankDetailsForm.controls.nomineeRelationshipControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.nomineeRelationshipControl.touched"
+              class="error-span">
+              Nominee relaionship is
+              required
+              field.</span>
+            <span *ngIf="bankDetailsForm.controls.nomineeRelationshipControl.errors?.maxlength
+                                        &&
+                                        bankDetailsForm.controls.nomineeRelationshipControl.touched"
+              class="error-span">
+              Should be max 30 characters</span>
+            <!-- </div> -->
+          </div>
+
+
+
+        </div>
+
+        <div class="row pl-1 pr-1 mb-4">
+
+          <div class="col-md-4">
+            <!-- <div [formGroup]="preferredAccountForm" class="form-group"> -->
+            <span class="label-control">Preferred Salary Account</span>
+            <mat-select class="form-control" formControlName="preferredAccountControl"
+              placeholder="Please Select Prefereed Salary Account">
+              <mat-option *ngFor="let salaryAccount of preferredAccount" [value]="salaryAccount">
+                {{salaryAccount}}
+              </mat-option>
+            </mat-select>
+            <span *ngIf="bankDetailsForm.controls.preferredAccountControl.errors?.required
+                                        &&
+                                        bankDetailsForm.controls.preferredAccountControl.touched" class="error-span">
+              Preferred salary account is
+              required
+              field.</span>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </p-accordionTab>
+</p-accordion>
+
+
+<p-accordion>
+  <p-accordionTab header="Conditions & Rates" class="card" [selected]="true">
+    <div class="row pl-3 pr-3 ml-2 mr-2 mt-2 maindiv">
+      <div class=" col-md-12 cleartop">
+        <table class="table table-striped table-bordered
+                                dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4" id="grdOrganizations">
+          <tbody>
+            <tr>
+              <th>Bank Name</th>
+              <th>Branch / IFS Code</th>
+              <th>Acccount Number</th>
+              <th>Account Effective Date</th>
+              <th>Preferred Salary Account</th>
+            </tr>
+            <tr *ngFor="let bankDetail of bankDetailsGrid">
+              <td class="text-align-left">
+                <span>{{bankDetail.bankName}}</span>
+              </td>
+              <td class="text-align-left">
+                <span>{{bankDetail.bankBranchIfsc}}</span>
+              </td>
+              <td class="text-align-left">
+                <span>{{bankDetail.bankAccountNumber}}</span>
+              </td>
+              <td class="text-align-left">
+                <span>{{bankDetail.accountEffectiveDateFrom}}</span>
+              </td>
+              <td class="text-align-left">
+                <span>{{bankDetail.preferredAccount}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+  <div class="row pull-right btSection">
+    <div class="col-md12">
+      <button pButton type="submit" label="ADD Employee Account" [disabled]="addEmployeeDisabled"
+        (click)="addEmployeeAccount()" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Save" [disabled]="saveDisabled || bankDetailsForm.invalid"
+        (click)="saveBankDetails()" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Find" [disabled]="findDisabled" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Modify" [disabled]="modifyDisabled" class="ui-button-rounded"></button>
+      <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+
+    </div>
+  </div>
+</div>

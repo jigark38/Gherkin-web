@@ -1,0 +1,308 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Loan & Advance</span></li>
+    </ol>
+</div>
+<div class="card ">
+    <div class="bg-gray">
+        Loan & Advance Details
+    </div>
+    <div class="card-body">
+        <form [formGroup]="loanDetailsForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Login User Name</span>
+                            <input type="text" matInput [value]="employee.userName" placeholder="Enter Login User Name" readonly="readonly" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Date of Entry</span>
+                            <input matInput class="form-control border-bottom-1 mb-1" #entryDateInput formControlName="entryDate" placeholder="Please Select Date Of Entry" [matDatepicker]="eDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #eDate>
+                            </mat-datepicker>
+                            <span *ngIf="loanDetailsForm.controls.entryDate.errors?.required && loanDetailsForm.controls.entryDate.touched" class="error-span">Date of Entry is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Organisation</span>
+                            <mat-select class="form-control" formControlName="orgofficeNo" placeholder="Please Select Organisation">
+                                <mat-option *ngFor="let organisation of organisationDetails" [value]="organisation.orgOfficeNo">
+                                    {{organisation.orgOfficeName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.orgofficeNo.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.orgofficeNo.touched" class="error-span">
+                Organisation is
+                required
+                field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Department</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Department" formControlName="department">
+                                <mat-option *ngFor="let department of departmentDetails" [value]="department.departmentCode">
+                                    {{department.departMentName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.department.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.department.touched" class="error-span">
+                Department is
+                required
+                field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Division</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Division" formControlName="division">
+                                <mat-option *ngFor="let devision of devisionDetails" [value]="devision.subDepartmentCode">
+                                    {{devision.subDepartmentName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.division.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.division.touched" class="error-span">
+                Division is
+                required
+                field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Designation</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Designation" formControlName="designation">
+                                <mat-option *ngFor="let designation of designationDetails" [value]="designation.designationCode">
+                                    {{designation.designattionName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.designation.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.designation.touched" class="error-span">
+                Designation is
+                required
+                field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Biometric Id</span>
+                            <input maxlength="10" matInput type="text" placeholder="Please enter Biometric Id" formControlName="biometricId" class="form-control mb-1" (blur)="getemployeeByBiometricIdonBlur()">
+                            <!-- <span *ngIf="loanDetailsForm.controls.biometricId.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.biometricId.touched"
+                                class="error-span">
+                                biometricId is
+                                required
+                                field.</span> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Employee Name</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Employee Name" formControlName="employeeID">
+                                <mat-option *ngFor="let employee of employeeDetails" [value]="employee.empId">
+                                    {{employee.empName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.employeeID.errors?.required
+                                                          &&
+                                                          loanDetailsForm.controls.employeeID.touched" class="error-span">
+                Employee Name is
+                required
+                field.</span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Loan Type</span>
+                            <app-auto-complete (selectedValueChangeBlur)="saveItemToList($event)" [options]="items" placeholder="Please Select Loan Type" [selectedValueFormControl]="loanDetailsForm.controls.lAType" (saveitemToList)="saveItemToList($event)">
+                            </app-auto-complete>
+                            <span *ngIf="loanDetailsForm.controls.lAType.errors?.required
+                            &&
+                            loanDetailsForm.controls.lAType.touched" class="error-span">
+                Loan Type is
+                required
+                field.</span>
+                            <span *ngIf="loanDetailsForm.controls.lAType.errors?.maxlength
+                            &&
+                            loanDetailsForm.controls.lAType.touched" class="error-span">
+                Loan Type max length is 30.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control"> Loan Requested Date </span>
+                            <input matInput class="form-control border-bottom-1 mat-select-placeholder mb-1" formControlName="lARequistionDate" #requistionDateInput placeholder="Please Select Loan Requested Date" [matDatepicker]="sDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="sDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #sDate>
+                            </mat-datepicker>
+                            <span *ngIf="loanDetailsForm.controls.lARequistionDate.errors?.required && loanDetailsForm.controls.lARequistionDate.touched" class="error-span">Loan Requested Date is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Login Request Amount</span>
+                            <input maxlength="8" matInput type="text" placeholder="Login Request Amount" formControlName="lARequistionAmount" class="form-control mb-1">
+                            <span *ngIf="loanDetailsForm.controls.lARequistionAmount.errors?.required && loanDetailsForm.controls.lARequistionAmount.touched" class="error-span">Login Request Amount is required field.</span>
+                            <span *ngIf="loanDetailsForm.controls.lARequistionAmount.errors?.pattern && loanDetailsForm.controls.lARequistionAmount.touched" class="error-span">
+                should be
+                numerics
+                only</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Loan Account No</span>
+                            <input *ngIf="mode != 'find'" matInput type="text" placeholder="Loan Account No" [value]="loanDetailsForm.controls.loanAdvNo.value?.slice(3)" class="form-control mb-1" readonly>
+                            <mat-select *ngIf="mode === 'find'" class="form-control mb-1" placeholder="Please Select Loan Account No" formControlName="loanAdvNo">
+                                <mat-option *ngFor="let loan of loanDetails" [value]="loan.loanAdvNo">
+                                    {{loan.loanAdvNo?.slice(3)}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.loanAdvNo.errors?.required && loanDetailsForm.controls.loanAdvNo.touched" class="error-span">Loan Account No is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Loan Approved Date</span>
+                            <input matInput class="form-control border-bottom-1 mat-select-placeholder mb-1" #approvedDateInput formControlName="lAApprovedDate" placeholder="Please Select Loan Approved Date" [matDatepicker]="dDate">
+                            <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dDate">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dDate>
+                            </mat-datepicker>
+                            <span *ngIf="loanDetailsForm.controls.lAApprovedDate.errors?.required && loanDetailsForm.controls.lAApprovedDate.touched" class="error-span">Loan Approved Date is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Loan Approved Amount</span>
+                            <input maxlength="8" matInput type="text" placeholder="Loan Approved Amount" formControlName="lAApprovedAmount" class="form-control mb-1">
+                            <span *ngIf="loanDetailsForm.controls.lAApprovedAmount.errors?.required && loanDetailsForm.controls.lAApprovedAmount.touched" class="error-span">Loan Approved Amount is required field.</span>
+                            <span *ngIf="loanDetailsForm.controls.lAApprovedAmount.errors?.pattern && loanDetailsForm.controls.lAApprovedAmount.touched" class="error-span">
+                should be
+                numerics
+                only</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">No. Of Installments</span>
+                            <input maxlength="4" matInput type="text" placeholder="No. Of Installments" formControlName="lANoOfInstl" class="form-control mb-1">
+                            <span *ngIf="loanDetailsForm.controls.lANoOfInstl.errors?.required && loanDetailsForm.controls.lANoOfInstl.touched" class="error-span">No. Of Installments is required field.</span>
+                            <span *ngIf="loanDetailsForm.controls.lANoOfInstl.errors?.pattern && loanDetailsForm.controls.lANoOfInstl.touched" class="error-span">
+                should be
+                numerics
+                only</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Loan Condition</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Loan Condition" formControlName="lACondition">
+                                <mat-option value="InterestFree">Interest Free</mat-option>
+                                <mat-option value="Interest">Interest</mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.lACondition.errors?.required && loanDetailsForm.controls.lACondition.touched" class="error-span">Loan Condition is required field.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Interest Percentage</span>
+                            <input matInput type="text" placeholder="Interest Percentage" formControlName="lAInterestPercentage" class="form-control mb-1">
+                            <span *ngIf="loanDetailsForm.controls.lAInterestPercentage.errors?.pattern && loanDetailsForm.controls.lAInterestPercentage.touched" class="error-span">
+                should be
+                numerics
+                only in format of
+                XX.XXX</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Approx. Monthly Deduction</span>
+                            <input maxlength="6" matInput type="text" placeholder="Approx. Monthly Deduction" formControlName="lAMonthlyDeduction" class="form-control mb-1">
+                            <span *ngIf="loanDetailsForm.controls.lAMonthlyDeduction.errors?.required && loanDetailsForm.controls.lAMonthlyDeduction.touched" class="error-span">Approx. Monthly Deduction is required field.</span>
+                            <span *ngIf="loanDetailsForm.controls.lAMonthlyDeduction.errors?.pattern && loanDetailsForm.controls.lAMonthlyDeduction.touched" class="error-span">
+                should be
+                numerics
+                only</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Approved By</span>
+                            <mat-select class="form-control mb-1" placeholder="Please Select Employee Name" formControlName="lAApprovedEmployeeID">
+                                <mat-option *ngFor="let employee of allEmployeeDetails" [value]="employee.employeeId">
+                                    {{employee.employeeName}}
+                                </mat-option>
+                            </mat-select>
+                            <span *ngIf="loanDetailsForm.controls.lAApprovedEmployeeID.errors?.required && loanDetailsForm.controls.lAApprovedEmployeeID.touched" class="error-span">Approved By is required field.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Loan Amount Deducted Till Date</span>
+                            <input matInput type="number" placeholder="Loan Amount Deducted Till Date" formControlName="laDeductedTillDate" class="form-control mb-1">
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class=" form-group">
+                            <span class="label-control">Till Date Installments paid</span>
+                            <input matInput type="number" placeholder="Till Date Installments paid" formControlName="laInstallmentsTillPaid" class="form-control mb-1">
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="pull-right">
+
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+            <button pButton type="submit" [disabled]="mode === 'find' || mode === 'update' || mode === 'add'" label="New Loans / Adavnces" class="ui-button-rounded" (click)="createLoadAdvances()"></button>
+            <button pButton type="submit" label="Save" [disabled]="!loanDetailsForm.valid || mode === 'find'" class="ui-button-rounded" (click)="save()"></button>
+            <button pButton type="submit" [disabled]="mode === 'find' || mode === 'update' || mode === 'add'" label="Find" class="ui-button-rounded" (click)="search()"></button>
+            <button pButton type="submit" *ngIf="mode === 'find'" [disabled]="!loanDetailsForm.valid" label="Modify" class="ui-button-rounded" (click)="modify()"></button>
+            <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,310 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Culling & Pack Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-tabView>
+        <p-tabPanel header="Graded Greens Details">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Unit Name</span>
+                            <mat-select placeholder="Please Select Unit Name" class="form-control">
+                                <mat-option *ngFor="let item of officeLocations" [value]="item.OrgOfficeNo">
+                                    {{item.OrgOfficeName}}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Graded Material Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>GRN Date</th>
+                                <th>GRN No</th>
+                                <th>Area Name</th>
+                                <th>Crop Name</th>
+                                <th>Quantity</th>
+                                <th>Batch Allot. Date / No</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr>
+                                <ng-container>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Pending Production Batch Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        cellpadding="4">
+                        <tbody>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Batch Date</th>
+                                <th>Batch No</th>
+                                <th>Production Grades</th>
+                                <th>No. of Barrels</th>
+                                <th>Batch Quantity</th>
+                                <th>Media Preserve In</th>
+                                <th>Till Date Packed</th>
+                                <th>Pending Nos</th>
+                                <th>Req. Qty</th>
+                            </tr>
+                            <tr>
+                                <ng-container>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+
+        <p-tabPanel header="Culling, Grading & Pack Details">
+            <p-accordionTab header="Culling, Grading & Pack Details" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Receiving Unit</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Batch Date</span>
+                                <input type="text" class="form-control" value="Test1">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Batch No</span>
+                                <input type="text" class="form-control" value="Test1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Batch Quantity</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Media Process</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Include Grading Section</span>
+                                <select type="text" class="form-control">
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Weightment Mode</span>
+                                <select type="text" class="form-control">
+                                    <option>Direct</option>
+                                    <option>Manual Weighment</option>
+                                    <option>Automation Weighment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Culling Process Date</span>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Entered By</span>
+                                <select type="text" class="form-control">
+                                    <option>Test1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Barrel Starting No</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Barrel Ending No</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">No. of Barrels</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">On Duty Employees Details</span>
+                                <textarea type="text" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Quantity after Culling Process</span>
+                                <input type="text" class="form-control" value="Test">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Barcode Print</span>
+                                <select type="text" class="form-control">
+                                    <option>No</option>
+                                    <option>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Graded Material Details" [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                    <tbody>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>Crop Grade</th>
+                            <th>GRN Qty</th>
+                            <th>Total Graded Qty</th>
+                            <th>Packed Grade</th>
+                            <th>No of Barrels</th>
+                        </tr>
+                        <tr>
+                            <ng-container>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-accordionTab>
+            <p-accordionTab header="Barrel & Weight Details" [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                    <tbody>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>Wt. No</th>
+                            <th>Crop Grade</th>
+                            <th>Packed Grade</th>
+                            <th>Barrel No</th>
+                            <th>Barrel Size</th>
+                            <th>Filled Qty</th>
+                        </tr>
+                        <tr>
+                            <ng-container>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-accordionTab>
+        </p-tabPanel>
+    </p-tabView>
+
+
+    <div class="mgt-20 pull-right">
+        <div class="col-md-12">
+            <!-- <button pButton type="submit" label="Grading Weighment" class="ui-button-rounded"></button> -->
+            <button pButton type="submit" label="Next" class="ui-button-rounded"></button>
+            <!-- <button pButton type="submit" label="Save" class="ui-button-rounded"></button> -->
+            <!-- <button pButton type="submit" label="Modify" class="ui-button-rounded"></button> -->
+            <button pButton type="submit" label="Clear" class="ui-button-rounded"></button>
+        </div>
+    </div>
+    <div style="height: 28px;"></div>
+</p-accordion>

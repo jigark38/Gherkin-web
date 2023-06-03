@@ -1,0 +1,47 @@
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: black;
+  opacity: 0.5; /* Firefox */
+  font-size: 10px;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: black;
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: black;
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.ui-table-tbody .mat-datepicker-toggle-default-icon {
+  height: 18px !important;
+}
+
+table td {
+  text-align: center !important;
+  vertical-align: inherit !important;
+}
+
+.float-left {
+  float: left;
+}
+
+.no-selection-error {
+  margin-left: 0px !important;
+  margin-bottom: 5px !important;
+}
+
+.width-100px {
+  width: 100px !important;
+}
+
+.disableTab {
+  pointer-events: none;
+  cursor: pointer;
+}

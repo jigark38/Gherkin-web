@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-lg-10">
+        <h5>Confirmation</h5>
+    </div>
+    <div class="col-lg-2 cursor-pointer" (click)="onNoClick()">
+        <mat-icon>close</mat-icon>
+    </div>
+</div>
+<div class="row pad-lf-15">
+    <!-- <label>Do You Want to add More Size Rates?</label> -->
+    <label [innerHtml]="messageText"></label>
+    <br>
+    <br>
+</div>
+<div class="row pad-lf-15 pad-tp-20">
+    <!-- <button mat-button (click)="onYesClick()">Yes</button>
+    <button mat-button  >No</button> -->
+
+    <input type="submit" value="Yes" (click)="onYesClick()" class="btn btn-info">
+    <input type="submit" value="No" (click)="onNoClick()" class="btn btn-info mar-lf-10">
+</div>

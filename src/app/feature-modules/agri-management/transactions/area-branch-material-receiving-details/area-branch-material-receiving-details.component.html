@@ -1,0 +1,291 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Area/Branch Materials Receiving Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Area/Branch Materials Receiving Details" [selected]="true">
+        <form [formGroup]="areaDetailsForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Area/Branch Name</span>
+                                <mat-select class="form-control" #areaID tabindex="0" formControlName="AreaID"
+                                    (selectionChange)="areaChange($event)" [ngClass]="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                    && (areaDetailsForm.get('AreaID').errors?.required)?'error-border':''">
+
+                                    <mat-option *ngFor="let areaCode of areaCodesList" [value]="areaCode.areaId">
+                                        {{areaCode.areaName}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched) 
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Season From / To</span>
+                                <input type="text" class="form-control" formControlName="SeasonFromToDate">
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('PSNumber').valid) && (areaDetailsForm.get('PSNumber').touched) 
+                                && areaDetailsForm.get('PSNumber').errors?.required">PSNumber is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Area / Branch
+                                    Incharge</span>
+                                <input type="text" class="form-control" formControlName="AreaBranchIncharge">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Received Date</span>
+
+                                <!-- <p-calendar class="form-control" [formControl]="AreaMRDate" [showTime]="true">
+                                </p-calendar> -->
+                                <p-calendar id="areaBMRD" class="form-control" readonlyInput="true" tabindex="0"
+                                    (onSelect)="onReceivedDateSelect($event)" [formControlName]="'AreaMRDate'"
+                                    dateFormat="dd-M-yy" [showTime]="true" [showIcon]="true" icon="pi pi-calendar"
+                                    [ngClass]="!(areaDetailsForm.get('AreaMRDate').valid) && (areaDetailsForm.get('AreaMRDate').touched) 
+                                    && (areaDetailsForm.get('AreaMRDate').errors?.required)?'error-border':''">
+                                </p-calendar>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaMRDate').valid) && (areaDetailsForm.get('AreaMRDate').touched) 
+                                && areaDetailsForm.get('AreaMRDate').errors?.required">Received Date is
+                                    required!</small>
+                                <!-- <input type="text" formControlName="AreaMRDate" [matDatepicker]="ejd"
+                                    class="form-control" #AreaMRDate tabindex="3">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #ejd>
+                                </mat-datepicker> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Inward No</span>
+                                <input type="text" formControlName="AreaMRNNoVisible" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Expeneses Paid</span>
+                                <input type="text" formControlName="MRExpensesPaid" #MRExpensesPaid
+                                    class="form-control entry-box-orderdetails" tabindex="0" [ngClass]="!(areaDetailsForm.get('MRExpensesPaid').valid) && (areaDetailsForm.get('MRExpensesPaid').touched) 
+                                    && (areaDetailsForm.get('MRExpensesPaid').errors?.required ||
+                                    areaDetailsForm.get('MRExpensesPaid').errors?.pattern)?'error-border':''" />
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('MRExpensesPaid').valid) && (areaDetailsForm.get('MRExpensesPaid').touched) 
+                                    && areaDetailsForm.get('MRExpensesPaid').errors?.required">Expeneses Paid is
+                                    required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('MRExpensesPaid').valid) && (areaDetailsForm.get('MRExpensesPaid').touched) 
+                            && (areaDetailsForm.get('MRExpensesPaid').errors?.pattern)">Expeneses Paid
+                                    can be max 8 numeric characters!</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Remarks</span>
+                                <textarea type="text" formControlName="MRRemarks" class="form-control" tabindex="0"
+                                    [ngClass]="!(areaDetailsForm.get('MRRemarks').valid) && (areaDetailsForm.get('MRRemarks').touched) 
+                                    && (areaDetailsForm.get('MRRemarks').errors?.maxlength)?'error-border':''"></textarea>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('MRRemarks').valid) && (areaDetailsForm.get('MRRemarks').touched) 
+                        && (areaDetailsForm.get('MRRemarks').errors?.maxlength)">Remarks allows upto 300
+                                    characters only!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Material Group</span>
+                                <input type="text" formControlName="RawMaterialGroup" class="form-control" value="Test">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Material Name</span>
+                                <input type="text" formControlName="RawMaterialDetailsName" class="form-control"
+                                    value="Test">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Despatched Qty / UOM</span>
+                                <input type="text" formControlName="RMMaterialTransferQty"
+                                    class="form-control entry-box-orderdetails" [ngClass]="!(areaDetailsForm.get('RMMaterialTransferQty').valid) && (areaDetailsForm.get('RMMaterialTransferQty').touched) 
+                                && (areaDetailsForm.get('RMMaterialTransferQty').errors?.required ||
+                                areaDetailsForm.get('RMMaterialTransferQty').errors?.pattern)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('RMMaterialTransferQty').valid) && (areaDetailsForm.get('RMMaterialTransferQty').touched) 
+                                && areaDetailsForm.get('RMMaterialTransferQty').errors?.required">Despatched Qty / UOM
+                                    is required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('RMMaterialTransferQty').valid) && (areaDetailsForm.get('RMMaterialTransferQty').touched) 
+                        && (areaDetailsForm.get('RMMaterialTransferQty').errors?.pattern)">Despatched Qty / UOM
+                                    can be max 13 numeric characters long with upto 3 decimal points!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Received Qty / UOM</span>
+                                <input type="text" #RMMaterialReceivedQuantity
+                                    formControlName="RMMaterialReceivedQuantity"
+                                    class="form-control entry-box-orderdetails" tabindex="0"
+                                    [ngClass]="!(areaDetailsForm.get('RMMaterialReceivedQuantity').valid) && (areaDetailsForm.get('RMMaterialReceivedQuantity').touched) 
+                                    && (areaDetailsForm.get('RMMaterialReceivedQuantity').errors?.required ||
+                                    areaDetailsForm.get('RMMaterialReceivedQuantity').errors?.pattern)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('RMMaterialReceivedQuantity').valid) && (areaDetailsForm.get('RMMaterialReceivedQuantity').touched) 
+                                    && areaDetailsForm.get('RMMaterialReceivedQuantity').errors?.required">Received Qty
+                                    / UOM is required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('RMMaterialReceivedQuantity').valid) && (areaDetailsForm.get('RMMaterialReceivedQuantity').touched) 
+                            && (areaDetailsForm.get('RMMaterialReceivedQuantity').errors?.pattern)">Received Qty / UOM
+                                    can be max 13 numeric characters long with upto 3 decimal points!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Quantity Shortfall /
+                                    Damaged</span>
+                                <input type="text" formControlName="MRShortfallDamageQty"
+                                    class="form-control entry-box-orderdetails" tabindex="0"
+                                    (blur)="updateSelectedMaterialReceivableRow()"
+                                    [ngClass]="!(areaDetailsForm.get('MRShortfallDamageQty').valid) && (areaDetailsForm.get('MRShortfallDamageQty').touched) 
+                                        && (areaDetailsForm.get('MRShortfallDamageQty').errors?.pattern || 
+                                        areaDetailsForm.get('MRShortfallDamageQty').errors?.required)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('MRShortfallDamageQty').valid) && (areaDetailsForm.get('MRShortfallDamageQty').touched) 
+                                        && areaDetailsForm.get('MRShortfallDamageQty').errors?.required">Quantity
+                                    Shortfall / Damaged is required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('MRShortfallDamageQty').valid) && (areaDetailsForm.get('MRShortfallDamageQty').touched) 
+                                && (areaDetailsForm.get('MRShortfallDamageQty').errors?.pattern)">Quantity Shortfall /
+                                    Damaged can be max 13 numeric characters long with upto 3 decimal points!</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Material Receivables" [selected]="true">
+        <div class="container-fluid">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <div>
+                        <table class="table
+                            table-striped
+                            table-bordered
+                            dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let col of materialReceivablesCols"> {{col.header}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <th>Sl.No</th>
+                                    <th>Select (Radio Button)</th>
+                                    <th>Desp. Date / OGP No</th>
+                                    <th>Driver Name / Contact No</th>
+                                    <th>Material Group / Name</th>
+                                    <th>Desp. Qty / UOM</th>
+                                </tr> -->
+                                <tr>
+                                <tr
+                                    *ngIf="!materialReceivablesList ||(materialReceivablesList && materialReceivablesList.length == 0)">
+                                    <td style="width: 100%;" [attr.colspan]="materialReceivablesCols.length">
+                                        No records found
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let item of materialReceivablesList;  index as i;let j=index">
+                                    <td class="center-align" [ngStyle]="materialReceivablesCols[0].style">
+                                        {{j+1}}
+                                    </td>
+                                    <td class="center-align" [ngStyle]="materialReceivablesCols[1].style">
+                                        <!-- <input type="checkbox" [(ngModel)]="item.IsSelected"
+                                                (change)="pendingPurchaseOrderChange($event)" /> -->
+                                        <!-- <p-tableRadioButton [value]="item.IsSelected"></p-tableRadioButton> -->
+                                        <!-- <div class="ui-radiobutton ui-widget">
+                                            <div class="ui-radiobutton-box ui-widget ui-state-default">
+                                                <input type="radio" /></div>  [checked]="item.IsSelected" 
+                                        </div> -->
+                                        <label class="container">
+                                            <input type="radio" name="radio"
+                                                (change)="materialReceivablesSelect($event, item)">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td [ngStyle]="materialReceivablesCols[2].style">
+                                        <span>{{item.DespDate | date : 'dd-MMM-yyyy'}} /
+                                            {{item.OGPId}}</span>
+                                        <!-- {{item.OGPNo}} -->
+                                    </td>
+                                    <td [ngStyle]="materialReceivablesCols[3].style">
+                                        <span>{{item.MDDriverName}} / {{item.MDDriverContactNo}}</span>
+                                    </td>
+                                    <td [ngStyle]="materialReceivablesCols[4].style">
+                                        <span>{{item.RawMaterialGroup}} / {{item.RawMaterialDetailsName}}</span>
+                                    </td>
+                                    <td [ngStyle]="materialReceivablesCols[5].style">
+                                        <span>{{item.RMMaterialTransferQty}} / {{item.RawMaterialUOM}}</span>
+                                    </td>
+                                    <td class="right-align" [ngStyle]="materialReceivablesCols[6].style">
+                                        <span>{{item.RMMaterialReceivedQuantity}} </span>
+                                    </td>
+                                    <td class="right-align" [ngStyle]="materialReceivablesCols[7].style">
+                                        <span>{{item.MRShortfallDamageQty}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="button" label="Material Acceptance" class="ui-button-rounded"
+            (click)="materialAcceptanceClick()" [disabled]="matClickd"></button>
+        <button pButton type="submit" label="Save" class="ui-button-rounded" (click)="saveAreaBMRDetails()"
+            [disabled]="saveDisabled"></button>
+        <button pButton type="button" disabled="true" label="Modify" class="ui-button-rounded"></button>
+        <button pButton type="button" [disabled]="disableOtherControls" label="Clear" class="ui-button-rounded"
+            (click)="clearBtnClick()"></button>
+    </div>
+</div>

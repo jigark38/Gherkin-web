@@ -1,0 +1,58 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Harvest GRN Receiving & Weighment</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-tabView [activeIndex]="index">
+        <p-tabPanel header="Green Reception Details">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Unit Name</span>
+                            <mat-select class="form-control" [(ngModel)]="OrgOfficeNo" #OrgOfficeNoID="ngModel" placeholder="--Select--"
+                                (ngModelChange)="populateGrids()">
+                                <mat-option *ngFor="let org of organisationUnitList" [value]="org.orgOfficeNo">
+                                    {{org.orgOfficeName}}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Inward Details" [selected]="true">
+                    <app-ng-grid [cols]="inwardGrid" [actions]="actionParams"
+                        (selectedRowHandler)="inwardGridSelectedRowEvent($event)"
+                        (rowUnselectHandler)="inwardGridRowUnSelectedEvent($event)" [data]="inwardGridData">
+                    </app-ng-grid>
+            </p-accordionTab>
+            <p-accordionTab header="Green Reception Details" [selected]="true">
+                <app-ng-grid #grid2 [cols]="greenRecpDetailsGrid" [actions]="actionParams"
+                    (selectedRowHandler)="greenRecpDetailsGridSelectedRowEvent($event)"
+                    (rowUnselectHandler)="greenRecpDetailsGridRowUnSelectedEvent($event)"
+                    [data]="greenRecpDetailsGridData"></app-ng-grid>
+            </p-accordionTab>
+
+
+            <!-- <div style="height: 28px;"></div> -->
+            <div class="pull-right">
+                <div class="col-md-12">
+                    <!--<button pButton type="submit" [disabled]="OrgOfficeNo" (click)="greenQualityCheck()"
+                        label="Greens Quality Check" class="ui-button-rounded"></button>-->
+                    <button pButton type="submit" label="Next" (click)="openNext()" class="ui-button-rounded button-top"
+                        [disabled]="actionButtonStatus.Next"></button>
+                </div>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Quality Check Details">
+            <app-green-receipt-quality-check-detail-testing [inwardGridSelectedRowData]="inwardGridSelectedRow"
+                [OrgOfficeNo]="OrgOfficeNo" (isSucess)="getUpdatedvalue($event)" [greenRecpDetailsGridSelectedRowData]="greenRecpDetailsGridSelectedRow">
+            </app-green-receipt-quality-check-detail-testing>
+        </p-tabPanel>
+    </p-tabView>
+
+    <!-- <div style="height: 28px;"></div> -->
+</p-accordion>

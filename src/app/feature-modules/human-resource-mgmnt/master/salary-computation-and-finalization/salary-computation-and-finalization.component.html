@@ -1,0 +1,540 @@
+<div class="row pull-right" id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Human Resource Management</a></li>
+    <li class="active"><span>Salary Computation & Finalization </span></li>
+  </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+  <p-accordionTab header="Order Approval" [selected]="true">
+    <form [formGroup]="SalaryComputationAndFinalizationForm">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Approved By </span>
+                <input type="text" class="form-control" readonly name="approvedBy" formControlName="ApprovedBy">
+              </div>
+            </div>
+
+            <div class="col-xs-4 col-sm-4 col-md-4">
+              <div class="form-group">
+                <span class="label-control">Approved Date</span>
+                <input [matDatepicker]="dp2" placeholder="Please choose Approved Date" matInput class="form-control
+                                    border-bottom-1" formControlName="ApprovedDate" #dateOfApprove>
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp2>
+                </mat-datepicker>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.ApprovedDate.errors?.required
+                                        &&
+                                        SalaryComputationAndFinalizationForm.controls.ApprovedDate.touched" class="error-span">
+                  Date of Approved is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Organisation</span>
+                <mat-select class="form-control" (selectionChange)="changeOrganisation($event.value)"
+                            formControlName="Organisation"
+                            placeholder="Select Organisation"
+                            #orgNameDDL>
+                  <mat-option [value]="org.OrgOfficeNo" *ngFor="let org of organisationList">
+                    {{org.OrgOfficeName}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.Organisation.errors?.required
+                                        &&
+                                        SalaryComputationAndFinalizationForm.controls.Organisation.touched" class="error-span">
+                  Organisation is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Employee</span>
+                <mat-select class="form-control" formControlName="EmployeeCategory" placeholder="Select Employee" (selectionChange)="changeEmployee($event.value)">
+                  <mat-option value="Permanent">Permanent</mat-option>
+                  <mat-option value="Probation">Probation</mat-option>
+                  <mat-option value="Intern">Intern</mat-option>
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.EmployeeCategory.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.EmployeeCategory.touched" class="error-span">
+                  Employee is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Biometric / Field Staff</span>
+                <mat-select class="form-control" formControlName="BiometricFieldStaff" (selectionChange)="changeBioMetric($event.value)"
+                            placeholder="Select Biometric / Field Staff">
+                  <mat-option value="Through Biometric Process">Through Biometric Process</mat-option>
+                  <mat-option value="Field Staff">Field Staff</mat-option>
+
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.BiometricFieldStaff.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.BiometricFieldStaff.touched" class="error-span">
+                  Biometric / Field Staff is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Month & Year</span>
+                <mat-select class="form-control" formControlName="MonthYear" placeholder="Select Month & Year" (selectionChange)="changeMonthYear($event.value)" #MonthYearDDL>
+                  <mat-option *ngFor="let currMonth of currentMonthYearList" [value]="currMonth.MonthValue">{{currMonth.MonthYear}}</mat-option>
+                </mat-select>
+              </div>
+            </div>
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Canteen Deduction Amount / Day</span>
+                <input type="text" class="form-control" placeholder="Enter Canteen Deducton Amount / Day" maxlength="9" formControlName="CanteenDeductionAmount">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('CanteenDeductionAmount').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.CanteenDeductionAmount.touched"
+                      class="error-span">
+                  Canteen Deduction Amount / Day can be
+                  numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.CanteenDeductionAmount.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.CanteenDeductionAmount.touched" class="error-span">
+                  Canteen Deduction Amount / Day is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Other Deductoins</span>
+                <mat-select class="form-control" formControlName="OtherDeductoins" placeholder="Select Other Deductoins" (selectionChange)="changeOtherDeductionType($event.value)">
+                  <mat-option value="Per Day">Per Day</mat-option>
+                  <mat-option value="Per Month">Per Month</mat-option>
+
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.OtherDeductoins.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.OtherDeductoins.touched" class="error-span">
+                  Other Deductoins is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Other Deduction Amount / Day</span>
+                <input type="text" class="form-control" formControlName="OtherDeductionAmount" placeholder="Enter Canteen Deducton Amount / Day" max="9">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('OtherDeductionAmount').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.OtherDeductionAmount.touched"
+                      class="error-span">
+                  Canteen Deduction Amount / Day can be
+                  numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.OtherDeductionAmount.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.CanteenDeductionAmount.touched" class="error-span">
+                  Other Deduction Amount / Day is required field.
+                </span>
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Department</span>
+                <mat-select class="form-control" (selectionChange)="changeDepartment($event.value)" placeholder="Select Department"
+                            formControlName="Department"
+                            #departmentNameDDL>
+                  <mat-option value="All">All Department</mat-option>
+                  <mat-option [value]="department.departmentCode" *ngFor="let department of departmentList">
+                    {{department.departMentName}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.Department.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.Department.touched" class="error-span">
+                  Department is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4">
+              <div class="form-group">
+                <span class="label-control">Division</span>
+                <mat-select class="form-control" (selectionChange)="changeSubDepartment($event.value)" formControlName="Division"
+                            #divisionNameDDL>
+                  <mat-option [value]="division.subDepartmentCode" *ngFor="let division of divisionList">
+                    {{division.subDepartmentName}}
+                  </mat-option>
+                </mat-select>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.Division.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.Division.touched" class="error-span">
+                  Division is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Employee Name</span>
+                <input type="text" class="form-control" placeholder="Enter Employee Name" formControlName="EmployeeName">
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.EmployeeName.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.EmployeeName.touched" class="error-span">
+                  Employee Name is required field.
+                </span>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Employee ID</span>
+                <input type="text" class="form-control" placeholder="Enter Employee ID" formControlName="EmployeeID">
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.EmployeeID.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.EmployeeID.touched" class="error-span">
+                  Employee ID is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">
+                  Leaves Brought Forward
+                </span>
+                <input type="text" class="form-control" readonly formControlName="LeavesBroughtForward">
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.LeavesBroughtForward.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.LeavesBroughtForward.touched" class="error-span">
+                  Leaves Brought Forward is required field.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Total No. of Days this Month</span>
+                <input type="text" class="form-control" readonly formControlName="DaysThisMonth" maxlength="10"
+                       placeholder="Enter Total No. of Days this Month">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('DaysThisMonth').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.DaysThisMonth.touched"
+                      class="error-span">
+                  Total No. of Days this Month can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.DaysThisMonth.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.DaysThisMonth.touched" class="error-span">
+                  Total No. of Days this Month is required field.
+                </span>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Days Consider this Month</span>
+
+                <input type="text" class="form-control" formControlName="DaysConsiderThisMonth" maxlength="10" (change)="changeDayConsider()"
+                       placeholder="Enter Days Consider this Month">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('DaysConsiderThisMonth').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.DaysConsiderThisMonth.touched"
+                      class="error-span">
+                  Days Consider this Month can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.DaysConsiderThisMonth.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.DaysConsiderThisMonth.touched" class="error-span">
+                  Days Consider this Month is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Leaves Carry forward</span>
+
+                <input type="text" class="form-control" readonly formControlName="DaysCarryForward" placeholder="Enter Days Carry forward" maxlength="7">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('DaysCarryForward').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.DaysCarryForward.touched"
+                      class="error-span">
+                  Leaves Carry forward can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.DaysCarryForward.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.DaysCarryForward.touched" class="error-span">
+                  Leaves Carry forward is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Loans</span>
+                <input type="text" class="form-control" formControlName="Loans" placeholder="Enter Loans" maxlength="10" (change)="changeLoan()">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('Loans').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.Loans.touched"
+                      class="error-span">
+                  Loans can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.Loans.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.Loans.touched" class="error-span">
+                  Loans is required field.
+                </span>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Canteen Deductions</span>
+                <input type="text" class="form-control" formControlName="CanteenDeductions" placeholder="Enter Canteen Deductions" maxlength="10" (change)="changeCanteenAmount()">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('CanteenDeductions').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.CanteenDeductions.touched"
+                      class="error-span">
+                  Canteen Deductions can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.CanteenDeductions.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.CanteenDeductions.touched" class="error-span">
+                  Canteen Deductions is required field.
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Others</span>
+                <input type="text" class="form-control" formControlName="Others" placeholder="Enter Others" maxlength="10" (change)="changeOthers()">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('Others').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.Others.touched"
+                      class="error-span">
+                  Others can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.Others.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.Others.touched" class="error-span">
+                  Others is required field.
+                </span>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">TDS</span>
+                <input type="text" class="form-control" formControlName="TDS" placeholder="Enter TDS" maxlength="10" (change)="changeTDS()">
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('TDS').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.TDS.touched"
+                      class="error-span">
+                  TDS can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.TDS.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.TDS.touched" class="error-span">
+                  TDS is required field.
+                </span>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <span class="label-control">Net Payable</span>
+
+                <input type="text" class="form-control" formControlName="NetPayable" placeholder="Enter Net Payable" readonly >
+                <span *ngIf="SalaryComputationAndFinalizationForm.get('NetPayable').errors?.pattern
+                                    &&
+                                    SalaryComputationAndFinalizationForm.controls.NetPayable.touched"
+                      class="error-span">
+                  Net Payable can be numbers only.
+                </span>
+                <span *ngIf="SalaryComputationAndFinalizationForm.controls.NetPayable.errors?.required
+                                        &&
+                           SalaryComputationAndFinalizationForm.controls.NetPayable.touched" class="error-span">
+                  Net Payable is required field.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+  <p-accordionTab header="Orders & Distributors Details" [selected]="true">
+    <div class="container-fluid">
+      <div class="addScroll">
+        <table class="table table-striped table-bordered dt-responsive nowrap " cellspacing="0" cellpadding="4">
+          <tbody>
+            <tr>
+              <th>Sl. No</th>
+              <th>Department </th>
+              <th>Division</th>
+              <th>Employee Name / Designation</th>
+              <th>Employee ID</th>
+              <th>Leaves BF</th>
+              <th>Days Attnd.</th>
+              <th>Days Consider</th>
+              <th>Leaves CF</th>
+              <th>Month Salary</th>
+              <th>OT Pay</th>
+              <th>Gross Salary</th>
+              <th>PF Ded.</th>
+              <th>ESI Ded.</th>
+              <th>PT Ded.</th>
+              <th>Loans</th>
+              <th>Canteen</th>
+              <th>Others</th>
+              <th>TDS</th>
+              <th>Net Payable</th>
+              <th>Select</th>
+            </tr>
+            <tr *ngIf="!employeeAttendanceDetails || employeeAttendanceDetails.length==0">
+              <td colspan="20" style="text-align: center; ">
+                No Record Found.
+              </td>
+            </tr>
+            <tr *ngFor="let emp of employeeAttendanceDetails; let i=index" style="text-align: center;">
+              <ng-container>
+                <td>
+                  {{i+1}}
+                </td>
+                <td class="left-align">{{emp.department}}</td>
+                <td class="left-align">
+                  {{emp.division}}
+                </td>
+                <td class="left-align">
+                  {{emp.employeeNameDesignation}}
+                </td>
+                <td class="right-align">
+                  {{emp.employeeID}}
+                </td>
+                <td class="right-align">
+                  {{emp.noOfDaysCarryForward}}
+                </td>
+                <td class="right-align">
+                  {{emp.attendanceDaysCount}}
+                </td>
+                <td class="right-align">
+                  {{emp.daysConsider}}
+                </td>
+                <td class="right-align">
+                  {{emp.leavesCF}}
+                 
+                </td>
+                <td class="right-align">
+                  {{emp.monthlySalary  | number:'1.2-2' }}
+
+                </td>
+                <td class="right-align">
+                  {{emp.oTPay | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.grossSalary  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.pFDed  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.eSIDed  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.pTDed  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.loans  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.canteen  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.others  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.tDS  | number:'1.2-2' }}
+                </td>
+                <td class="right-align">
+                  {{emp.netPayable  | number:'1.2-2' }}
+                </td>
+                <td>
+                  <mat-radio-button name="select"
+                                    [checked]="i==selectedEmployee"
+                                    (click)="ontableItemSelect(emp,i)">
+                  </mat-radio-button>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+  </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+  <div class="row pull-right btSection">
+    <div class="row bords d-flex justify-content-end">
+      <div class="col-md-12">
+        <button pButton type="button" label="Save" class="ui-button-rounded mt-2 mb-2" (click)="saveAttendanceDetails()"></button>
+        <button pButton type="button" label="Find" class="ui-button-rounded mt-2 mb-2"></button>
+        <button pButton type="button" label="Modify" class="ui-button-rounded mt-2 mb-2"></button>
+        <button pButton type="button" label="Clear" class="ui-button-rounded mt-2 mb-2"></button>
+      </div>
+    </div>
+  </div>
+</div>

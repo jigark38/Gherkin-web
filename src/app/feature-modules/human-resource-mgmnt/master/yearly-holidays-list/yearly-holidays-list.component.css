@@ -1,0 +1,26 @@
+
+::ng-deep .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    color: unset;
+}
+
+::ng-deep .mat-option-pseudo-checkbox.mat-pseudo-checkbox-checked {
+    background-color: #007ad9;
+}
+thead{
+    background: #007ad9;
+    border: 1px solid #005b9f;
+}
+
+.customTd{
+    padding: unset;
+}
+
+.customTd ul{
+    padding: unset;
+    margin: unset;
+}
+
+.customTd ul div{
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+}

@@ -1,0 +1,96 @@
+<!-- <div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Organisation Management</a></li>
+        <li class="active"><span>Management Details</span></li>
+    </ol>
+</div> -->
+<form [formGroup]="managementForm" (ngSubmit)="addorUpdateManagement()">
+    <div id="pnlGrdOrganization">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Management Name</span>
+                    <input type="text" UpperCase [pKeyFilter]="blockSpecial" maxlength="30" formControlName="managementName" class="form-control">
+                    <span *ngIf="managementForm.controls.managementName.invalid && managementForm.controls.managementName.touched" class="error-span">
+                            Management Name
+                            is required field.</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Designation</span>
+                    <input type="text" UpperCase pKeyFilter="alpha" maxlength="30" formControlName="managementDesignation" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Primary Contact Number</span>
+                    <input pKeyFilter="int" id="txtPrimaryContactNumber" maxlength="10" formControlName="orgMngContactNo" class="form-control">
+                    <span *ngIf="!managementForm.controls.orgMngContactNo.errors?.required && managementForm.get('orgMngContactNo').invalid
+                                                                 && managementForm.controls.orgMngContactNo.touched" class="error-span">{{managementForm.get('orgMngContactNo').errors?.error}}</span>
+
+                    <span *ngIf="managementForm.controls.orgMngContactNo.invalid && managementForm.controls.orgMngContactNo.touched" class="error-span">
+                            Primary Contact Number
+                            is required field.</span>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Alternate Contact Number</span>
+                    <input pKeyFilter="int" class="form-control" maxlength="10" formControlName="orgMngAltContactNo">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Email Id</span>
+                    <input type="email" formControlName="orgMngEmailId" class="form-control">
+                    <span *ngIf="!managementForm.controls.orgMngEmailId.errors?.required && managementForm.get('orgMngEmailId').invalid
+                        && managementForm.controls.orgMngEmailId.touched" class="error-span">Invalid Email id</span>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Residential Address </span>
+                    <textarea class="form-control" maxlength="1000" formControlName="orgMngResidenceDetails"></textarea>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">PAN</span>
+                    <input name="txtpan" UpperCase pKeyFilter="alphanum" type="text" maxlength="11" formControlName="orgMngPanDetails" id="txtpan" class="form-control">
+                    <span *ngIf="!managementForm.controls.orgMngPanDetails.errors?.required && managementForm.get('orgMngPanDetails').invalid
+                        && managementForm.controls.orgMngPanDetails.touched" class="error-span">Invalid PAN</span>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">DIN</span>
+                    <input type="text" pKeyFilter="alpha" maxlength="20" formControlName="orgMngDinDetails" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="hidden" formControlName="orgMngCode">
+            </div>
+        </div>
+        <div class="row mgt-20">
+            <div class="col-md-12">
+                <button pButton type="button" label="Clear" (click)="clearManagementControls()" class="ui-button-rounded pull-right"></button>
+                <button pButton type="submit" label="{{mode}} Management" class="ui-button-rounded pull-right"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mgt-20">
+        <div class="col-md-12">
+            <app-ng-grid [cols]="managementCols" [data]="managementDetails" [actions]="actionParams" (editHandler)="editClick($event)" (deleteHandler)="deleteClick($event)">
+            </app-ng-grid>
+        </div>
+    </div>
+
+</form>
+<p-toast [style]="{marginTop: '20px'}"></p-toast>

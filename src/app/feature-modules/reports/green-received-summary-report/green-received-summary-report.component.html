@@ -1,0 +1,184 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span> Greens Received Summary Report</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Greens Received Summary Report" [selected]="true">
+        <form [formGroup]="greenReceivedForm">
+            <div class="row  ml-2 mr-2 mt-2 maindiv">
+                <div class="col-md-12 cleartop">
+                    <div class="row pl-1 pr-1 align-items-center">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Season From / To</span>
+                                <mat-select formControlName="seasons" class="form-control" placeholder="Select Season From / To">
+                                    <mat-option *ngFor="let season of seasons" [value]="season">
+                                        {{season.FromDate | date:'dd-MMM-yyyy'}} / {{season.ToDate | date:'dd-MMM-yyyy'}}
+                                    </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Material Group</span>
+                                <mat-select formControlName="materialGroup" class="form-control" placeholder="Select Material Group" (selectionChange)="getMaterialName()">
+                                    <mat-option *ngFor="let group of materialGroup" [value]="group">
+                                        {{group.Name}}
+                                    </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Material Name</span>
+                                <mat-select class="form-control" formControlName="materialName" placeholder="Select Material Name">
+                                    <mat-option *ngFor="let names of materialName" [value]="names">
+                                        {{names.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control"> From Date </span>
+                                <input formControlName="fromDate" matInput class="form-control border-bottom-1 mb-1" placeholder="Enter From Date" [matDatepicker]="eDate">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate>
+                                </mat-datepicker>
+                                <!-- <small Class="form-text text-danger">Received Date is
+                                required!</small> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control"> To Date </span>
+                                <input matInput formControlName="toDate" class="form-control border-bottom-1 mb-1" placeholder="Enter To Date" [matDatepicker]="eDate2" (ngModelChange)="toDateChange()">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="eDate2">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #eDate2>
+                                </mat-datepicker>
+                                <!-- <small Class="form-text text-danger">Received Date is
+                                required!</small> -->
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text p-0" style="margin:auto;">
+                                <input type="checkbox" [checked]="true" class="m-0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Summary Report</span>
+                                <!-- <mat-select class="form-control">
+                                <mat-option value="">Yes</mat-option>
+                                <mat-option value=""> No </mat-option>
+                            </mat-select> -->
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text p-0" style="margin:auto;">
+                                <input type="checkbox" class="m-0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <!-- <span class="label-control">Area Name </span> -->
+                                <mat-select class="form-control" placeholder="Area Name">
+                                    <mat-option value="">Yes</mat-option>
+                                    <mat-option value=""> No </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text p-0" style="margin:auto;">
+                                <input type="checkbox" class="m-0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <!-- <span class="label-control">Buyer wise</span> -->
+                                <mat-select class="form-control" placeholder="Buyer Wise">
+                                    <mat-option value="">Yes</mat-option>
+                                    <mat-option value=""> No </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text p-0" style="margin:auto;">
+                                <input type="checkbox" class="m-0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <!-- <span class="label-control"> Farmer wise</span> -->
+                                <mat-select class="form-control" placeholder="Farmer Wise">
+                                    <mat-option value="">Yes</mat-option>
+                                    <mat-option value=""> No </mat-option>
+                                </mat-select>
+                                <!-- <small Class="form-text text-danger" *ngIf="!(areaDetailsForm.get('AreaID').valid) && (areaDetailsForm.get('AreaID').touched)
+                                && areaDetailsForm.get('AreaID').errors?.required">Area/Branch Name is
+                                    required!</small> -->
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+</p-accordion>
+<div style="height: 28px;"></div>
+
+
+<div class="mgt-20 pull-right">
+    <div class="row pull-right btSection">
+        <div class="col-md-12">
+            <button pButton type="button" label="Print" (click)="printbtnClick()" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Export" (click)="exportReport()" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+        </div>
+    </div>
+</div>

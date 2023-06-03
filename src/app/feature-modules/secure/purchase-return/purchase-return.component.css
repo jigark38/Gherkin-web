@@ -1,0 +1,4 @@
+.readonly {
+    pointer-events: none;
+    cursor: default;
+}

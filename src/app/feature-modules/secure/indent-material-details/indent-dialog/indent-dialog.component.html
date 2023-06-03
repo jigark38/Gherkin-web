@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-lg-10">
+        <h5>Add More Material</h5>
+    </div>
+    <div class="col-lg-2 cursor-pointer">
+        <mat-icon>close</mat-icon>
+    </div>
+</div>
+<div class="row pad-lf-15">
+    <label>Do you want to add more materials</label>
+    <br>
+    <br>
+</div>
+<div class="row pad-lf-15 pad-tp-20">
+    <input type="submit" value="Yes" [mat-dialog-close]="true" class="btn btn-info">
+    <input type="submit" value="No" [mat-dialog-close]="false" class="btn btn-info">
+</div>

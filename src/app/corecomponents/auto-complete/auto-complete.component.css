@@ -1,0 +1,31 @@
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: black;
+  opacity: 0.5;
+  /* Firefox */
+  font-size: 10px;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: black;
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: black;
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.edit-icon {
+  font-size: 16px;
+  float: right;
+  margin-top: 16px;
+}
+
+.mar-lf-10 {
+  margin-left: 10px;
+}

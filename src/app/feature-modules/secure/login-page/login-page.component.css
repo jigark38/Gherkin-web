@@ -1,0 +1,116 @@
+.bkg-img {
+  margin-top: -5px !important;
+  background-image: url('/assets/login-page-back.jpg');
+  filter: blur(1px) brightness(0.3945);
+  -webkit-filter: blur(1px) brightness(0.3945);
+  background-color: rgba(0, 0, 0, 0.5);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: calc(100vh - 5px);
+  padding: 10%;
+  height: 100vh;
+  margin-bottom: 0px;
+}
+
+.bkg-img:before {
+  background-color: #333333d6;
+}
+
+.bigBox {
+  width: 600px;
+  margin: 0 auto;
+  padding: 0px 10px 20px 10px;
+  background-color: white !important;
+  /* background-color: rgb(6, 248, 6); */
+  text-align: center;
+  border-radius: 5px;
+}
+
+.smallBox {
+  /* margin: auto; */
+  border-radius: 5px;
+  width: 400px;
+  height: 70px;
+  padding: 10px;
+  background: linear-gradient(60deg, #0f204b, #0f204b);
+  box-shadow: 0 4px 10px 0px #0f204b, 0 7px 10px -5px #0f204b;
+  transform: translateY(-20px);
+  display: inline-block;
+}
+
+.signin-button {
+  float: left;
+  background: linear-gradient(60deg, #0f204b, #0f204b);
+  margin-top: 20px;
+  color: white
+}
+
+#login .container #login-row #login-column #login-box {
+  max-width: 600px;
+  height: 220px;
+  /* border: 1px solid #9C9C9C; */
+  /* background-color: #EAEAEA; */
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+
+#login .container #login-row #login-column #login-box #login-form #register-link {
+  margin-top: -85px;
+}
+
+.form-group {
+  height: 60px !important;
+}
+
+.error-span {
+  padding-left: 69px !important;
+}
+
+.abc {
+  background-color: #0f204b;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+/* Blur changes */
+
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Position text in the middle of the page/image */
+
+.bg-text {
+  /* Black w/opacity/see-through */
+  color: white;
+  font-weight: bold;
+  /* border: 3px solid #f1f1f1; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 80%;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}

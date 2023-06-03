@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="card-title pt-10">Packed Inventory</h3>
+      </div>
+      <div class="col-md-6">
+        <input [matDatepicker]="dpas" placeholder="Please enter Date of entry" matInput class="form-control
+                                        border-bottom-1" #attendanceDate>
+        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dpas">
+        </mat-datepicker-toggle>
+        <mat-datepicker #dpas>
+        </mat-datepicker>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped table-bordered dt-responsive nowrap mt-2" cellspacing="0" cellpadding="4"
+          id="grdOrganizations">
+          <thead>
+            <tr>
+              <th>Media</th>
+              <th>Material</th>
+              <th>Buying Qty</th>
+              <th>Received Qty</th>
+              <th>For the Month</th>
+              <th>For the Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container>
+              <tr>
+                <td class="text-align-center">
+                  <span>1</span>
+                </td>
+                <td class="text-align-center">
+                  <span>tester</span>
+                </td>
+                <td class="text-align-center">
+                  <span>tester2</span>
+                </td>
+                <td class="text-align-center">
+                  <span>rawMaterialUOM</span>
+                </td>
+                <td class="text-align-center">
+                  <span>-</span>
+                </td>
+                <td class="text-align-center">
+                  <span>yuo</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

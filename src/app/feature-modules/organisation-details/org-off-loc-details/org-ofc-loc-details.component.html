@@ -1,0 +1,202 @@
+<form [formGroup]="locationForm" (ngSubmit)="addorUpdateDetails()">
+    <div>
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Office Name</span>
+                    <input type="text" UpperCase formControlName="orgOfficeName" class="form-control" maxlength="50">
+                    <span
+                        *ngIf="locationForm.controls.orgOfficeName.invalid && locationForm.controls.orgOfficeName.touched"
+                        class="error-span">
+                        Office Name
+                        is required field.</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Nature of Office</span>
+                    <input type="text" UpperCase formControlName="natureOfficeDetails" class="form-control"
+                        maxlength="200">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Address</span>
+                    <textarea rows="2" cols="50" UpperCase formControlName="locationOfficeAddress" class="form-control"
+                        maxlength="300">
+
+                                  </textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Country</span>
+                    <div class="ng-autocomplete">
+                        <!-- (inputFocused)="cascadeFocused('country',$event)" -->
+                        <!-- <ng-autocomplete #country [data]="countries" [searchKeyword]="'countryName'"
+                          (selected)='countryChange($event)' (inputCleared)="clearCascade('country')"
+                          formControlName="countryCode" [itemTemplate]="itemTemplate">
+                      </ng-autocomplete> -->
+
+
+                        <app-auto-complete [options]="countryOptionsList" placeholder="Please Select Country"
+                            (selectedValueChangeBlur)="countryChange($event)"
+                            [selectedValueFormControl]="locationForm.controls.countryCode"
+                            (input)="locationForm.patchValue({countryCode: $event.target.value.toUpperCase()})"
+                            (saveitemToList)="savesCountryToList($event)" [maxLength]="20">
+                        </app-auto-complete>
+
+
+
+                    </div>
+
+                    <span *ngIf="locationForm.controls.countryCode.invalid && locationForm.controls.countryCode.touched"
+                        class="error-span">
+                        Country
+                        is required field.</span>
+
+                </div>
+            </div>
+            <!-- (inputCleared)="clearCascade('state')" -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">State</span>
+                    <div class="ng-autocomplete">
+
+                        <app-auto-complete [options]="stateOptionsList" placeholder="Please Select State"
+                            (selectedValueChangeBlur)="stateChange($event)"
+                            [selectedValueFormControl]="locationForm.controls.stateCode"
+                            (input)="locationForm.patchValue({stateCode: $event.target.value.toUpperCase()})"
+                            (saveitemToList)="saveStateToList($event)" [maxLength]="20">
+                        </app-auto-complete>
+
+
+                    </div>
+
+                    <span *ngIf="locationForm.controls.stateCode.invalid && locationForm.controls.stateCode.touched"
+                        class="error-span">
+                        State
+                        is required field.</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">District</span>
+                    <div class="ng-autocomplete">
+
+
+                        <!-- <app-auto-complete [options]="districtOptionsList" placeholder="Please Select District" (selectedValueChangeBlur)="districtChange($event)" [selectedValueFormControl]="locationForm.controls.districtCode" (input)="locationForm.patchValue({districtCode: $event.target.value.toUpperCase()})"
+                          (saveitemToList)="saveDistrictToList($event)" [maxLength]="20">
+                      </app-auto-complete> -->
+
+
+                        <app-auto-complete [options]="districtOptionsList" placeholder="Please Select District"
+                            (selectedValueChangeBlur)="districtChange($event)"
+                            [selectedValueFormControl]="locationForm.controls.districtCode"
+                            (input)="locationForm.patchValue({districtCode: $event.target.value.toUpperCase()})"
+                            (saveitemToList)="saveDistrictToList($event)" [maxLength]="20">
+                        </app-auto-complete>
+
+                    </div>
+
+                    <span
+                        *ngIf="locationForm.controls.districtCode.invalid && locationForm.controls.districtCode.touched"
+                        class="error-span">
+                        District
+                        is required field.</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">City</span>
+                    <div class="ng-autocomplete">
+
+
+                        <app-auto-complete [options]="placeOptionsList" placeholder="Please Select City"
+                            [selectedValueFormControl]="locationForm.controls.PlaceCode"
+                            (input)="locationForm.patchValue({PlaceCode: $event.target.value.toUpperCase()})"
+                            (saveitemToList)="savePlaceToList($event)" [maxLength]="20">
+                        </app-auto-complete>
+
+
+                    </div>
+
+                    <span *ngIf="locationForm.controls.PlaceCode.invalid && locationForm.controls.PlaceCode?.touched"
+                        class="error-span">
+                        Place
+                        is required field.</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Phone No</span>
+                    <input type="text" maxlength="10" pKeyFilter="int" class="form-control"
+                        formControlName="locationPhoneDetails">
+                    <span *ngIf="locationForm.controls.locationPhoneDetails.errors?.pattern" class="error-span">
+                        Phone No
+                        is not valid(10 digits only).</span>
+                </div>
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Fax No.</span>
+                    <input type="text" pKeyFilter="int" class="form-control" formControlName="locationFaxDetails"
+                        maxlength="15">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Mobile No.</span>
+                    <input type="text" pKeyFilter="int" class="form-control" maxlength="10"
+                        formControlName="locationCellPhone">
+                    <span *ngIf="!locationForm.controls.locationCellPhone.errors?.required && locationForm.get('locationCellPhone').invalid
+                      && locationForm.controls.locationCellPhone.touched" class="error-span">Please enter valid
+                        Mobile No</span>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Email Id</span>
+                    <input type="email" pKeyFilter="email" class="form-control" formControlName="locationEmailId"
+                        maxlength="200">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Labor Certification No</span>
+                    <input type="text" class="form-control" formControlName="laborLicenseNo" maxlength="30">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <span class="label-control">Other Licenses Details</span>
+                    <input type="text" class="form-control" formControlName="otherLicenseDetails" maxlength="50">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="hidden" formControlName="orgOfficeNo">
+                <input type="hidden" formControlName="orgCode">
+            </div>
+        </div>
+        <!-- Location Form: {{locationForm.value | json}} -->
+        <div class="row mgt-20">
+            <div class="col-md-12">
+                <button pButton type="button" label="Clear" (click)="clearLocDetails()"
+                    class="ui-button-rounded pull-right"></button>
+                <button pButton type="submit" label="{{mode}} Location" class="ui-button-rounded pull-right"></button>
+            </div>
+        </div>
+    </div>
+    <div class="row mgt-20">
+        <div class="col-md-12">
+            <app-ng-grid [cols]="locationCols" [data]="locationDetails" (editHandler)="editClick($event)"
+                [actions]="actionParams" (deleteHandler)="deleteClick($event)"></app-ng-grid>
+        </div>
+    </div>
+
+</form>
+<p-toast [style]="{marginTop: '20px'}"></p-toast>

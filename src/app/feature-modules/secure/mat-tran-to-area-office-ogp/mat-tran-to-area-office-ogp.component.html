@@ -1,0 +1,242 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Purchase Management</a></li>
+        <li class="active"><span>Material Transfer to Area Office & OGP</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height-max"></div>
+
+
+<p-accordion>
+    <p-accordionTab header="Material Transfer to Area Office & OGP" [selected]="true">
+
+        <div class="container-fluid" [formGroup]="materialTransToOfficeForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Entered By</span>
+                        <input type="text" class="form-control" formControlName="EmployeeId">
+                        <!-- <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('EmployeeId').valid) && (isGridRowSelected || isSubbmitted)">Entered
+                            by required!</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Area Name</span>
+                        <input type="text" class="form-control" formControlName="AreaName">
+                        <!-- <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('AreaName').valid) && (isGridRowSelected || isSubbmitted)">Area
+                            name required!</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">OGP Date</span>
+                        <input [matDatepicker]="ogpDate" #OgpDate class="form-control" formControlName="OgpDate">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ogpDate">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #ogpDate></mat-datepicker>
+                        <!-- <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('OgpDate').valid) && (isGridRowSelected || isSubbmitted)">OGP
+                            Date required!</small> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">OGP No</span>
+                        <input type="text" class="form-control" formControlName="OgpNumber" value="ABC">
+                        <!-- <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('OgpNumber').valid) && (isGridRowSelected || isSubbmitted)">OGP
+                            No required!</small> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Transporter Name</span>
+                        <input type="text" class="form-control" formControlName="TransporterName" #TransporterName
+                            oninput="this.value = this.value.toUpperCase()">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('TransporterName').valid) && (isGridRowSelected || isSubbmitted)">Transporter
+                            Name required!</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Vehicle No</span>
+                        <input type="text" class="form-control" formControlName="VehicleNumber"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('VehicleNumber').valid) && (isGridRowSelected || isSubbmitted)">Vehicle
+                            No required!</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Driver Name</span>
+                        <input type="text" class="form-control" formControlName="DriverName"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('DriverName').valid) && (isGridRowSelected || isSubbmitted)">Driver
+                            Name required!</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Driver Contact No</span>
+                        <input type="text" class="form-control" formControlName="DriverContactNumber" pattern="\d{10}">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('DriverContactNumber').valid) && (isGridRowSelected || isSubbmitted)">Driver
+                            Contact No required!</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Field Staff</span>
+                        <input type="text" class="form-control" formControlName="FieldStaff"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('FieldStaff').valid) && (isGridRowSelected || isSubbmitted)">Field
+                            Staff required!</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Freight Amount</span>
+                        <input type="text" class="form-control" formControlName="FreightAmount" pattern="\d+">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('FreightAmount').valid) && (isGridRowSelected || isSubbmitted)">Freight
+                            Amount required!</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Advance Amount</span>
+                        <input type="text" class="form-control" formControlName="AdvanceAmount" pattern="\d+">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('AdvanceAmount').valid) && (isGridRowSelected || isSubbmitted)">Advance
+                            Amount required!</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Approx. Material Amount</span>
+                        <input type="text" class="form-control" formControlName="ApproxMaterialAmount" pattern="\d+">
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('ApproxMaterialAmount').valid) && (isGridRowSelected || isSubbmitted)">Approx.
+                            Material Amount required!</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Despatch Date & Time</span>
+                        <input [matDatepicker]="despDate" #despatchDate class="form-control"
+                            formControlName="DespatchDate">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="despDate">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #despDate></mat-datepicker>
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('DespatchDate').valid) && (isGridRowSelected || isSubbmitted)">Despatch
+                            Date & Time required!</small>
+
+                        <!-- <p-calendar id="despatchDate" [formControlName]="'DespatchDate'" class="form-control"
+                            readonlyInput="true" tabindex="0" dateFormat="dd-M-yy" [showTime]="true" [showIcon]="true"
+                            icon="pi pi-calendar" placeholder="Despatch Date & Time">
+                        </p-calendar> -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Remarks</span>
+                        <textarea type="text" class="form-control" formControlName="Remarks"
+                            oninput="this.value = this.value.toUpperCase()"></textarea>
+                        <small class="form-text text-danger"
+                            *ngIf="!(materialTransToOfficeForm.get('Remarks').valid) && (isGridRowSelected || isSubbmitted)">Remarks
+                            required!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion tabindex="-1">
+    <p-accordionTab header="Despatch Details" [selected]="true" tabindex="-1">
+        <div class="container-fluid" tabindex="-1">
+            <div class="row m-b-25">
+                <div class="col-md-12">
+                    <div>
+                        <table class="table table-striped table-bordered
+                            dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                            <tbody>
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <!-- <th>Selected Row</th> -->
+                                    <th>Area / Branch Name</th>
+                                    <th>OGP Date</th>
+                                    <th>OGP No</th>
+                                    <th>Total Materials</th>
+                                </tr>
+                                <tr *ngFor="let material of  materialTransferList; let i = index"
+                                    (click)="onSelectRow(material,i)" [class.active]="i == rowIndex">
+                                    <ng-container>
+                                        <td style="text-align:center;">
+                                            {{i+1}}
+                                        </td>
+                                        <!-- <td style="text-align:center;">
+                                            <input #checkboxes class="form-check-input" type="checkbox" value=""
+                                                id="defaultCheck1" (click)="selectedTblRow($event, i)"
+                                                [checked]="checkboxes[i]">
+                                        </td> -->
+                                        <td>
+                                            {{material.AreaName}}
+                                        </td>
+                                        <td>
+                                            {{material.OgpDate | date: 'medium'}}
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{material.Id}}
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{material.TotalMaterial}}
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                                <tr *ngIf="gridRowCountChecked && materialTransferList.length==0 && isGatePassClicked">
+                                    <ng-container>
+                                        <td colspan="6">
+                                            No records exist
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+
+
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="button" label="Outward Gate Pass" class="ui-button-rounded" [disabled]="disblGatePassBtn"
+            (click)="gatePass()"></button>
+        <button pButton type="button" label="Save" class="ui-button-rounded" [disabled]="disblSave()"
+            (click)="onSave()"></button>
+        <button pButton type="button" label="Modify" class="ui-button-rounded" [disabled]="disblModifyBtn"></button>
+        <button pButton type="button" label="Print OGP" class="ui-button-rounded"
+            [disabled]="disblPrintOGPBtn"></button>
+        <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="clearClick()"></button>
+    </div>
+</div>

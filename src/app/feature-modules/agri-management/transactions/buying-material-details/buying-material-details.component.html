@@ -1,0 +1,627 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Buying cum Material Details</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height"></div>
+
+<p-accordion>
+    <p-tabView (onChange)="onTabChange($event.index)">
+        <p-tabPanel header="Buying Details" [selected]="selectedTab === 'BuyingDetails'">
+            <form [formGroup]="GrnEntryForm">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="label-control">Area Name</label>
+                                    <mat-select placeholder="Please select Area Name" class="form-control"
+                                        (selectionChange)="onChangeAreaName($event.value)" formControlName="AreaID"
+                                        [disabled]="GRNEntrySelectionDisabled">
+                                        <mat-option *ngFor="let area of allAreas" [value]="area.areaId">
+                                            {{area.areaName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="GrnEntryForm.controls.AreaID.touched && !GrnEntryForm.controls.AreaID.valid"
+                                        class="text-danger">
+                                        Area Name is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="label-control">Supervisor</label>
+                                    <mat-select placeholder="Please select Supervisor" class="form-control"
+                                        (selectionChange)="onChangeSupervisor($event.value)"
+                                        formControlName="AreaIncharge" [disabled]="GRNEntrySelectionDisabled">
+                                        <mat-option *ngFor="let emp of employeesList" [value]="emp.employeeId">
+                                            {{emp.employeeName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="GrnEntryForm.controls.AreaIncharge.touched && !GrnEntryForm.controls.AreaIncharge.valid"
+                                        class="text-danger">
+                                        Area Incharge is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="label-control">Weighment Mode</label>
+                                    <mat-select placeholder="Please select Weighment Mode" class="form-control"
+                                        formControlName="WeighmentMode" [disabled]="GRNEntrySelectionDisabled">
+                                        <mat-option value="Manual">Manual</mat-option>
+                                        <mat-option value="Automation">Automation</mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="GrnEntryForm.controls.WeighmentMode.touched && !GrnEntryForm.controls.WeighmentMode.valid"
+                                        class="text-danger">
+                                        Weighment Mode Incharge is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button pButton type="submit" label="GRN Entry" (click)="GRNEntryClick()"
+                                class="ui-button-rounded pull-right"
+                                [disabled]="GRNEntrySelectionDisabled || !GrnEntryForm.valid"></button>
+                        </div>
+                    </div>
+                </div>
+                <p-accordionTab header="Greens Received Details" [selected]="true"
+                    *ngIf="greenReceivedDetailsGridItem && greenReceivedDetailsGridItem.length>0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <p-table #dtGRN [columns]="grnReceivedCols" [value]="greenReceivedDetailsGridItem"
+                                    [(selection)]="selectedGrnData" [resizableColumns]="true" [autoLayout]="true">
+                                    <ng-template pTemplate="header" let-grn let-columns>
+                                        <tr>
+                                            <th style="width: 5em;">
+                                                Sl. No
+                                            </th>
+                                            <th style="width: 12em" [pSortableColumn]="col.field"
+                                                *ngFor="let col of columns">
+                                                {{col.header}}
+                                            </th>
+                                            <th style="width: 45px;">
+                                                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-grn let-ri="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{ ri + 1}}
+                                            </td>
+                                            <td *ngFor="let col of columns">
+                                                {{grn[col.field]}}
+                                            </td>
+                                            <td style="width: 45px;">
+                                                <p-tableRadioButton [value]="grn"
+                                                    [disabled]="greenProcurementSelectionDisabled"
+                                                    (click)="onNextClick()"></p-tableRadioButton>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="3" style="text-align:left">No Green Received Details found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+                </p-accordionTab>
+            </form>
+        </p-tabPanel>
+        <p-tabPanel header="Buyer Details" [selected]="selectedTab === 'BuyerDetails'"
+            [disabled]="selectedGrnData == null">
+            <p-accordionTab header="Buyer Receiving Details" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    cellpadding="4">
+                                    <tbody>
+                                        <tr>
+                                            <th>Sl.No</th>
+                                            <th>Buyer Name</th>
+                                            <th>Crop Count</th>
+                                            <th>Total Crates</th>
+                                            <th>Total Quantity</th>
+                                        </tr>
+                                        <tr>
+                                        <tr *ngFor="let item of buyerSchemeWiseDetail ;let j = index">
+                                            <td class="text-center">
+                                                {{j+1}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.buyerrName}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.cropCountInfo}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.totalCrate}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.totalQuantity}}
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </p-accordionTab>
+            <p-accordionTab header="Greens Count & Weight Details" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span class="label-control">Crop Group</span>
+                                            <mat-select class="form-control" [(ngModel)]="cropGroup"
+                                                (ngModelChange)="getCropNameCodeList($event)"
+                                                placeholder="Please select Crop Group"
+                                                [disabled]="cropNameGroupDisabled"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <mat-option [value]="cg.CropGroupCode" *ngFor="let
+                                                                                        cg
+                                                                                        of
+                                                                                        cropGroupList">{{cg.Name}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span class="label-control">Crop Name</span>
+                                            <mat-select class="form-control" [(ngModel)]="cropName"
+                                                (ngModelChange)="getCropSchemes($event)"
+                                                placeholder="Please enter Crop Name" [disabled]="cropNameGroupDisabled"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <mat-option [value]="cropName.cropNameCode" *ngFor="let
+                                                            cropName
+                                                            of
+                                                            cropNameList">
+                                                    {{cropName.name}}</mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    cellpadding="4">
+                                    <tbody>
+                                        <tr>
+                                            <th>Sl.No</th>
+                                            <th>Crop Count</th>
+                                            <th>No. of Crates</th>
+                                            <th>Each Crate Tare Wt.</th>
+                                            <th>Crate No From </th>
+                                            <th>Crate No To</th>
+                                            <th>Gross Wt.</th>
+                                            <th>Tare Wt.</th>
+                                            <th>Net Wt.</th>
+                                        </tr>
+                                        <tr *ngFor="let item of weightDetailsList; let i = index">
+                                            <td class="text-center">
+                                                {{i+1}}
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <mat-select class="form-control" #autoHighlight
+                                                        (ngModelChange)="selectedcropScheme($event, item)"
+                                                        [(ngModel)]="item.cropCount" name="cropCount"
+                                                        [disabled]="item.isDisabled || item.cropSchemeDisabled">
+                                                        <mat-option [value]="crop.Code"
+                                                            *ngFor="let crop of cropSchemeList">
+                                                            {{crop.From}}
+                                                            {{' '}}
+                                                            {{crop.Sign}}
+                                                            {{' / '}}
+                                                            {{crop.Count}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        [(ngModel)]="item.noOfCrate"
+                                                        (keyup)="getNoOfCrate($event, item)" name="noOfCrate"
+                                                        (keydown)="OnlyNumber($event)" [disabled]="item.isDisabled">
+
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        [(ngModel)]="item.eachTare" (keyup)="geteachTrae($event, item)"
+                                                        name="eachTare" (keydown)="ThreeDigitDecimalNumber($event)"
+                                                        [disabled]="item.isDisabled">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        (keyup)="getcreatFromNo($event, item)"
+                                                        [(ngModel)]="item.creatFromNo" name="creatFromNo"
+                                                        [disabled]="item.isDisabled">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        (keyup)="getcreatToNo($event, item)"
+                                                        [(ngModel)]="item.creatToNo" name="creatToNo"
+                                                        [disabled]="item.isDisabled">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        [(ngModel)]="item.grossWt" (keyup)="calcNetWt($event, item)"
+                                                        (blur)="showPopup($event, item)" name="grossWt"
+                                                        (keydown)="ThreeDigitDecimalNumber($event)"
+                                                        [disabled]="item.isDisabled">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        [(ngModel)]="item.tareWt" name="tareWt" [disabled]="true">
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-group mb-0">
+                                                    <input type="text" class="form-control right-aligned-input"
+                                                        [(ngModel)]="item.netWt" name="netWt" [disabled]="true">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-skyblue">
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold">Total</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold"> {{getCrateTotal(true,"")}} </span>
+                                            </td>
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold"> {{getGrossWtTotal(true,"")}}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold"> {{getTareWtTotal(true,"")}} </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold"> {{getNetWtTotal(true,"")}} </span>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+        <p-tabPanel header="GRN & Material Details" [selected]="selectedTab === 'SummaryReceivedDetails'"
+            [disabled]="!this.GreenReceivedDetailsWithGrnDetail">
+            <form [formGroup]="HarvestGrnForm">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Area</span>
+                                    <input matInput type="text" class="form-control" formControlName="AreaName"
+                                        disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Supervisor</span>
+                                    <input matInput type="text" class="form-control" formControlName="EmpName" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Harvest GRN Date</span>
+                                    <input [matDatepicker]="harvestDate" class="form-control"
+                                        (dateInput)="onDateChange(HarvestGrnForm.controls.HarvestGRNDate.value)"
+                                        formControlName="HarvestGRNDate" #grnDate>
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                        [for]="harvestDate">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #harvestDate>
+                                    </mat-datepicker>
+
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.HarvestGRNDate.touched && !HarvestGrnForm.controls.HarvestGRNDate.valid"
+                                        class="text-danger">
+                                        Harvest GRN Date is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Harvest GRN No</span>
+                                    <input matInput type="text" class="form-control" formControlName="HarvestGRNNo"
+                                        disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="label-control">Vehicle No</label>
+                                    <mat-select placeholder="Please select Vehicle No" class="form-control"
+                                        (selectionChange)="onChangeVehicleNo($event)" formControlName="VechicalNo">
+                                        <mat-option *ngFor="let vd of vehicleDetails" [value]="vd">
+                                            {{vd.vehicleRegNo}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.VechicalNo.touched && !HarvestGrnForm.controls.VechicalNo.valid"
+                                        class="text-danger">
+                                        Vechical No is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Driver Name</span>
+                                    <input matInput type="text" class="form-control" formControlName="DriverName">
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.DriverName.touched && !HarvestGrnForm.controls.DriverName.valid"
+                                        class="text-danger">
+                                        Driver Name is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Starting KM Reading</span>
+                                    <input matInput type="number" class="form-control"
+                                        formControlName="VechicalStartingReading">
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.VechicalStartingReading.touched && !HarvestGrnForm.controls.VechicalStartingReading.valid"
+                                        class="text-danger">
+                                        Starting KM Reading is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Vehicle Freight</span>
+                                    <input matInput type="text" class="form-control" formControlName="VehicalFreight">
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.VehicalFreight.touched && !HarvestGrnForm.controls.VehicalFreight.valid"
+                                        class="text-danger">
+                                        Vehicle Freight is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group ui-g-12 ui-md-6">
+                                    <span class="label-control">Time of Dispatch</span>
+                                    <p-calendar formControlName="VehicalStartTime" [timeOnly]="true">
+                                    </p-calendar>
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.VehicalStartTime.touched && !HarvestGrnForm.controls.VehicalStartTime.valid"
+                                        class="text-danger">
+                                        Time Of Dispatch is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Total Quantity</span>
+                                    <input matInput type="text" class="form-control"
+                                        formControlName="HarvestGRNTotalQuantity" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Total No. of Crates</span>
+                                    <input matInput type="text" class="form-control"
+                                        formControlName="HarvestGRNTotalDespCrates" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Material Transfer To UNIT</span>
+                                    <mat-select placeholder="Please select Transfer To Unit" class="form-control"
+                                        formControlName="OrgOfficeNo">
+                                        <mat-option *ngFor="let ofc of ofcLocations" [value]="ofc.orgOfficeNo">
+                                            {{ofc.orgOfficeName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.OrgOfficeNo.touched && !HarvestGrnForm.controls.OrgOfficeNo.valid"
+                                        class="text-danger">
+                                        Material Unit is required **
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <span class="label-control">Remarks</span>
+                                    <textarea pInputTextarea class="form-control"
+                                        formControlName="HarvestGRNRemarks"></textarea>
+                                    <span
+                                        *ngIf="HarvestGrnForm.controls.HarvestGRNRemarks.touched && !HarvestGrnForm.controls.HarvestGRNRemarks.valid"
+                                        class="text-danger">
+                                        <span *ngIf="HarvestGrnForm.controls.HarvestGRNRemarks.errors?.required">
+                                            Remarks is
+                                            required ** </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p-accordionTab header="Summary Received Details" [selected]="true">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                    cellpadding="4">
+                                    <tbody>
+                                        <tr>
+                                            <th>Sl.No</th>
+                                            <th>Buyer Name</th>
+                                            <th>No of Crates</th>
+                                            <th *ngFor="let crop of cropSchemeListAddedData">
+                                                {{crop.CropSchemeInfo}}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                        <tr *ngFor="let item of buyerWiseDetail ;let j = index">
+                                            <td class="text-center">
+                                                {{j+1}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.BuyerEmployeeName}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{item.CrateTotal}}
+                                            </td>
+
+                                            <td class="text-center" *ngFor="let crop of cropSchemeListAddedData">
+                                                <span class="font-weight-bold">
+                                                    {{getBuyerSchemeTotal(item.BuyerEmployeeID
+                                                    ,crop.CropSchemeCode)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-skyblue">
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold">Total</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="font-weight-bold">{{getSummaryCrateTotal()}}</span>
+                                            </td>
+                                            <td class="text-center" *ngFor="let crop of cropSchemeListAddedData">
+                                                <span class="font-weight-bold">
+                                                    {{getSchemeTotal(crop.CropSchemeCode)}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </p-accordionTab>
+            <div class="mgt-20 pull-right">
+                <div class="col-md-12">
+                    <button pButton type="submit" label="Save" [disabled]="!HarvestGrnForm.valid"
+                        (click)="saveDetails()" class="ui-button-rounded" #saveBtn></button>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</p-accordion>
+
+
+<div class="modal fade" id="AddMoreData" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
+    aria-labelledby="addMoreDataModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMoreDataModalCenterTitle">Continue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-dismiss="modal"
+                    (click)="closePopup()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you want to continue?
+            </div>
+            <div class="modal-footer">
+                <button pButton type="button" (click)="continueToAddCount();" label="Continue Count"
+                    class="ui-button-rounded" data-dismiss="modal" #continueBtn></button>
+
+                <button pButton type="submit" (click)="changeCountdata();" label="Change Count"
+                    class="ui-button-rounded" data-dismiss="modal"></button>
+                <button pButton type="submit" (click)="completeBuyer();" label="Complete Buyer"
+                    class="ui-button-rounded" data-dismiss="modal"></button>
+                <button pButton type="button" (click)="goToSummary();" label="Complete Loading"
+                    class="ui-button-rounded" data-dismiss="modal"></button>
+            </div>
+        </div>
+    </div>
+</div>

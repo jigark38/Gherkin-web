@@ -1,0 +1,257 @@
+
+<div class="row pull-right" id="bread">
+        <ol class="breadcrumb breadcrumb-arrow">
+            <li><a href="#">Agri Management </a></li>
+            <li class="active"><span>Field Staff</span></li>
+        </ol>
+ </div>
+      
+ <div class="breadcrumb-height-max"></div>
+
+<p-tabView>
+        <p-tabPanel header="Field Staff Details">
+                <form [formGroup]="fieldStaffForm" (ngSubmit)="OnSubmit()">
+                        <div class="card">
+
+                                <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Date of Entry</span>
+                                                                <input #fromDate [matDatepicker]="frmDate" #dateOfEntry
+                                                                        class="form-control"
+                                                                        formControlName="dateOfEntry">
+                                                                <mat-datepicker-toggle class="date-picker-icon-position"
+                                                                        matSuffix [for]="frmDate">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #frmDate></mat-datepicker>
+
+
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span class="label-control">Login User Name</span>
+                                                                <input type="text" class="form-control"
+                                                                        formControlName="loginUserName" [value]="">
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                                <span>Area Name</span>
+                                                                <mat-select #AreaDDL formControlName="areaID"
+                                                                        class="form-control"
+                                                                        (ngModelChange)="getfieldStaff($event)"
+                                                                        (blur)="onBlurMethod()">
+                                                                        <mat-option *ngFor="let area of areaList"
+                                                                                [value]="area.areaId">
+                                                                                {{area.areaName | uppercase}}
+                                                                        </mat-option>
+                                                                </mat-select>
+
+                                                                <small class="form-text text-danger"
+                                                                        *ngIf="!(fieldStaffForm.get('areaID').disabled) && !(fieldStaffForm.get('areaID').valid) && (addNewStaffClcked || findStaffClicked || modifyStaffClicked)">
+                                                                        Please select an area</small>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div formGroupName="fieldStaffs">
+                                                <div class="row">
+
+
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span>Department </span>
+                                                                        <mat-select #DepartmentDDL
+                                                                                formControlName="departmentCode"
+                                                                                class="form-control"
+                                                                                (ngModelChange)="GetSubDept($event)"
+                                                                                (blur)="onBlurMethod()">
+                                                                                <mat-option
+                                                                                        *ngFor="let deprt of deprtList"
+                                                                                        [value]="deprt.departmentCode">
+                                                                                        {{deprt.departMentName | uppercase}}
+                                                                                </mat-option>
+                                                                        </mat-select>
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="!(fieldStaffForm.get(['fieldStaffs','departmentCode']).valid) && addNewStaffClcked">Please
+                                                                                select
+                                                                                department</small>
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span>Sub Department </span>
+                                                                        <mat-select formControlName="subDepartmentCode"
+                                                                                class="form-control"
+                                                                                (ngModelChange)="GetDesigination($event)"
+                                                                                (blur)="onBlurMethod()">
+                                                                                <mat-option
+                                                                                        *ngFor="let subDeprt of subDeptList"
+                                                                                        [value]="subDeprt.subDepartmentCode">
+                                                                                        {{subDeprt.subDepartmentName | uppercase}}
+                                                                                </mat-option>
+                                                                        </mat-select>
+
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="!(fieldStaffForm.get(['fieldStaffs','subDepartmentCode']).valid) && addNewStaffClcked">
+                                                                                Please selectSub department</small>
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span>Designation </span>
+                                                                        <mat-select formControlName="designationCode"
+                                                                                class="form-control"
+                                                                                (ngModelChange)="GetEmpByDesg($event)"
+                                                                                (blur)="onBlurMethod()">
+                                                                                <mat-option
+                                                                                        *ngFor="let designation of desginationList"
+                                                                                        [value]="designation.designationCode">
+                                                                                        {{designation.designattionName | uppercase}}
+                                                                                </mat-option>
+                                                                        </mat-select>
+
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="!(fieldStaffForm.get(['fieldStaffs','designationCode']).valid) && addNewStaffClcked">
+                                                                                Designation Required!</small>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                <div class="row">
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span>Incharge / Field Staff</span>
+                                                                        <mat-select formControlName="staffType"
+                                                                                class="form-control"
+                                                                                (blur)="onBlurMethod()">
+                                                                                <mat-option
+                                                                                        *ngFor="let staftyp of staffTypeArray"
+                                                                                        [value]="staftyp">
+                                                                                        {{staftyp | uppercase}}
+                                                                                </mat-option>
+                                                                        </mat-select>
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="!(fieldStaffForm.get(['fieldStaffs','staffType']).valid) && addNewStaffClcked">
+                                                                                Staff type Required!</small>
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span>Employee Name</span>
+                                                                        <mat-select formControlName="employeeID"
+                                                                                class="form-control"
+                                                                                (blur)="onBlurMethod()">
+                                                                                <mat-option
+                                                                                        *ngFor="let employee of employeList"
+                                                                                        [value]="employee.employeeId">
+                                                                                        {{employee.employeeName | uppercase}}
+                                                                                </mat-option>
+                                                                        </mat-select>
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="!(fieldStaffForm.get(['fieldStaffs','employeeID']).valid) && addNewStaffClcked">
+                                                                                please select an employee!</small>
+                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                        <span class="label-control">Effective
+                                                                                Date</span>
+
+                                                                        <input [matDatepicker]="ejd" #dateOfEntry
+                                                                                placeholder="dd-mm-yyyy"
+                                                                                class="form-control"
+                                                                                formControlName="effectiveDate"
+                                                                                (dateChange)="onBlurMethod()">
+                                                                        <mat-datepicker-toggle
+                                                                                class="date-picker-icon-position"
+                                                                                matSuffix [for]="ejd">
+                                                                        </mat-datepicker-toggle>
+                                                                        <mat-datepicker #ejd>
+                                                                        </mat-datepicker>
+                                                                        <small class="form-text text-danger"
+                                                                                *ngIf="(fieldStaffForm.get(['fieldStaffs','effectiveDate']).value == null || fieldStaffForm.get(['fieldStaffs','effectiveDate']).value == '' ) && addNewStaffClcked">
+                                                                                Enter valid date!</small>
+                                                                </div>
+                                                        </div>
+
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
+                        <div class="card">
+
+                                <div class="card-body" style="overflow-y:auto">
+                                        <div class="row m-b-25">
+                                                <div class="col-md-12">
+                                                        <div>
+                                                                <table class="table table-striped table-bordered dt-responsive nowrap"
+                                                                        cellspacing="0" cellpadding="4">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>S.No</th>
+                                                                                        <th>Department</th>
+                                                                                        <th>Designation</th>
+                                                                                        <th>Employee Name</th>
+                                                                                        <th>Effective Date</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <tr *ngFor="let staff of staffArray; let i = index"
+                                                                                        (click)="populate(staff)">
+                                                                                        <td>
+                                                                                                <span>{{i+1}}</span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{changeDeptCodeToName(staff.departmentCode)}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{changeDesgCodeToName(staff.designationCode)}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{changeEmpCodeToName(staff.employeeID) | uppercase}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                                {{staff.effectiveDate | date:'dd/MM/yyyy'}}
+                                                                                        </td>
+                                                                                </tr>
+                                                                        </tbody>
+
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="card">
+                                <div class="row pull-right btSection">
+                                        <div class="col-md12">
+                                                <button pButton type="button" label="New Field Staff"
+                                                        class="ui-button-rounded" (click)="onClickNewFieldStaff()"
+                                                        tabindex="-1" [disabled]="disblFIeldstaffBtn"> </button>
+                                                <button #SaveBtn pButton type="submit" label="Save"
+                                                        class="ui-button-rounded" [disabled]="disableSave()"></button>
+                                                <button pButton type="button" label="Find" class="ui-button-rounded"
+                                                        (click)="onClickFindFieldStaff()"
+                                                        [disabled]="disblFindBtn"></button>
+                                                <button pButton type="button" label="Modify" class="ui-button-rounded"
+                                                        (click)="onClickModify()" [disabled]="disblModifyBtn"></button>
+                                                <button pButton type="button" label="Clear" class="ui-button-rounded"
+                                                        (click)="resetForm()"
+                                                        [disabled]="!(fieldStaffForm.value)"></button>
+                                        </div>
+                                </div>
+                        </div>
+                </form>
+        </p-tabPanel>
+</p-tabView>
+
+<jw-modal id="save-fieldstaff-Modal">
+        <h6>Do you want to add more staff details?</h6>
+        <div class="row pull-right bottom-right">
+                <input type="button" class="btn btn-info" #YesBtn (click)="addNewFieldStaff();" value="Yes" />
+                <input type="button" class="btn btn-info" (click)="onNo();" value="No" />
+        </div>
+
+</jw-modal>

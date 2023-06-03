@@ -1,0 +1,267 @@
+<div class="row pull-right " id="bread">
+  <ol class="breadcrumb breadcrumb-arrow">
+    <li><a href="#">Transport & Vehicle Management</a></li>
+    <li class="active"><span>Driver Details</span></li>
+  </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<div [formGroup]="driverDetailsForm">
+  <p-accordion>
+    <p-accordionTab header="Driver Details" [selected]="true">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Entered By</span>
+              <input type="text" formControlName="empName" class="form-control" maxlength="20"
+                placeholder="Please Select Employee Created Id" [disabled]='true'>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Date of Entry</span>
+              <div>
+                <input matInput class="form-control
+                                        border-bottom-1" placeholder="Please Select Date of Entry" #driverEntryDate
+                  [matDatepicker]="dp2" formControlName="driverEntryDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp2">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp2>
+                </mat-datepicker>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4">
+            <div class="form-group" *ngIf="(isFindOn) || (!isFindOn)">
+              <span class="label-control">Department</span>
+              <mat-select #departmentRef class="form-control" formControlName="department"
+                placeholder="Please Select Department" (selectionChange)="departmentValueChange()">
+                <mat-option *ngFor="let dept of departmentList" [value]="dept.departmentCode">
+                  {{dept.departMentName}}</mat-option>
+              </mat-select>
+              <span *ngIf="driverDetailsForm.controls.department.errors?.required
+                                    &&
+                                    driverDetailsForm.controls.department.touched" class="error-span">Department
+                is required
+                field.</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Sub Department</span>
+              <mat-select class="form-control" formControlName="subDepartment"
+                placeholder="Please Select Sub Department" (selectionChange)="subDepartmentValueChange()">
+                <mat-option *ngFor="let dept of subDepartmentList" [value]="dept.subDepartmentCode">
+                  {{dept.subDepartmentName}}</mat-option>
+              </mat-select>
+              <span *ngIf="driverDetailsForm.controls.subDepartment.errors?.required
+            &&
+            driverDetailsForm.controls.subDepartment.touched" class="error-span">Sub Department
+                is
+                required field.</span>
+              <span *ngIf="subDepartmentError" class="error-span">Sub Department not found for selected
+                Department.</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Designation</span>
+              <mat-select class="form-control" formControlName="designation" placeholder="Please Select Designation"
+                (selectionChange)="designationValueChange()">
+                <mat-option *ngFor="let designation of designationList" [value]="designation.designationCode">
+                  {{designation.designattionName}}</mat-option>
+              </mat-select>
+              <span *ngIf="driverDetailsForm.controls.designation.errors?.required
+            &&
+            driverDetailsForm.controls.designation.touched" class="error-span">Designation
+                is
+                required field.</span>
+              <span *ngIf="designationError" class="error-span">Designation not found for selected
+                Sub Department.</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Employees Names</span>
+              <mat-select class="form-control" formControlName="employeeName" placeholder="Please Select Employee Name"
+                (selectionChange)="employeeValueChange()">
+                <mat-option *ngFor="let employee of employeeList" [value]="employee.empId">
+                  {{employee.empName}}</mat-option>
+              </mat-select>
+              <span *ngIf="driverDetailsForm.controls.employeeName.errors?.required
+            &&
+            driverDetailsForm.controls.employeeName.touched" class="error-span">Designation
+                is
+                required field.</span>
+              <span *ngIf="employeeError" class="error-span">Employees not found for selected
+                designation.</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Contact Number</span>
+              <input type="text" maxlength="14" formControlName="contactNumber"
+                placeholder="Please Enter Contact Number" class="form-control">
+              <span *ngIf="driverDetailsForm.get('contactNumber').errors?.pattern
+                                  &&
+                                  driverDetailsForm.controls.contactNumber.touched" class="error-span">Contact
+                Number can in a
+                format of
+                0XXXXXXXXXX.</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Years of Experience</span>
+              <input type="text" formControlName="drivingYearsExp" placeholder="Please Enter Years of Experience"
+                class="form-control">
+              <span *ngIf="driverDetailsForm.controls.drivingYearsExp.errors?.required
+                                &&
+                                driverDetailsForm.controls.drivingYearsExp.touched" class="error-span">Years of
+                Experience is required
+                field.</span>
+              <span *ngIf="driverDetailsForm.get('drivingYearsExp').errors?.pattern
+                                &&
+                                driverDetailsForm.controls.drivingYearsExp.touched" class="error-span">Years of
+                Experience should be in
+                format
+                of YY.MM (00.00)</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Licence Type</span>
+              <mat-select class="form-control" formControlName="driverLicenseType"
+                placeholder="Please Select Licence Type" (selectionChange)="licenceTypeChange()">
+                <mat-option *ngFor="let licence of licenceTypeList" [value]="licence">
+                  {{licence}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Driver Licence Number</span>
+              <input matInput formControlName="driverLicenseNumber" type="text" class="form-control" maxlength="20"
+                placeholder="Please enter your Licence">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Expiry Date</span>
+              <div>
+                <input matInput class="form-control
+                                        border-bottom-1" (selectionChange)="expiryDateChanged()"
+                  placeholder="Please Select Driver Expiry Date" #driverExpiryDate [matDatepicker]="dp"
+                  formControlName="driverExpiryDate">
+                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp>
+                </mat-datepicker>
+                <span *ngIf="driverDetailsForm.controls.driverExpiryDate.errors?.required
+                                        &&
+                                        driverDetailsForm.controls.driverExpiryDate.touched" class="error-span">Expiry
+                  Date is
+                  required
+                  field.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Issue Authortiy</span>
+              <input matInput formControlName="drivingLicenseIssueAuthority" type="text" class="form-control"
+                maxlength="30" placeholder="Please Enter Driving License Issue Authority">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Name of the Document</span>
+              <input type="text" #documentName class="form-control" placeholder="Please Enter Name of the Document"
+                maxlength="30" formControlName="nameOfDocument">
+              <span *ngIf="driverDetailsForm.controls.nameOfDocument.errors?.required
+                                &&
+                                driverDetailsForm.controls.nameOfDocument.touched" class="error-span">Name of the
+                Document is
+                required
+                field.</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="label-control">Document Upload</span>
+              <input #fileNameForDocument type="file" class="form-control"
+                accept="application/pdf, image/jpeg, image/png" (change)="onFileChange($event)"
+                [disabled]=isDocumentuploadDisabled>
+              <span *ngIf="isFileError" class="error-span">Please
+                upload file type of jpeg/png/pdf.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-accordionTab>
+
+
+  </p-accordion>
+  <p-accordion>
+    <p-accordionTab header="Vehicle Documents Details" [selected]="true">
+      <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4">
+        <tbody>
+          <tr>
+            <th>Sl.No</th>
+            <th>Document Name</th>
+          </tr>
+          <tr *ngFor="let document of documentList;let i=index">
+
+            <td class="text-align-center">
+              <span>{{i+1}}</span>
+            </td>
+
+            <td class="text-align-center">
+              <span>
+                <a class="text-deco-underline" (click)="downloadFile(document)">{{document.driverDocumentName}}</a>
+              </span>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </p-accordionTab>
+  </p-accordion>
+</div>
+
+
+
+
+
+<div class="mgt-20 pull-right">
+  <mat-progress-bar *ngIf="disableButton" mode="indeterminate"></mat-progress-bar>
+  <div class="row pull-right btSection">
+    <div class="col-md12">
+      <button pButton type="submit" [disabled]="disableButton || !enableNew" label="Add
+                 " (click)="addNewDriverDetails()" class="ui-button-rounded"></button>
+
+      <button pButton type="submit" [disabled]="disableButton || !enableSave || !driverDetailsForm.valid" #saveButton
+        label="Save" (click)="saveDriverDetails()" class="ui-button-rounded"></button>
+
+      <button pButton type="submit" [disabled]="disableButton || !enableFind" label="Find" (click)="findDriverDetails()"
+        class="ui-button-rounded"></button>
+
+      <button pButton type="submit" [disabled]="disableButton || !enableModify" #modifyButton label="Modify"
+        (click)="modifyDriverDetails()" class="ui-button-rounded"></button>
+
+      <button pButton type="submit" [disabled]="disableButton" label="Clear" (click)="clearDriverDetails()"
+        class="ui-button-rounded"></button>
+
+    </div>
+  </div>
+</div>

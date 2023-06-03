@@ -1,0 +1,284 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Accounts & Finance Management</a></li>
+        <li class="active"><span>Account Master</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<!-- <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+    
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="noChildern(node)">
+        <li class="mat-tree-node">
+          
+            <button mat-icon-button disabled></button>
+            {{node.AccountOrGroupName}}
+        </li>
+    </mat-tree-node>
+   
+    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+        <li>
+            <div class="mat-tree-node" (click)="loadChildren(node)">
+                <button mat-icon-button matTreeNodeToggle
+                    [attr.aria-label]="'toggle ' + node.AccountOrGroupName">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'remove_circle' : 'add_circle'}}
+                    </mat-icon>
+                </button>
+                {{node.AccountOrGroupName}}
+            </div>
+            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+            </ul>
+        </li>
+    </mat-nested-tree-node>
+</mat-tree> -->
+
+
+<p-tabView>
+
+    <p-tabPanel header="Account Master">
+        <form #form="ngForm">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="label-control">Organisation Name</label>
+                                            <select class="form-control" (change)="allotStatus()"
+                                                [(ngModel)]="accountMaster.OrgCode" name="OrgCode" #OrgCode="ngModel"
+                                                required>
+                                                <option value=" ">--Select--</option>
+                                                <ng-container *ngFor="let org of organisationList">
+                                                    <option [value]=org.orgCode>{{org.organisationName}}</option>
+                                                </ng-container>
+                                            </select>
+
+                                            <span *ngIf="OrgCode.touched && !OrgCode.valid" class="text-danger">
+                                                Organisation name is required **
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <span class="label-control">Legal Status</span>
+                                            <input type="text" class="form-control"
+                                                [(ngModel)]="accountMaster.LegalStatus" name="LegalStatus"
+                                                #LegalStatus="ngModel" required disabled>
+                                            <span *ngIf="LegalStatus.touched && !LegalStatus.valid" class="text-danger">
+                                                Legal Status is required **
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="label-control">Head</label>
+                                            <select class="form-control" (change)="allotHeadName()"
+                                                [(ngModel)]="accountMaster.AccHeadCode" name="AccHeadCode"
+                                                #AccHeadCode="ngModel" required>
+                                                <option value=" ">--Select--</option>
+                                                <ng-container *ngFor="let acc of accountHeadList">
+                                                    <option [value]="acc.AccHeadCode">{{acc.HeadName}}</option>
+
+                                                </ng-container>
+                                            </select>
+
+                                            <span *ngIf="AccHeadCode.touched && !AccHeadCode.valid" class="text-danger">
+                                                Head Name is required **
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="label-control">Group</label>
+                                            <select class="form-control" (change)="allotGroupName()"
+                                                [(ngModel)]="accountMaster.AccGroupCode" name="AccGroupCode"
+                                                #AccGroupCode="ngModel">
+
+                                                <ng-container *ngFor="let group of groupList">
+                                                    <!--apply for loop-->
+                                                    <option [value]="group.AccountOrGroupCode"
+                                                        *ngIf="!group.IsAccount && group.ParentGroupCode">
+                                                        {{group.AccountOrGroupName}}</option>
+
+                                                </ng-container>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <span class="label-control">Group Name</span>
+                                        <input type="text" class="form-control" [(ngModel)]="accountMaster.SubGroupName"
+                                            name="SubGroupName" #SubGroupName="ngModel" [required]=isNewGroup
+                                            [disabled]="!isNewGroup" />
+
+                                        <span *ngIf="SubGroupName.touched && !SubGroupName.valid" class="text-danger">
+                                            Group Name is required **
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <span class="label-control">Account Head</span>
+                                            <input type="text" class="form-control"
+                                                [(ngModel)]="accountMaster.AccountName" name="AccountName"
+                                                #AccountName="ngModel" [disabled]="isNewGroup"
+                                                [required]="!isNewGroup" />
+
+                                            <span *ngIf="AccountName.touched && !AccountName.valid" class="text-danger">
+                                                Account Name is required **
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="label-control">Opening Balance Date</label>
+
+                                        <input [matDatepicker]="openingBalDate" class="form-control"
+                                            [(ngModel)]="accountMaster.OpBalanceDate" name="accountMaster.OpBalanceDate"
+                                            [disabled]="isNewGroup" #OpBalanceDate="ngModel" [required]="!isNewGroup">
+                                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                            [for]="openingBalDate">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #openingBalDate>
+                                        </mat-datepicker>
+
+
+
+                                        <!-- <input type="date" class="form-control"
+                                            [(ngModel)]="accountMaster.OpBalanceDate" name="OpBalanceDate"
+                                            [disabled]="isNewGroup" #OpBalanceDate="ngModel" [required]="!isNewGroup" /> -->
+                                        <span *ngIf="OpBalanceDate.touched && !OpBalanceDate.valid" class="text-danger">
+                                            Opening balance date is required **
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="label-control">Amount</label>
+                                        <input type="number" class="form-control" [disabled]="isNewGroup"
+                                            pattern="^(?:\d{0,18}\.\d{1,3})$|^\d{0,18}$" step="0.01"
+                                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                                            [(ngModel)]="accountMaster.OpBalanceAmount" name="OpBalanceAmount"
+                                            #OpBalanceAmount="ngModel" [required]="!isNewGroup" />
+
+                                        <span *ngIf="OpBalanceAmount.touched && !OpBalanceAmount.valid"
+                                            class="text-danger"><span *ngIf="OpBalanceAmount.errors?.required">Amount is
+                                                required **</span>
+                                            <span *ngIf="OpBalanceAmount.errors?.pattern" class="text-danger"> Opening
+                                                balance should be of the form 0.00 **</span>
+
+
+                                        </span>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                        <label class="label-control">Debit/Credit</label>
+                                        <select class="form-control" [(ngModel)]="accountMaster.DebitCreditDetails"
+                                            name="DebitCreditDetails" #DebitCreditDetails="ngModel"
+                                            [disabled]="isNewGroup" [required]="!isNewGroup">
+
+                                            <ng-container>
+                                                <!--apply for loop-->
+                                                <option value="Dr">Debit</option>
+                                                <option value="Cr">Credit</option>
+                                            </ng-container>
+                                        </select>
+
+                                        <span *ngIf="DebitCreditDetails.touched && !DebitCreditDetails.valid"
+                                            class="text-danger">
+                                            Please select debit/credit option **
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!------------------------------ Code for tree Structure  -------------------------->
+                        <div class="col-md-5">
+
+                            <div class="main-box">
+                                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+                                    <!-- This is the tree node template for leaf nodes -->
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle
+                                        (click)="noChildern(node)">
+                                        <li class="mat-tree-node" [ngClass]="styleTree(node)">
+                                            <!-- use a disabled button to provide padding for tree leaf -->
+
+                                            <button mat-icon-button disabled></button>
+                                            <span>{{node.AccountOrGroupName}}</span>
+                                            <span class="style_children">{{node.children.length}}</span>
+                                        </li>
+                                    </mat-tree-node>
+                                    <!-- This is the tree node template for expandable nodes -->
+                                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                                        <li>
+                                            <div class="mat-tree-node" (click)="loadChildren(node)"
+                                                [ngClass]="styleTree(node)">
+                                                <button mat-icon-button matTreeNodeToggle
+                                                    [attr.aria-label]="'toggle ' + node.AccountOrGroupName">
+                                                    <mat-icon class="mat-icon-rtl-mirror">
+                                                        {{treeControl.isExpanded(node) ? 'remove_circle_outline' : 'add_circle_outline'}}
+                                                    </mat-icon>
+                                                </button>
+
+                                                <span>{{node.AccountOrGroupName}}</span>
+                                                <span class="style_children">{{node.children.length}}</span>
+                                            </div>
+                                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                                                <ng-container matTreeNodeOutlet></ng-container>
+                                            </ul>
+                                        </li>
+                                    </mat-nested-tree-node>
+                                </mat-tree>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pull-right m-b-30 m-r-10">
+                    <div class="col-md-12">
+                        <button pButton (click)="newGroup()" label="New Group" class="ui-button-rounded"></button>
+                        <button pButton (click)="newAccount()" label="New Account" class="ui-button-rounded"></button>
+                        <button pButton type="submit" [disabled]="!form.valid" (click)="saveAccMaster()" label="Save"
+                            class="ui-button-rounded"></button>
+                        <button pButton (click)="modifyAccMaster()" [disabled]="!form.valid || !isFindEnabled"
+                            label="Modify" class="ui-button-rounded"></button>
+                        <button pButton (click)="clrAccMaster()" label="Clear" class="ui-button-rounded"></button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+</p-tabView>

@@ -1,0 +1,19 @@
+.example-month-picker .mat-calendar-period-button {
+    pointer-events: none;
+  }
+  
+  .example-month-picker .mat-calendar-arrow {
+    display: none;
+  }
+  table {
+    border-collapse: collapse;
+    width: 985px;
+    overflow-x: scroll;
+    display: block;
+  }
+  
+  tbody {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 540px;
+  }

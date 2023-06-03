@@ -1,0 +1,479 @@
+<div class="row pull-right " id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Production Process Filling & Ware House Division</a></li>
+        <li class="active"><span>Production Schedule Details</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+<p-accordion>
+    <p-tabView [activeIndex]="activeIndex" (onChange)="handleTabViewChange($event)">
+        <p-tabPanel header="Sales Order Details">
+            <div class="container-fluid" [formGroup]="productionScheduleForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Order Schedule</span>
+                            <mat-select formControlName="PSThroughDetails" (selectionChange)="orderScheduleChange()"
+                                class="form-control" [ngClass]="!(productionScheduleForm.get('PSThroughDetails').valid) && (productionScheduleForm.get('PSThroughDetails').touched) &&
+                                productionScheduleForm.get('PSThroughDetails').errors?.required?'error-border':''">
+                                <mat-option value="Through Sales Order">Through Sales Order</mat-option>
+                                <mat-option value="Direct Production">Direct Production</mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSThroughDetails').valid) &&
+                            productionScheduleForm.get('PSThroughDetails').touched &&
+                            productionScheduleForm.get('PSThroughDetails').errors?.required">Order Schedule is
+                                required!</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Unit</span>
+                            <mat-select formControlName="OrgofficeNo" class="form-control"
+                                (selectionChange)="OrgOfficeChange($event)" [ngClass]="!(productionScheduleForm.get('OrgofficeNo').valid) && 
+                             (productionScheduleForm.get('OrgofficeNo').touched) &&
+                                productionScheduleForm.get('OrgofficeNo').errors?.required?'error-border':''">
+                                <mat-option *ngFor="let location of officeLocations" [value]="location.orgOfficeNo">
+                                    {{location.orgOfficeName}}</mat-option>
+                            </mat-select>
+                            <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('OrgofficeNo').valid) &&
+                            productionScheduleForm.get('OrgofficeNo').touched &&
+                            productionScheduleForm.get('OrgofficeNo').errors?.required">Unit is required!</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p-accordionTab header="Pending Sales Order Schedule Details" [selected]="true">
+                <div class="container-fluid">
+                    <table class="table table-striped table-bordered dt-responsive nowrap table-horizontal-scroll"
+                        cellspacing="0" cellpadding="4">
+                        <thead class="ui-table-thead">
+                            <tr>
+                                <th *ngFor="let col of pSOScheduleDetailsCols" [ngStyle]="col.style">
+                                    {{col.header}}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-table-tbody">
+                            <tr *ngIf="pSOScheduleDetailsList && pSOScheduleDetailsList.length == 0">
+                                <td style="width: 100%;" [attr.colspan]="pSOScheduleDetailsCols.length">
+                                    No records found
+                                </td>
+                            </tr>
+                            <tr *ngFor="let item of pSOScheduleDetailsList;  index as i;let j=index">
+                                <td class="center-align" [ngStyle]="pSOScheduleDetailsCols[0].style">
+                                    {{j+1}}
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[1].style">
+                                    <span>{{item.profInvDate | date : 'dd-MMM-yyyy'}} </span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[2].style">
+                                    <span> {{item.profInvNo}}</span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[3].style">
+                                    <span>{{item.consigneeCbName}}</span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[4].style">
+                                    <span>{{item.CountryName}}</span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[5].style">
+                                    <span>{{item.fPVarietyName}} </span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[6].style">
+                                    <span>{{item.fPGrade}}</span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[7].style">
+                                    <span>{{item.preservedIn}}</span>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[8].style">
+                                    <span>{{item.qtyDrum}} / {{item.packUOM}} </span>
+
+                                </td>
+                                <td class="right-align" [ngStyle]="pSOScheduleDetailsCols[9].style">
+                                    <span>{{item.qtyDrum}}</span>
+                                </td>
+                                <td class="right-align" [ngStyle]="pSOScheduleDetailsCols[10].style">
+                                    <input type="text" class="entry-box"
+                                        [ngClass]="item.IsSchdQtyValid?'error-border':''" [(ngModel)]="item.SchdQty"
+                                        (blur)="validateSchdQty(item)" />
+                                </td>
+                                <td class="right-align" [ngStyle]="pSOScheduleDetailsCols[11].style">
+                                    <span>{{item.TotalQty}}</span>
+                                </td>
+                                <td class="right-align" [ngStyle]="pSOScheduleDetailsCols[12].style">
+                                    <input matInput class="form-control border-bottom-1" #dateOfCreation
+                                        [matDatepicker]="dp" [(ngModel)]="item.deliverBy">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dp">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #dp>
+                                    </mat-datepicker>
+                                </td>
+                                <td [ngStyle]="pSOScheduleDetailsCols[13].style">
+                                    <input type="checkbox" [(ngModel)]="item.IsSelected" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-accordionTab>
+        </p-tabPanel>
+
+        <p-tabPanel header="Production Schedule Details" [disabled]="disabledPSDTab">
+            <p-accordionTab header="Production Schedule Details" [selected]="true">
+                <div class="container-fluid" [formGroup]="productionScheduleForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Date of Schedule </span>
+                                <input [matDatepicker]="dos" #dateOfEntry class="form-control" readonly
+                                    formControlName="ProductionScheduleDate" #ProductionScheduleDate tabindex="0"
+                                    [ngClass]="!(productionScheduleForm.get('ProductionScheduleDate').valid) && 
+                                    (productionScheduleForm.get('ProductionScheduleDate').touched) &&
+                                    productionScheduleForm.get('ProductionScheduleDate').errors?.required?'error-border':''">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="dos">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dos>
+                                </mat-datepicker>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('ProductionScheduleDate').valid) &&
+                                productionScheduleForm.get('ProductionScheduleDate').touched &&
+                                productionScheduleForm.get('ProductionScheduleDate').errors?.required">Date of Schedule
+                                    is required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Production Schedule No</span>
+                                <input type="text" class="form-control" formControlName="ProductionScheduleNo"
+                                    tabindex="0" [ngClass]="!(productionScheduleForm.get('ProductionScheduleNo').valid) && 
+                                (productionScheduleForm.get('ProductionScheduleNo').touched) &&
+                                productionScheduleForm.get('ProductionScheduleNo').errors?.required?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('ProductionScheduleNo').valid) &&
+                                productionScheduleForm.get('ProductionScheduleNo').touched &&
+                                productionScheduleForm.get('ProductionScheduleNo').errors?.required">Production
+                                    Schedule No is required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Scheduled By</span>
+                                <!-- <mat-select class="form-control" #Employee formControlName="EmployeeID" tabindex="0"
+                                    [ngClass]="!(productionScheduleForm.get('EmployeeID').valid) && 
+                                (productionScheduleForm.get('EmployeeID').touched) &&
+                                productionScheduleForm.get('EmployeeID').errors?.required?'error-border':''">
+                                    <mat-option value=""></mat-option>
+                                    <mat-option *ngFor="let employee of employeeDetails" [value]="employee.employeeId">
+                                        {{employee.employeeName}}</mat-option>
+                                </mat-select> -->
+                                <input type="text" class="form-control" formControlName="EmployeeName" tabindex="0"
+                                    readonly>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('EmployeeID').valid) &&
+                                productionScheduleForm.get('EmployeeID').touched &&
+                                productionScheduleForm.get('EmployeeID').errors?.required">Scheduled By is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Production Schedule for</span>
+                                <input type="text" class="form-control" formControlName="ProductionSchedulefor"
+                                    tabindex="0" readonly>
+                                <!--  [ngClass]="!(productionScheduleForm.get('ProductionSchedulefor').valid) && (productionScheduleForm.get('ProductionSchedulefor').touched) &&
+                                productionScheduleForm.get('ProductionSchedulefor').errors?.required?'error-border':''"<small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSThroughDetails').valid) &&
+                                productionScheduleForm.get('PSThroughDetails').touched &&
+                                productionScheduleForm.get('PSThroughDetails').errors?.required">Production Schedule
+                                    for is required!</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Production Require Date By</span>
+                                <input [matDatepicker]="ejd" #dateOfEntry class="form-control" readonly
+                                    formControlName="PSRequireDateBy" #PSRequireDateBy tabindex="0"
+                                    [ngClass]="!(productionScheduleForm.get('PSRequireDateBy').valid) && (productionScheduleForm.get('PSRequireDateBy').touched)?'error-border':''">
+                                <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="ejd">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #ejd>
+                                </mat-datepicker>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSRequireDateBy').valid) &&
+                                productionScheduleForm.get('PSRequireDateBy').touched &&
+                                productionScheduleForm.get('PSRequireDateBy').errors?.required">Production
+                                    Require Date By is required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Product Group</span>
+                                <mat-select class="form-control" formControlName="FPGroupCode" tabindex="0"
+                                    (selectionChange)="productGroupChange($event)" [ngClass]="!(productionScheduleForm.get('FPGroupCode').valid) && 
+                                    (productionScheduleForm.get('FPGroupCode').touched) &&
+                                productionScheduleForm.get('FPGroupCode').errors?.required?'error-border':''">
+
+                                    <mat-option *ngFor="let group of productGroupDetails" [value]="group.groupCode">
+                                        {{group.grpName}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('FPGroupCode').valid) &&
+                                productionScheduleForm.get('FPGroupCode').touched &&
+                                productionScheduleForm.get('FPGroupCode').errors?.required">Product Group is
+                                    required!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Product Name</span>
+                                <mat-select class="form-control" formControlName="FPVarietyCode" tabindex="0"
+                                    (selectionChange)="productNameChange($event)" [ngClass]="!(productionScheduleForm.get('FPVarietyCode').valid) &&
+                                     (productionScheduleForm.get('FPVarietyCode').touched) &&
+                                productionScheduleForm.get('FPVarietyCode').errors?.required?'error-border':''">
+
+                                    <mat-option *ngFor="let name of productNameDetails" [value]="name.varietyCode">
+                                        {{name.varietyName}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('FPVarietyCode').valid) &&
+                                productionScheduleForm.get('FPVarietyCode').touched &&
+                                productionScheduleForm.get('FPVarietyCode').errors?.required">Product Name is
+                                    required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Grade / Size</span>
+                                <mat-select class="form-control" #gradeSize formControlName="FPGradeCode" tabindex="0"
+                                    [ngClass]="!(productionScheduleForm.get('FPGradeCode').valid) && 
+                                (productionScheduleForm.get('FPGradeCode').touched) &&
+                                productionScheduleForm.get('FPGradeCode').errors?.required?'error-border':''">
+
+                                    <mat-option *ngFor="let grade of gradeSizeDetails" [value]="grade.gradeCode">
+                                        {{grade.gradeFrom}} - {{grade.gradeTo}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('FPGradeCode').valid) &&
+                                productionScheduleForm.get('FPGradeCode').touched &&
+                                productionScheduleForm.get('FPGradeCode').errors?.required">Grade / Size is
+                                    required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Pack UOM</span>
+                                <mat-select class="form-control" formControlName="PackUOM" tabindex="0" [ngClass]="!(productionScheduleForm.get('PackUOM').valid) && 
+                                (productionScheduleForm.get('PackUOM').touched) &&
+                                productionScheduleForm.get('PackUOM').errors?.required?'error-border':''">
+                                    <mat-option value="KGS">KGS</mat-option>
+                                    <mat-option value="LBS">LBS</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PackUOM').valid) &&
+                                productionScheduleForm.get('PackUOM').touched &&
+                                productionScheduleForm.get('PackUOM').errors?.required">Pack UOM is required!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Qty / Pack In</span>
+                                <input type="text" formControlName="QtyDrum" class="form-control entry-box-orderdetails"
+                                    tabindex="0" [ngClass]="!(productionScheduleForm.get('QtyDrum').valid) && (productionScheduleForm.get('QtyDrum').touched) &&
+                                (productionScheduleForm.get('QtyDrum').errors?.pattern ||
+                                productionScheduleForm.get('QtyDrum').errors?.required)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('QtyDrum').valid) &&
+                                productionScheduleForm.get('QtyDrum').touched &&
+                                productionScheduleForm.get('QtyDrum').errors?.required">Qty / Pack In is
+                                    required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('QtyDrum').valid) &&
+                                    productionScheduleForm.get('QtyDrum').touched &&
+                                    productionScheduleForm.get('QtyDrum').errors?.pattern">Qty / Pack In should allow
+                                    decimal(6,3) only!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Pack Weight</span>
+                                <input type="text" formControlName="DrumWeight" (blur)="calculateProductQuantity()"
+                                    tabindex="0" class="form-control entry-box-orderdetails" [ngClass]="!(productionScheduleForm.get('DrumWeight').valid) && (productionScheduleForm.get('DrumWeight').touched) &&
+                                (productionScheduleForm.get('DrumWeight').errors?.pattern ||
+                                productionScheduleForm.get('DrumWeight').errors?.required)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('DrumWeight').valid) &&
+                                productionScheduleForm.get('DrumWeight').touched &&
+                                productionScheduleForm.get('DrumWeight').errors?.required">Pack Weight is
+                                    required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('DrumWeight').valid) &&
+                                productionScheduleForm.get('DrumWeight').touched &&
+                                productionScheduleForm.get('DrumWeight').errors?.pattern">Pack Weight should allow
+                                    decimal(5,3) only!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Apprx. Quantity (Pack In Nos)</span>
+                                <input type="text" formControlName="PSQuantity" (blur)="calculateProductQuantity()"
+                                    tabindex="0" class="form-control entry-box-orderdetails" [ngClass]="!(productionScheduleForm.get('PSQuantity').valid) && (productionScheduleForm.get('PSQuantity').touched) &&
+                                (productionScheduleForm.get('PSQuantity').errors?.pattern||
+                                productionScheduleForm.get('PSQuantity').errors?.required)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSQuantity').valid) &&
+                                productionScheduleForm.get('PSQuantity').touched &&
+                                productionScheduleForm.get('PSQuantity').errors?.required">Apprx. Quantity (Pack In
+                                    Nos) is required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSQuantity').valid) &&
+                                productionScheduleForm.get('PSQuantity').touched &&
+                                productionScheduleForm.get('PSQuantity').errors?.pattern">Apprx. Quantity (Pack In Nos)
+                                    should allow 6 numeric characters only!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Product Quantity / UOM</span>
+                                <input type="text" formControlName="PSQtyUOM" tabindex="0" readonly
+                                    class="form-control entry-box-orderdetails" [ngClass]="!(productionScheduleForm.get('PSQtyUOM').valid) && (productionScheduleForm.get('PSQtyUOM').touched) &&
+                                (productionScheduleForm.get('PSQtyUOM').errors?.pattern || 
+                                productionScheduleForm.get('PSQtyUOM').errors?.required)?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSQtyUOM').valid) &&
+                                productionScheduleForm.get('PSQtyUOM').touched &&
+                                productionScheduleForm.get('PSQtyUOM').errors?.required">Product Quantity / UOM is
+                                    required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('PSQtyUOM').valid) &&
+                                    productionScheduleForm.get('PSQtyUOM').touched &&
+                                    productionScheduleForm.get('PSQtyUOM').errors?.pattern">Product Quantity / UOM
+                                    should allow 12 numeric characters only!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Production Sch. To UNIT</span>
+                                <input type="text" formControlName="OrgofficeName" tabindex="0" readonly
+                                    class="form-control" [ngClass]="!(productionScheduleForm.get('OrgofficeName').valid) && 
+                                    (productionScheduleForm.get('OrgofficeName').touched) &&
+                                productionScheduleForm.get('OrgofficeName').errors?.required?'error-border':''">
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('OrgofficeName').valid) &&
+                                productionScheduleForm.get('OrgofficeName').touched &&
+                                productionScheduleForm.get('OrgofficeName').errors?.required">Production Sch. To UNIT
+                                    is required!</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Preserved in</span>
+                                <mat-select formControlName="MediaProcessCode" tabindex="0" class="form-control"
+                                    [ngClass]="!(productionScheduleForm.get('PSThroughDetails').valid) && (productionScheduleForm.get('PSThroughDetails').touched) &&
+                                productionScheduleForm.get('PSThroughDetails').errors?.required?'error-border':''">
+
+                                    <mat-option *ngFor="let media of mediaProcessNameList"
+                                        [value]="media.mediaProcessCode">
+                                        {{media.mediaProcessName}}</mat-option>
+                                </mat-select>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('MediaProcessCode').valid) &&
+                                productionScheduleForm.get('MediaProcessCode').touched &&
+                                productionScheduleForm.get('MediaProcessCode').errors?.required">Preserved in is
+                                    required!</small>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Media Description / Remarks</span>
+                                <textarea type="text" formControlName="MediaProcessDescRemarks" tabindex="0"
+                                    class="form-control" (blur)="openPopup()"
+                                    [ngClass]="!(productionScheduleForm.get('MediaProcessDescRemarks').valid) && 
+                                    (productionScheduleForm.get('MediaProcessDescRemarks').touched) &&
+                                (productionScheduleForm.get('MediaProcessDescRemarks').errors?.required ||
+                                productionScheduleForm.get('MediaProcessDescRemarks').errors?.maxlength)?'error-border':''"></textarea>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('MediaProcessDescRemarks').valid) &&
+                                productionScheduleForm.get('MediaProcessDescRemarks').touched &&
+                                productionScheduleForm.get('MediaProcessDescRemarks').errors?.required">Media
+                                    Description / Remarks is required!</small>
+                                <small Class="form-text text-danger" *ngIf="!(productionScheduleForm.get('MediaProcessDescRemarks').valid) &&
+                                    productionScheduleForm.get('MediaProcessDescRemarks').touched &&
+                                    productionScheduleForm.get('MediaProcessDescRemarks').errors?.maxlength">Media
+                                    Description / Remarks allow 500 charaters only!</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-accordionTab>
+            <p-accordionTab header="Production Schedule Details" [selected]="true">
+                <table class="table table-striped table-bordered dt-responsive nowrap table-horizontal-scroll"
+                    cellspacing="0" cellpadding="4">
+                    <thead class="ui-table-thead">
+                        <tr>
+                            <th *ngFor="let col of productionScheduleDetailsCols" [ngStyle]="col.style">
+                                {{col.header}}</th>
+                            <!-- <th>Sl.No</th>
+                            <th>Order Details</th>
+                            <th>Product Name</th>
+                            <th>Grade / Size</th>
+                            <th>Qty / Pack UOM</th>
+                            <th>Order Quantity (Nos)</th>
+                            <th>Schd. Qty (Nos)</th>
+                            <th>Preserved in (Media)</th>
+                            <th>Media Description</th> -->
+                        </tr>
+                    </thead>
+                    <tbody class="ui-table-tbody">
+                        <tr *ngIf="productionScheduleDetailsList && productionScheduleDetailsList.length == 0">
+                            <td style="width: 100%;" [attr.colspan]="productionScheduleDetailsCols.length">
+                                No records found
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of productionScheduleDetailsList;  index as i;let j=index">
+                            <td class="center-align" [ngStyle]="productionScheduleDetailsCols[0].style">
+                                {{j+1}}
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[1].style">
+                                <label class="container">
+                                    <input type="radio" name="radio" (change)="productionScheduleSelect($event, item)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[2].style">
+                                <span>{{item.profInvDate | date : 'dd-MMM-yyyy'}} / {{item.profInvNo}} /
+                                    {{item.consigneeCbName}}</span>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[3].style">
+                                <span>{{item.fPVarietyName}}</span>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[4].style">
+                                <span>{{item.fPGrade}}</span>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[5].style">
+                                <span>{{item.qtyDrum}} / {{item.packUOM}} </span>
+                            </td>
+                            <td class="right-align" [ngStyle]="productionScheduleDetailsCols[6].style">
+                                <span>{{item.PSQuantity}} / {{item.PSQtyUOM}}</span>
+                            </td>
+                            <td class="right-align" [ngStyle]="productionScheduleDetailsCols[7].style">
+                                <span>{{item.PSQuantity}} / {{item.PSQtyUOM}}</span>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[8].style">
+                                <span>{{item.MediaProcessCode}}</span>
+                            </td>
+                            <td [ngStyle]="productionScheduleDetailsCols[9].style">
+                                <span>{{item.MediaProcessDescRemarks}} </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-accordionTab>
+        </p-tabPanel>
+    </p-tabView>
+
+
+    <div class="mgt-20 pull-right">
+        <div class="col-md-12">
+            <button pButton type="button" label="Production Schedule" class="ui-button-rounded"
+                (click)="startProdSchedule()"></button>
+            <button pButton type="button" [disabled]="nextBtnEnable() || !disabledPSDTab" (click)="nextBtnClick()"
+                label="Next" class="ui-button-rounded"></button>
+            <button pButton type="button" #save label="Save" [disabled]="saveBtnEnable()" class="ui-button-rounded"
+                (click)="saveProductionScheduleDetails()"></button>
+            <button pButton type="button" label="Modify" disabled="disabled" class="ui-button-rounded"></button>
+            <button pButton type="button" label="Clear" [disabled]="isStartedForm" (click)="clearAllContent()"
+                class="ui-button-rounded"></button>
+        </div>
+    </div>
+    <div style="height: 28px;"></div>
+</p-accordion>

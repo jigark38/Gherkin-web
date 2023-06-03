@@ -1,0 +1,330 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Attendance Finalization</span></li>
+    </ol>
+</div>
+
+<div class="breadcrumb-height"></div>
+
+<div class="card">
+    <div class="bg-gray">
+        Attendance Finalization
+    </div>
+    <div class="card-body" [formGroup]="daywiseattendaceForm">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="label-control">Unit Name</span>
+                    <mat-select class="form-control" formControlName="unitLocation" #unitLocationField
+                        placeholder="Please Select Unit Location">
+                        <mat-option [value]="item.orgOfficeNo" *ngFor="let item of officeLocationList">
+                            {{item.orgOfficeName}}</mat-option>
+                    </mat-select>
+                    <span
+                        *ngIf="daywiseattendaceForm.controls.unitLocation?.errors?.required && daywiseattendaceForm.controls.unitLocation?.touched"
+                        class="error-span">Unit Name
+                        is
+                        required field.</span>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control"> Date</span>
+                        <input matInput class="form-control border-bottom-1 mb-1" formControlName="AttendanceDate"
+                            placeholder="Date" [matDatepicker]="Date5" (ngModelChange)="OnDateChange()">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="Date5">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #Date5>
+                        </mat-datepicker>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Details Order by</span>
+                        <mat-select class="form-control" formControlName="detailsOrderBy"
+                            (ngModelChange)="orderEmployeesBy()">
+                            <mat-option value="id">
+                                ID
+                            </mat-option>
+                            <mat-option value="department">
+                                Department
+                            </mat-option>
+                            <mat-option value="inTime">
+                                In Time
+                            </mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Department</span>
+                        <mat-select class="form-control" placeholder="Please enter Department"
+                            (ngModelChange)="getAttendanceDetail()" formControlName="department"
+                            (selectionChange)="changeDept($event)">
+                            <mat-option *ngFor="let department of departmentList" [value]="department.departmentCode">
+                                {{department.departMentName}}
+                            </mat-option>
+                        </mat-select>
+                        <span *ngIf="daywiseattendaceForm.controls.department.errors?.required
+                        &&
+                        daywiseattendaceForm.controls.department.touched" class="error-span">Department
+                            is
+                            required field.
+                        </span>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Sub Department
+                        </span>
+                        <mat-select formControlName="subDepartmentCode" class="form-control"
+                            (selectionChange)="getAttendanceDetail()">
+                            <mat-option *ngFor="let sub of lstSubDepartment" [value]="sub.subDepartmentCode">
+                                {{ sub.subDepartmentName }}
+                            </mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Staff / Worker
+                        </span>
+                        <mat-select class="form-control" formControlName="workerOrstaff"
+                            (selectionChange)="getAttendanceDetail()">
+                            <mat-option value="Worker">Worker</mat-option>
+                            <mat-option value="Staff">Staff</mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Search by ID</span>
+                        <input type="text" class="form-control" formControlName="searchByID" placeholder="" maxlength=""
+                            (blur)="filterEmployeeList()" (keydown)="OnlyNumber($event)">
+                        <!-- (ngModelChange)="filterEmployeeList()"> -->
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Updated by </span>
+                        <input type="text" class="form-control" placeholder="" maxlength="" formControlName="UpdatedBy">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control"> Updated Date</span>
+                        <input matInput class="form-control border-bottom-1 mb-1" formControlName="UpdatedDate"
+                            placeholder="Date" [matDatepicker]="Date6">
+                        <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="Date6">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #Date6>
+                        </mat-datepicker>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Employee Name</span>
+                        <input type="text" class="form-control" placeholder="" maxlength=""
+                            formControlName="employeeName">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+                <!-- <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Gender</span>
+                        <input type="text" class="form-control" placeholder="" maxlength="" formControlName="gender">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div> -->
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Department</span>
+                        <mat-select class="form-control" (selectionChange)="changeDept($event)"
+                            formControlName="employeeDepartment">
+                            <mat-option *ngFor="let department of departmentList" [value]="department.departmentCode">
+                                {{department.departMentName}}
+                            </mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Sub Department Updated </span>
+                        <mat-select formControlName="employeeSubDepartmentCode" class="form-control">
+                            <mat-option *ngFor="let sub of lstSubDepartment" [value]="sub.subDepartmentCode">
+                                {{ sub.subDepartmentName }}
+                            </mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">IN Time Updated</span>
+                        <input type="text" class="form-control" placeholder="" maxlength=""
+                            formControlName="inTimeUpdated">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Out Time Updated</span>
+                        <input type="text" class="form-control" placeholder="" maxlength=""
+                            formControlName="outTimeUpdated">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Duration</span>
+                        <input type="text" class="form-control" placeholder="" maxlength="" formControlName="duration"
+                            [value]="calculateDuration()" (blur)="UpdateAttendance()">
+                        <span class="error-span">
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <span class="label-control">Filter by</span>
+                        <mat-select class="form-control" formControlName="filterBy" (ngModelChange)="filterBy()">
+                            <mat-option value="singlePunch">
+                                Single Punch
+                            </mat-option>
+                            <mat-option value="attended">
+                                Attended
+                            </mat-option>
+                            <mat-option value="missed">
+                                Missed Punch
+                            </mat-option>
+                        </mat-select>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class=" col-md-12 cleartop">
+            <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" cellpadding="4"
+                id="grdOrganizations">
+                <tbody>
+                    <tr>
+                        <th>   <input type="checkbox" formControlName="parentCheckBox" (click)="CheckParentRow()"/></th>
+                        <th>Sl No</th>
+                        <th>ID No
+                        </th>
+                        <th>Employee Name
+                        </th>
+                        <th>Department
+                        </th>
+                        <th>IN Time
+                        </th>
+                        <th>OUT Time
+                        </th>
+                        <th>Duration
+                        </th>
+                        <th>Shift Duration
+                        </th>
+                        <th>OT Hrs.
+                        </th>
+                    </tr>
+                    <ng-container *ngFor="let item of lstEmployee; let i = index">
+                        <tr
+                            [class.active]="(item.indRegId === selectedRowId)|| (item.isEdited == true)">
+                            <td> 
+                                <input type="checkbox" [disabled]="!(item.inTime && item.outTime)" [checked] ="item.isChecked === true" (click) = "CheckChildRow(item)" />
+                            </td>
+                            <td class="text-align-center" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{i+1}}</span>
+                            </td>
+                            <td class="text-align-left" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.indRegId}}</span>
+                            </td>
+                            <td class="text-align-left" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.employeeName}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.department}} / {{item.subDepartment}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.inTime}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.outTime}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.duration}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.shiftDuration}}</span>
+                            </td>
+                            <td class="text-align-right" (click)="modifyEmployeeceDetails(item)">
+                                <span>{{item.overtime}}</span>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <tr *ngIf="lstEmployee.length === 0 && dataNotFound">
+                        <td class="data_not_found" colspan="10">
+                            No Records Exists on this selected Date
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <!-- <p-paginator [rows]="10" [totalRecords]="lstEmployee.length" (onPageChange)="paginate($event)">
+            </p-paginator> -->
+
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-md-12 my-3 text-right">
+                <button pButton type="button" label="Attendance Finalize" class="ui-button-rounded"
+                    (click)="attendenceFinilClick()" [disabled]="disblAttFinlizeBtn"></button>
+                <button pButton type="button" label="Save" class="ui-button-rounded" (click)="save()"
+                    [disabled]="disblSaveBtn" #saveBtn></button>
+                <button pButton type="submit" label="Find" class="ui-button-rounded" disabled></button>
+                <button pButton type="submit" label="Modify" class="ui-button-rounded" disabled></button>
+                <button pButton type="button" label="Clear" class="ui-button-rounded" (click)="reset()"></button>
+            </div>
+
+        </div>
+    </div>
+</div>

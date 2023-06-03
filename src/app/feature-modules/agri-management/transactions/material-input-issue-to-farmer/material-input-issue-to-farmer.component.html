@@ -1,0 +1,478 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Agri Management</a></li>
+        <li class="active"><span>Material/Inputs Issue to Farmer</span></li>
+    </ol>
+</div>
+<div class="breadcrumb-height-max"></div>
+
+<p-accordion>
+    <p-accordionTab header="Farmers Details" [selected]="true">
+        <form [formGroup]="inputIssurFarmerForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Date of Issue</span>
+                                <input [matDatepicker]="picker" #datePicker class="form-control"
+                                    placeholder="Select Date of Issue" formControlName="dateOfIssue">
+                                <div class="img-block">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix [for]="picker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker>
+                                    </mat-datepicker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Area/Branch Name</span>
+                                <mat-select type="text" class="form-control" formControlName="areaName"
+                                    placeholder="Select Area/Branch Name" (selectionChange)="getSelectedArea($event)">
+                                    <mat-option [value]="area.areaId" *ngFor="let area of areaList">{{area.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Name of Field Staff</span>
+                                <mat-select type="text" class="form-control" formControlName="nameOfFieldStaff"
+                                    placeholder="Select Name of Field Staff">
+                                    <mat-option [value]="employee.employeeId" *ngFor="let employee of employeeInfoList">
+                                        {{employee.employeeName}}</mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Group</span>
+                                <mat-select type="text" class="form-control" formControlName="cropGroup"
+                                    (selectionChange)="getCropGroupName($event)" placeholder="Select Crop Group">
+                                    <mat-option [value]="cropGroup.cropGroupCode"
+                                        *ngFor="let cropGroup of cropGroupList">
+                                        {{cropGroup.cropGroupName}}</mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Name</span>
+                                <mat-select type="text" class="form-control" formControlName="cropName"
+                                    placeholder="Select Crop Name"
+                                    (selectionChange)="getSeasonDetailsByCropAndArea($event)">
+                                    <mat-option [value]="cropName.cropNameCode" *ngFor="let cropName of cropNameList">
+                                        {{cropName.name}}</mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Season From / To</span>
+                                <mat-select type="text" class="form-control" formControlName="seasonFromTo"
+                                    placeholder="Select Season From / To"
+                                    (selectionChange)="getSelectedAreaWiseSeasonFrom($event, inputIssurFarmerForm.value)">
+                                    <mat-option [value]="seasonFromTo.PsNumber"
+                                        *ngFor="let seasonFromTo of areaWiseSeasonToFromList">
+                                        {{seasonFromTo.FromDate |date:'dd-MMM-yyyy'}} /
+                                        {{seasonFromTo.ToDate | date:'dd-MMM-yyyy'}}</mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Country</span>
+                                <mat-select type="text" class="form-control" formControlName="country"
+                                    placeholder="Select Country">
+                                    <mat-option [value]="countryDetail.countryCode"
+                                        *ngFor="let countryDetail of areaWiseCountryList">{{countryDetail.countryName}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">State</span>
+                                <mat-select type="text" class="form-control" formControlName="state"
+                                    (selectionChange)="getDistrictList($event)" placeholder="Select State">
+                                    <mat-option [value]="stateDetail.stateCode"
+                                        *ngFor="let stateDetail of areaWiseStateList">{{stateDetail.stateName}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">District</span>
+                                <mat-select type="text" class="form-control" formControlName="district"
+                                    (selectionChange)="getMandalList($event)" placeholder="Select District">
+                                    <mat-option [value]="districtDetail.districtCode"
+                                        *ngFor="let districtDetail of areaWiseDistrictList">
+                                        {{districtDetail.districtName}}</mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Mandal</span>
+                                <mat-select type="text" class="form-control" formControlName="mandal"
+                                    placeholder="Select Mandal" (selectionChange)="getVillageList($event)">
+                                    <mat-option [value]="mandalDetail.mandalCode"
+                                        *ngFor="let mandalDetail of areaWiseMandalList">{{mandalDetail.mandalsName}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Village</span>
+                                <mat-select type="text" class="form-control" formControlName="village"
+                                    placeholder="Select Village">
+                                    <mat-option [value]="villageDetail.villageCode"
+                                        *ngFor="let villageDetail of areaWiseVillageList">{{villageDetail.villageName}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Search </span>
+                                <input type="text" class="form-control" formControlName="search"
+                                    (keydown.Tab)="updateSearchData($event, inputIssurFarmerForm.value)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Farmers Details" [selected]="true">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="row m-b-25">
+                    <div class="col-md-12">
+                        <p-table #dt [value]="farmerAnalysisData" dataKey="slno" [rowHover]="true" scrollHeight="300px"
+                            [scrollable]="true" selectionMode="single">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th pSortableColumn="slno">Sl. No.<p-sortIcon field="slno">
+                                        </p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="farmersName">Farmer Name<p-sortIcon field="farmersName">
+                                        </p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="farmersAgreementCode">Account No<p-sortIcon
+                                            field="farmersAgreementCode">
+                                        </p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="farmersNoofAcresArea">Acres<p-sortIcon
+                                            field="farmersNoofAcresArea">
+                                        </p-sortIcon>
+                                    </th>
+                                    <th pSortableColumn="agricultureDripNonDrip">Drip<p-sortIcon
+                                            field="agricultureDripNonDrip">
+                                        </p-sortIcon>
+                                    </th>
+                                    <th style="width: 45px;">
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-module>
+                                <tr class="ui-selectable-row">
+                                    <td>
+                                        {{module.slno}}
+                                    </td>
+                                    <td>
+                                        {{module.farmersName}}
+                                    </td>
+                                    <td>
+                                        {{module.accountNumber}}
+                                    </td>
+                                    <td>
+                                        {{module.farmersNoofAcresArea}}
+                                    </td>
+                                    <td>
+                                        {{module.agricultureDripNonDrip}}
+                                    </td>
+                                    <td style="width: 45px;">
+                                        <p-tableRadioButton [value]="module" (click)="radioBtnClick(module)">
+                                        </p-tableRadioButton>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="2" style="text-align:left">No Modules found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div>
+                            <ul class="pagination">
+                                <span *ngFor="let item of paginationData">
+                                    <li [ngClass]="{'isDisabled': item.enabled == false}">
+                                        <div class="content" (click)="getSlectedFileList(item)"
+                                            [ngClass]="{'active': selectedTasks?.name === item?.name}">{{item.name}}
+                                        </div>
+                                    </li>
+                                </span>
+                                <!-- <li class="isDisabled">
+                                    <div class="content">B</div>
+                                </li>
+                                <li>
+                                    <div class="content">C</div>
+                                </li>
+                                <li>
+                                    <div class="content">D</div>
+                                </li>
+                                <li>
+                                    <div class="content">E</div>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+    <p-accordionTab header="Material / Inputs Issue Details" [selected]="true" *ngIf="showWhenDataPresent">
+        <form [formGroup]="inputFeedingForm">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Date of Issue</span>
+                                <!-- <input type="date" class="form-control" formControlName="dateOfIssue" /> -->
+                                <input [matDatepicker]="pickerDate" #datePicker class="form-control"
+                                    formControlName="dateOfIssue">
+                                <div class="img-block">
+                                    <mat-datepicker-toggle class="date-picker-icon-position" matSuffix
+                                        [for]="pickerDate">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerDate>
+                                    </mat-datepicker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Issued By</span>
+                                <input type="text" class="form-control" formControlName="issuedBy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Name of Field Staff</span>
+                                <input type="text" class="form-control" formControlName="nameOfFieldStaff">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Crop Name</span>
+                                <input type="text" class="form-control" formControlName="cropName">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Season From / To</span>
+                                <input type="text" class="form-control" formControlName="seasonFromTo">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Farmer Name</span>
+                                <input type="text" class="form-control" formControlName="farmerName">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Account No</span>
+                                <input type="text" class="form-control" formControlName="accountNo">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Village</span>
+                                <input type="text" class="form-control" formControlName="village">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Harvesting Acres</span>
+                                <input type="text" class="form-control" formControlName="harvestingAcer">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <span class="label-control">Consumption Voucher No.</span>
+                                <input type="text" class="form-control" formControlName="consumptionVoucherNo">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+    <p-accordionTab header="Material (Inputs) Consumed " [selected]="true" *ngIf="showWhenDataPresent">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="row m-b-25">
+                    <div class="col-md-12">
+                        <div>
+                            <table class="table
+                                table-striped
+                                table-bordered
+                                dt-responsive nowrap" cellspacing="0" cellpadding="4">
+                                <tbody>
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th>POP Division</th>
+                                        <th>Group / Material Name</th>
+                                        <th>Trade Name</th>
+                                        <!-- update below two header as per requirement -->
+                                        <th>POP Std per ({{popPerAcre}}) / UOM</th>
+                                        <th>Qty Req ({{agreementAcres}})</th>
+                                        <th>Transferred Till Date</th>
+                                        <th>To Be Issue Qty</th>
+                                        <th>Transfer Qty</th>
+                                    </tr>
+                                    <tr *ngFor="let item of inputIssuesGrid"
+                                        (focusout)="calculateInputDetailOnChange($event,item)">
+                                        <ng-container>
+                                            <td>
+                                                {{item.slno}}
+                                            </td>
+                                            <td>
+                                                {{item.popDivision}}
+                                            </td>
+                                            <td>
+                                                {{item.groupMaterialName}}
+                                            </td>
+                                            <td>
+                                                {{item.tradeName}}
+                                            </td>
+                                            <td>
+                                                {{item.popStdPerUOM}}
+                                            </td>
+                                            <td>
+                                                {{item.qtyReqAcre}}
+                                            </td>
+                                            <td>
+                                                {{item.transferedTillDate}}
+                                            </td>
+                                            <td>
+                                                {{item.toBeIssueQuantity}}
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" [(ngModel)]="item.transferQty"
+                                                    (blur)="transferQtyBlur(item)" />
+                                            </td>
+                                        </ng-container>
+                                        <ng-template *ngIf="inputIssuesGrid.length === 0">
+                                    <tr>
+                                        <td colspan="2" style="text-align:left">No Modules found.</td>
+                                    </tr>
+                                    </ng-template>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-accordionTab>
+</p-accordion>
+<div class="mgt-20 pull-right">
+    <div class="col-md-12">
+        <button pButton type="submit" label="Input Issues" class="ui-button-rounded" (click)="updateTheDetail()"
+            [disabled]="disableInputIssue"></button>
+        <button pButton type="submit" #nextButton label="Next" class="ui-button-rounded" [disabled]="disableNext"
+            (click)="getInputFeedingDetail()"></button>
+        <button pButton type="submit" label="Save" class="ui-button-rounded" [disabled]="disableSave"
+            (click)="saveFarmerInput(inputFeedingForm.value)"></button>
+        <button pButton type="submit" label="Modify" disabled="true" class="ui-button-rounded"></button>
+        <button pButton type="submit" label="Clear" (click)="clear()" class="ui-button-rounded"></button>
+    </div>
+</div>
